@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace ApiGateways.Domman.Handler
 {
@@ -15,11 +16,13 @@ namespace ApiGateways.Domman.Handler
     {
         private readonly ApplicationDbContext _context;
         private readonly IMd5Hash _md5Hash;
+        private readonly ILogger<SingUpCommandHandler> _logger;
 
-        public SingUpCommandHandler(ApplicationDbContext context, IMd5Hash md5Hash)
+        public SingUpCommandHandler(ApplicationDbContext context, IMd5Hash md5Hash, ILogger<SingUpCommandHandler> logger)
         {
             _context = context;
             _md5Hash = md5Hash;
+            _logger = logger;
         }
 
         public async Task<Users> Handle(SingUpCommand request, CancellationToken cancellationToken)
@@ -36,6 +39,7 @@ namespace ApiGateways.Domman.Handler
 
                 await tr.CommitAsync(cancellationToken);
 
+                _logger.LogInformation($"user: {userData.Id}, {userData.Email} has registered");
                 return userData;
             }
         }

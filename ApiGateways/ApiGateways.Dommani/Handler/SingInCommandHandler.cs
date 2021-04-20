@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace ApiGateways.Domman.Handler
 {
@@ -21,12 +22,14 @@ namespace ApiGateways.Domman.Handler
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IMd5Hash _md5Hash;
+        private readonly ILogger<SingInCommandHandler> _logger;
 
-        public SingInCommandHandler(ApplicationDbContext context, IMd5Hash md5Hash, IConfiguration configuration)
+        public SingInCommandHandler(ApplicationDbContext context, IMd5Hash md5Hash, IConfiguration configuration, ILogger<SingInCommandHandler> logger)
         {
             _context = context;
             _md5Hash = md5Hash;
             _configuration = configuration;
+            _logger = logger;
         }
 
         public async Task<UserToken> Handle(SingInCommand request, CancellationToken cancellationToken)
@@ -48,6 +51,8 @@ namespace ApiGateways.Domman.Handler
                     SecurityAlgorithms.HmacSha256));
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            _logger?.LogWarning($"user: {request.Email} login");
 
             return new UserToken
             {
