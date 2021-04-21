@@ -1,8 +1,7 @@
-﻿using Common.Models.User;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 
-namespace ApiGateways.Context
+namespace Pixel.Context
 {
     public class ApplicationDbContext : DbContext
     {
@@ -30,7 +29,5 @@ namespace ApiGateways.Context
                 optionsBuilder.UseNpgsql(_connectionString);
             }
         }
-
-        public DbSet<Users> Users { get; set; }
     }
 }

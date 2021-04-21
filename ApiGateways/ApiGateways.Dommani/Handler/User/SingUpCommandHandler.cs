@@ -1,16 +1,16 @@
-﻿using ApiGateways.Common.Models.User;
-using ApiGateways.Context;
-using ApiGateways.Domman.Command;
+﻿using ApiGateways.Context;
+using ApiGateways.Dommain.Command.User;
 using ApiGateways.Service.Security;
+using Common.Models.User;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
-namespace ApiGateways.Domman.Handler
+namespace ApiGateways.Dommain.Handler.User
 {
     public class SingUpCommandHandler : IRequestHandler<SingUpCommand, Users>
     {

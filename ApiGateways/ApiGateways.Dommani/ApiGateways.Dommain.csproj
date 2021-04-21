@@ -6,11 +6,13 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.10.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApiGateways.Common\ApiGateways.Common.csproj" />
+    <ProjectReference Include="..\ApiGateways.Common\Common.csproj" />
     <ProjectReference Include="..\ApiGateways.Context\ApiGateways.Context.csproj" />
     <ProjectReference Include="..\ApiGateways.Service\ApiGateways.Service.csproj" />
   </ItemGroup>

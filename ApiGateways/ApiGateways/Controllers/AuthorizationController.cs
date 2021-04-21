@@ -1,5 +1,5 @@
-﻿using ApiGateways.Common.Models.User;
-using ApiGateways.Domman.Command;
+﻿using ApiGateways.Dommain.Command.User;
+using Common.Models.User;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

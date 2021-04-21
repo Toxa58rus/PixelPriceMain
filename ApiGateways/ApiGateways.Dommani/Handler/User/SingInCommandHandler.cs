@@ -1,10 +1,11 @@
-﻿using ApiGateways.Common.Models.User;
-using ApiGateways.Context;
-using ApiGateways.Domman.Command;
+﻿using ApiGateways.Context;
+using ApiGateways.Dommain.Command.User;
 using ApiGateways.Service.Security;
+using Common.Models.User;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -13,9 +14,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
-namespace ApiGateways.Domman.Handler
+namespace ApiGateways.Dommain.Handler.User
 {
     public class SingInCommandHandler : IRequestHandler<SingInCommand, UserToken>
     {

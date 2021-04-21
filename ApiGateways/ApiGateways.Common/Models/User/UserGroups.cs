@@ -1,8 +1,8 @@
 ﻿namespace Common.Models.User
 {
-    public class UserToken
+    public class UserGroups
     {
-        public string Token { get; set; }
+        public string GroupId { get; set; }
         public string UserId { get; set; }
     }
 }

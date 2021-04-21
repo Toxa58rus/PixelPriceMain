@@ -1,5 +1,5 @@
 using ApiGateways.Context;
-using ApiGateways.Domman.Command;
+using ApiGateways.Dommain.Command.User;
 using ApiGateways.Service.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
