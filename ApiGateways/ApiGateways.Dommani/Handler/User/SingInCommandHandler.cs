@@ -19,12 +19,12 @@ namespace ApiGateways.Dommain.Handler.User
 {
     public class SingInCommandHandler : IRequestHandler<SingInCommand, UserToken>
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApiGatewaysDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IMd5Hash _md5Hash;
         private readonly ILogger<SingInCommandHandler> _logger;
 
-        public SingInCommandHandler(ApplicationDbContext context, IMd5Hash md5Hash, IConfiguration configuration, ILogger<SingInCommandHandler> logger)
+        public SingInCommandHandler(ApiGatewaysDbContext context, IMd5Hash md5Hash, IConfiguration configuration, ILogger<SingInCommandHandler> logger)
         {
             _context = context;
             _md5Hash = md5Hash;

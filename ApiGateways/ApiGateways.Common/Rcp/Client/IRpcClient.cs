@@ -1,8 +1,10 @@
-﻿namespace Common.Rcp.Client
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Common.Rcp.Client
 {
     public interface IRpcClient
     {
-        string Call(string message);
-
+        Task<string> CallAsync(string message, CancellationToken cancellationToken);
     }
 }

@@ -1,13 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Common.Models.User;
+using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 
-namespace Pixel.Context
+namespace ApiGateways.Context
 {
-    public class ApplicationDbContext : DbContext
+    public class ApiGatewaysDbContext : DbContext
     {
         private readonly string _connectionString;
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApiGatewaysDbContext(DbContextOptions<ApiGatewaysDbContext> options) : base(options)
         {
             var npgsqlOptions = options.FindExtension<NpgsqlOptionsExtension>();
 
@@ -17,7 +18,7 @@ namespace Pixel.Context
             }
         }
 
-        public ApplicationDbContext(string connectionString)
+        public ApiGatewaysDbContext(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -29,5 +30,7 @@ namespace Pixel.Context
                 optionsBuilder.UseNpgsql(_connectionString);
             }
         }
+
+        public DbSet<Users> Users { get; set; }
     }
 }

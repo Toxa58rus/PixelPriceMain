@@ -1,17 +1,14 @@
 using ApiGateways.Context;
-using MediatR;
+using Common.Rcp;
+using Common.Rcp.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using Pixel.Dommain.Command;
-using System.Reflection;
-using Common.Rcp;
-using Common.Rcp.Server;
-using Microsoft.Extensions.Logging;
+using Pixel.Command;
+
 
 namespace Pixel
 {
@@ -30,20 +27,12 @@ namespace Pixel
             var connectionString = Configuration.GetConnectionString("Default");
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pixel", Version = "v1" });
-            });
-
-            services.AddMediatR(typeof(GetAllPixelsCommand).GetTypeInfo().Assembly);
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+                .AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
 
-            services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(new RpcOptions
-            {
-                Host = "localhost",
-                QueueName = "Pixel"
-            }));
+            var rpcOptions = new RpcOptions("Pixel");
+
+            services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new PixelCommandGroup()));
 
             services.AddLogging();
         }
@@ -54,8 +43,6 @@ namespace Pixel
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pixel v1"));
             }
 
             rpcServer.Start();

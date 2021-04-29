@@ -54,7 +54,7 @@ namespace ApiGateways
 
             services.AddMediatR(typeof(SingUpCommand).GetTypeInfo().Assembly);
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+                .AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
 
             services.AddTransient<IMd5Hash, Md5Hash>();
             services.AddLogging();

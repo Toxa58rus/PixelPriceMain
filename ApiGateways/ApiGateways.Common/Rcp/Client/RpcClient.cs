@@ -3,80 +3,86 @@ using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Concurrent;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Common.Rcp.Client
 {
     public class RpcClient : IRpcClient, IDisposable
     {
-        private readonly IConnection _connection;
+        private readonly string _queueName;
         private readonly IModel _channel;
-        private readonly string _replyQueueName;
+        private readonly string _replayQueueName;
         private readonly EventingBasicConsumer _consumer;
-        private readonly BlockingCollection<string> _respQueue;
-        private readonly IBasicProperties _selfProps;
-        private readonly string _correlationId;
-        private readonly string _serverQueueName;
+
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<string>>
+            _callbackMapper = new ConcurrentDictionary<string, TaskCompletionSource<string>>();
 
         public RpcClient(RpcOptions options)
         {
-            _respQueue = new BlockingCollection<string>();
+            _queueName = options.QueueName;
 
-            var factory = new ConnectionFactory { HostName = options.Host };
+            var factory = new ConnectionFactory()
+            {
+                HostName = options.Host,
+                UserName = options.UserName,
+                Password = options.Password
+            };
 
-            _connection = factory.CreateConnection();
-            _channel = _connection.CreateModel();
-            
-            _replyQueueName = _channel.QueueDeclare(
-                queue: options.QueueName,
-                durable: false,
-                exclusive: false,
-                autoDelete: false,
-                arguments: null);
+            var connection = factory.CreateConnection();
+            _channel = connection.CreateModel();
+            _replayQueueName = _channel.QueueDeclare().QueueName;
 
             _consumer = new EventingBasicConsumer(_channel);
-            _consumer.Received += ConsumerReceived;
-            _serverQueueName = options.QueueName;
-            _correlationId = "test"; //Guid.NewGuid().ToString();
-
-            _selfProps = _channel.CreateBasicProperties();
-            _selfProps.CorrelationId = _correlationId;
-            _selfProps.ReplyTo = _replyQueueName;
+            _consumer.Received += OnReceived;
         }
 
-        public string Call(string message)
+        public Task<string> CallAsync(string message, CancellationToken cancellationToken = default)
         {
+            var correlationId = Guid.NewGuid().ToString();
+            var tcs = new TaskCompletionSource<string>();
+            _callbackMapper.TryAdd(correlationId, tcs);
+
+            var props = _channel.CreateBasicProperties();
+            props.CorrelationId = correlationId;
+            props.ReplyTo = _replayQueueName;
+
             var messageBytes = Encoding.UTF8.GetBytes(message);
 
             _channel.BasicPublish(
                 exchange: string.Empty,
-                routingKey: _serverQueueName,
-                basicProperties: _selfProps,
-                body: messageBytes);
+                routingKey: _queueName,
+                props,
+                messageBytes);
 
             _channel.BasicConsume(
                 consumer: _consumer,
-                queue: _replyQueueName,
+                queue: _replayQueueName,
                 autoAck: true);
 
-            return _respQueue.Take();
+            cancellationToken.Register(() =>
+                _callbackMapper.TryRemove(correlationId, out _));
+
+            return tcs.Task;
         }
 
-        private void ConsumerReceived(object sender, BasicDeliverEventArgs e)
+        private void OnReceived(object model, BasicDeliverEventArgs eventArgs)
         {
-            var body = e.Body.ToArray();
-            var response = Encoding.UTF8.GetString(body);
-            
-            if (e.BasicProperties.CorrelationId == _correlationId)
-                _respQueue.Add(response);
-            
-            return;
+            var suchTaskExists =
+                _callbackMapper.TryRemove(eventArgs.BasicProperties.CorrelationId, out var tcs);
+
+            if (!suchTaskExists) return;
+
+            var body = eventArgs.Body.ToArray();
+            var responce = Encoding.UTF8.GetString(body);
+
+            tcs.TrySetResult(responce);
         }
 
         public void Dispose()
         {
-            _consumer.Received -= ConsumerReceived;
+            _consumer.Received -= OnReceived;
             _channel.Close();
-            _connection.Close();
         }
     }
 }

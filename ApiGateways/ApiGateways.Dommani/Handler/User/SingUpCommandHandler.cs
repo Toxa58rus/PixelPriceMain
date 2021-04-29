@@ -12,20 +12,20 @@ using System.Threading.Tasks;
 
 namespace ApiGateways.Dommain.Handler.User
 {
-    public class SingUpCommandHandler : IRequestHandler<SingUpCommand, Users>
+    public class SingUpCommandHandler : IRequestHandler<SingUpCommand, string>
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApiGatewaysDbContext _context;
         private readonly IMd5Hash _md5Hash;
         private readonly ILogger<SingUpCommandHandler> _logger;
 
-        public SingUpCommandHandler(ApplicationDbContext context, IMd5Hash md5Hash, ILogger<SingUpCommandHandler> logger)
+        public SingUpCommandHandler(ApiGatewaysDbContext context, IMd5Hash md5Hash, ILogger<SingUpCommandHandler> logger)
         {
             _context = context;
             _md5Hash = md5Hash;
             _logger = logger;
         }
 
-        public async Task<Users> Handle(SingUpCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(SingUpCommand request, CancellationToken cancellationToken)
         {
 
             if (request.Password != request.ConfirmPassword) return null;
@@ -40,7 +40,8 @@ namespace ApiGateways.Dommain.Handler.User
                 await tr.CommitAsync(cancellationToken);
 
                 _logger.LogInformation($"user: {userData.Id}, {userData.Email} has registered");
-                return userData;
+                
+                return "Ok";
             }
         }
 

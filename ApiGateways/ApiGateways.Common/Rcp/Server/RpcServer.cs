@@ -1,36 +1,42 @@
-﻿using Newtonsoft.Json;
-using NLog;
-using RabbitMQ.Client;
+﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using Common.Models.Pixels;
+using System.Threading.Tasks;
+using Common.Extensions;
+using Common.Models;
 
 namespace Common.Rcp.Server
 {
     public class RpcServer : IRpcServer, IDisposable
     {
-        private readonly IConnection _connection;
         private readonly IModel _channel;
-        private readonly EventingBasicConsumer _consumer;
         private readonly string _queueName;
+        private readonly CommandGroup _commands;
 
-        public RpcServer(RpcOptions options)
+        public RpcServer(RpcOptions options, CommandGroup commands)
         {
             _queueName = options.QueueName;
+            _commands = commands;
 
-            var factory = new ConnectionFactory { HostName = options.Host };
+            var factory = new ConnectionFactory
+            {
+                HostName = options.Host,
+                UserName = options.UserName,
+                Password = options.Password,
+                DispatchConsumersAsync = true
+            };
 
-            _connection = factory.CreateConnection();
-            _channel = _connection.CreateModel();
-            _consumer = new EventingBasicConsumer(_channel);
-            _consumer.Received += ConsumerReceived;
+            var connection = factory.CreateConnection();
+            _channel = connection.CreateModel();
         }
 
         public void Start()
         {
-            _channel.QueueDeclare(queue: _queueName,
+            _channel.QueueDeclare(
+                _queueName,
                 durable: false,
                 exclusive: false,
                 autoDelete: false,
@@ -41,51 +47,57 @@ namespace Common.Rcp.Server
                 prefetchCount: 1,
                 global: false);
 
-            _channel.BasicConsume(queue: _queueName,
+            var consumer = new AsyncEventingBasicConsumer(_channel);
+            consumer.Received += OnReceived;
+
+            _channel.BasicConsume(
+                queue: _queueName,
                 autoAck: false,
-                consumer: _consumer);
+                consumer);
         }
 
-        private void ConsumerReceived(object sender, BasicDeliverEventArgs e)
+        private async Task OnReceived(object model, BasicDeliverEventArgs eventArgs)
         {
-            var response = JsonConvert.SerializeObject(new List<Pixels>());
+            string responce = null;
 
-            var body = e.Body.ToArray();
-            var props = e.BasicProperties;
-            var replyProps = _channel.CreateBasicProperties();
-
-            replyProps.CorrelationId = props.CorrelationId;
+            var body = eventArgs.Body.ToArray();
+            var props = eventArgs.BasicProperties;
+            var replayProps = _channel.CreateBasicProperties();
+            replayProps.CorrelationId = props.CorrelationId;
 
             try
             {
                 var message = Encoding.UTF8.GetString(body);
+                var commandResponce = message.DeserializeToObject<CommandResponce>();
+                
+                var command = _commands.FindCommand(commandResponce.CommandName);
 
-                // тут бахаем обработку команд
-
+                if (command != null)
+                {
+                    responce = await command.Execute(commandResponce.Value);
+                }
             }
             catch (Exception ex)
             {
-                response = "";
+                responce = string.Empty;
             }
             finally
             {
-                var responceBytes = Encoding.UTF8.GetBytes(response);
-                
-                _channel.BasicPublish(
-                    exchange: "",
-                    routingKey: _queueName,
-                    basicProperties: replyProps,
-                    body: responceBytes);
+                var responceByte = Encoding.UTF8.GetBytes(responce);
 
-                _channel.BasicAck(deliveryTag: e.DeliveryTag, multiple: false);
+                _channel.BasicPublish(
+                    exchange: string.Empty,
+                    routingKey: props.ReplyTo,
+                    replayProps,
+                    responceByte);
+
+                _channel.BasicAck(eventArgs.DeliveryTag, multiple: false);
             }
         }
 
         public void Dispose()
         {
-            _consumer.Received += ConsumerReceived; 
             _channel.Dispose();
-            _connection.Dispose();
         }
     }
 }
