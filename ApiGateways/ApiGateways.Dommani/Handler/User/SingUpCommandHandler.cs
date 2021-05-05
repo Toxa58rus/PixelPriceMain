@@ -1,5 +1,6 @@
 ﻿using ApiGateways.Context;
 using ApiGateways.Dommain.Command.User;
+using ApiGateways.Service.CommandService.Pixel;
 using ApiGateways.Service.Security;
 using Common.Models.User;
 using MediatR;
@@ -17,12 +18,18 @@ namespace ApiGateways.Dommain.Handler.User
         private readonly ApiGatewaysDbContext _context;
         private readonly IMd5Hash _md5Hash;
         private readonly ILogger<SingUpCommandHandler> _logger;
+        private readonly IPixelServiceCommand _pixelCommandService;
 
-        public SingUpCommandHandler(ApiGatewaysDbContext context, IMd5Hash md5Hash, ILogger<SingUpCommandHandler> logger)
+        public SingUpCommandHandler(
+            ApiGatewaysDbContext context,
+            IMd5Hash md5Hash,
+            IPixelServiceCommand pixelCommandService,
+            ILogger<SingUpCommandHandler> logger)
         {
             _context = context;
             _md5Hash = md5Hash;
             _logger = logger;
+            _pixelCommandService = pixelCommandService;
         }
 
         public async Task<string> Handle(SingUpCommand request, CancellationToken cancellationToken)
@@ -38,9 +45,10 @@ namespace ApiGateways.Dommain.Handler.User
                 await _context.SaveChangesAsync(cancellationToken);
 
                 await tr.CommitAsync(cancellationToken);
+                await _pixelCommandService.CreateUserPixelGroup(userData.Id, "Default user group", true);
 
                 _logger.LogInformation($"user: {userData.Id}, {userData.Email} has registered");
-                
+
                 return "Ok";
             }
         }

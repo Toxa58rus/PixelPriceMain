@@ -1,12 +1,10 @@
-﻿using RabbitMQ.Client;
+﻿using Common.Extensions;
+using Common.Models;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Common.Extensions;
-using Common.Models;
 
 namespace Common.Rcp.Server
 {
@@ -69,7 +67,7 @@ namespace Common.Rcp.Server
             {
                 var message = Encoding.UTF8.GetString(body);
                 var commandResponce = message.DeserializeToObject<CommandResponce>();
-                
+
                 var command = _commands.FindCommand(commandResponce.CommandName);
 
                 if (command != null)

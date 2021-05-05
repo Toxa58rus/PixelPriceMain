@@ -1,16 +1,15 @@
 ﻿using ApiGateways.Dommain.Command.Pixels;
+using Common.Extensions;
+using Common.Models;
 using Common.Rcp;
 using Common.Rcp.Client;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Common.Extensions;
 using PixelsData = Common.Models.Pixels.Pixels;
-using Common.Models;
 
 namespace ApiGateways.Dommain.Handler.Pixels
 {

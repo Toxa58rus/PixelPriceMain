@@ -44,5 +44,7 @@ namespace Pixel.Context
         }
 
         public DbSet<Pixels> Pixels { get; set; }
+        public DbSet<PixelGroup> PixelGroup { get; set; }
+        public DbSet<PixelColor> PixelColor { get; set; }
     }
 }

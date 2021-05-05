@@ -28,9 +28,12 @@ namespace Pixel.Command
 
         private List<ServiceCommand> CreateDefaultDommand()
         {
-            return new List<ServiceCommand>
+            return new()
             {
-                new GetAllPixelsCommand()
+                new GetAllPixelsCommand(),
+                new CreatePixelGroupCommand(),
+                new ChangePixelGroupCommand(),
+                new RemovePixelGroupCommand()
             };
         }
     }

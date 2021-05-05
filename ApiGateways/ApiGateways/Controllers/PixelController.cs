@@ -8,12 +8,25 @@ using System.Threading.Tasks;
 namespace ApiGateways.Controllers
 {
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [Route("[controller]/[action]")]
     public class PixelController : BaseController
     {
         [HttpGet]
         [AllowAnonymous]
-        public async Task<List<Pixels>> GetAllPixels() => await Mediator.Send(new GetAllPixelsCommand());
+        public async Task<List<Pixels>> GetAllPixels() => 
+            await Mediator.Send(new GetAllPixelsCommand());
+
+        [HttpPost]
+        public async Task<PixelGroup> CreatePixelGroup([FromBody]CreatePixelGroupCommand command) => 
+            await Mediator.Send(command);
+
+        [HttpPost]
+        public async Task<List<Pixels>> ChangerPixelGroup([FromBody] ChangerPixelGroupCommand command) =>
+            await Mediator.Send(command);
+
+        [HttpDelete]
+        public async Task<bool> RemovePixeGrpup([FromBody] RemovePixeGrpupCommand command) =>
+            await Mediator.Send(command);
     }
 }

@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
+using ApiGateways.Service.CommandService.Pixel;
 
 namespace ApiGateways
 {
@@ -57,6 +58,7 @@ namespace ApiGateways
                 .AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
 
             services.AddTransient<IMd5Hash, Md5Hash>();
+            services.AddTransient<IPixelServiceCommand, PixelServiceCommand>();
             services.AddLogging();
         }
 
