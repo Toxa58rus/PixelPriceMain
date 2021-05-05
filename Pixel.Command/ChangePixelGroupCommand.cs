@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Pixel.Command
 {
-    public class ChangerPixelGroup : ServiceCommand
+    public class ChangePixelGroupCommand : ServiceCommand
     {
         public override string Name => "ChangerPixelGroup";
 
