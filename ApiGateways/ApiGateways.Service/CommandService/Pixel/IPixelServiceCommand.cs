@@ -9,8 +9,8 @@ namespace ApiGateways.Service.CommandService.Pixel
         Task<PixelGroup> CreateUserPixelGroup(string userId, string name, bool isDefault = false);
         Task<bool> RemovePixelGroup(string id, string groupId);
         Task<List<Pixels>> ChangerPixelGroup(List<Pixels> pixels, string groupId);
-        Task<string> ChangerPixelsOwner(List<Pixels> pixels, string userId);
-        Task<string> ChangerPixelGroupOwner(List<PixelGroup> groups, string userId);
-        Task<PixelColor> ChangerPixelColor(List<Pixels> pixels, string color);
+        Task<List<Pixels>> ChangerPixelsOwner(List<Pixels> pixels, string userId);
+        Task<List<PixelGroup>> ChangerPixelGroupOwner(List<PixelGroup> groups, string userId);
+        Task<List<PixelColor>> ChangerPixelColor(List<Pixels> pixels, string color);
     }
 }

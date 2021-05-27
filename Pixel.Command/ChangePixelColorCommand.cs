@@ -19,6 +19,7 @@ namespace Pixel.Command
             await using var context = new PixelDbContext();
 
             var value = jsonValue.ToString().DeserializeToObject<ChangePixelColorResponceModel>();
+            var result = new List<PixelColor>();
 
             foreach (var item in value.Pixels)
             {
@@ -30,9 +31,10 @@ namespace Pixel.Command
                 };
                 await context.PixelColor.AddAsync(pixelColor);
                 await context.SaveChangesAsync();
+                result.Add(pixelColor);
             }
 
-            return value.ToJson();
+            return result.ToJson();
         }
     }
 }

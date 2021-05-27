@@ -30,15 +30,15 @@ namespace ApiGateways.Controllers
             await Mediator.Send(command);
 
         [HttpPost]
-        public async Task<string> ChangerPixelsOwner([FromBody] ChangerPixelsOwnerCommand command) =>
+        public async Task<List<Pixels>> ChangerPixelsOwner([FromBody] ChangerPixelsOwnerCommand command) =>
             await Mediator.Send(command);
 
         [HttpPost]
-        public async Task<string> ChangerPixelGroupOwner([FromBody] ChangerPixelGroupOwnerCommand command) =>
+        public async Task<List<PixelGroup>> ChangerPixelGroupOwner([FromBody] ChangerPixelGroupOwnerCommand command) =>
             await Mediator.Send(command);
 
         [HttpPost]
-        public async Task<PixelColor> ChangerPixelColor([FromBody] ChangerPixelColorCommand command) =>
+        public async Task<List<PixelColor>> ChangerPixelColor([FromBody] ChangerPixelColorCommand command) =>
             await Mediator.Send(command);
     }
 }

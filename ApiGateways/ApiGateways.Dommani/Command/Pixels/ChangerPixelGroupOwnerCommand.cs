@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ApiGateways.Dommain.Command.Pixels
 {
 
-    public class ChangerPixelGroupOwnerCommand : IRequest<string>
+    public class ChangerPixelGroupOwnerCommand : IRequest<List<PixelGroup>>
     {
         public List<PixelGroup> Groups { get; set; }
         public string UserId { get; set; }

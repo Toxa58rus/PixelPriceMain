@@ -59,7 +59,7 @@ namespace ApiGateways.Service.CommandService.Pixel
             return await SendCommandToServer<List<Pixels>>(command);
         }
 
-        public async Task<string> ChangerPixelsOwner(List<Pixels> pixels, string userId)
+        public async Task<List<Pixels>> ChangerPixelsOwner(List<Pixels> pixels, string userId)
         {
             var command = new CommandResponce
             {
@@ -70,10 +70,10 @@ namespace ApiGateways.Service.CommandService.Pixel
                     UserId = userId
                 }
             };
-            return await SendCommandToServer<string>(command);
+            return await SendCommandToServer<List<Pixels>>(command);
         }
 
-        public async Task<string> ChangerPixelGroupOwner(List<PixelGroup> groups, string userId)
+        public async Task<List<PixelGroup>> ChangerPixelGroupOwner(List<PixelGroup> groups, string userId)
         {
             var command = new CommandResponce
             {
@@ -84,10 +84,10 @@ namespace ApiGateways.Service.CommandService.Pixel
                     UserId = userId
                 }
             };
-            return await SendCommandToServer<string>(command);
+            return await SendCommandToServer<List<PixelGroup>>(command);
         }
 
-        public async Task<PixelColor> ChangerPixelColor(List<Pixels> pixels, string color)
+        public async Task<List<PixelColor>> ChangerPixelColor(List<Pixels> pixels, string color)
         {
             var command = new CommandResponce
             {
@@ -98,7 +98,7 @@ namespace ApiGateways.Service.CommandService.Pixel
                     Color = color,
                 }
             };
-            return await SendCommandToServer<PixelColor>(command);
+            return await SendCommandToServer<List<PixelColor>>(command);
         }
 
 

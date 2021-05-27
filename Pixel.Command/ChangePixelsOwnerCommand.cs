@@ -20,6 +20,7 @@ namespace Pixel.Command
             await using var context = new PixelDbContext();
 
             var value = jsonValue.ToString().DeserializeToObject<ChangePixelsOwnerResponceModel>();
+            var result = new List<Pixels>();
 
 
             foreach (var item in value.Pixels)
@@ -28,9 +29,9 @@ namespace Pixel.Command
                 pixel.UserId = value.UserId;
 
                 await context.SaveChangesAsync();
+                result.Add(pixel);
             }
-            var result = "Владалец пикселей изменен";
-
+       
             return result.ToJson();
         }
     }

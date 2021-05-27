@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ApiGateways.Dommain.Handler.Pixels
 {
-    public class ChangerPixelColorCommandHandler : IRequestHandler<ChangerPixelColorCommand, PixelColor>
+    public class ChangerPixelColorCommandHandler : IRequestHandler<ChangerPixelColorCommand, List<PixelColor>>
     {
         private readonly IPixelServiceCommand _pixelServiceCommand;
 
@@ -20,7 +20,7 @@ namespace ApiGateways.Dommain.Handler.Pixels
             _pixelServiceCommand = pixelServiceCommand;
         }
 
-        public async Task<PixelColor> Handle(ChangerPixelColorCommand request, CancellationToken cancellationToken) =>
+        public async Task<List<PixelColor>> Handle(ChangerPixelColorCommand request, CancellationToken cancellationToken) =>
             await _pixelServiceCommand.ChangerPixelColor(request.Pixels, request.Color);
     }
 }
