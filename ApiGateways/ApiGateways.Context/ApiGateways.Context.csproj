@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApiGateways.Common\ApiGateways.Common.csproj" />
+    <ProjectReference Include="..\ApiGateways.Common\Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
 using ApiGateways.Context;
-using ApiGateways.Domman.Command;
+using ApiGateways.Dommain.Command.User;
 using ApiGateways.Service.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
+using ApiGateways.Service.CommandService.Pixel;
 
 namespace ApiGateways
 {
@@ -25,7 +26,6 @@ namespace ApiGateways
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("Default");
@@ -55,12 +55,13 @@ namespace ApiGateways
 
             services.AddMediatR(typeof(SingUpCommand).GetTypeInfo().Assembly);
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+                .AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
 
             services.AddTransient<IMd5Hash, Md5Hash>();
+            services.AddTransient<IPixelServiceCommand, PixelServiceCommand>();
+            services.AddLogging();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -71,11 +72,8 @@ namespace ApiGateways
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

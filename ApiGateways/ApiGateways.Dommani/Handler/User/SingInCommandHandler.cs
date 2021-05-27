@@ -1,10 +1,11 @@
-﻿using ApiGateways.Common.Models.User;
-using ApiGateways.Context;
-using ApiGateways.Domman.Command;
+﻿using ApiGateways.Context;
+using ApiGateways.Dommain.Command.User;
 using ApiGateways.Service.Security;
+using Common.Models.User;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -14,19 +15,21 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ApiGateways.Domman.Handler
+namespace ApiGateways.Dommain.Handler.User
 {
     public class SingInCommandHandler : IRequestHandler<SingInCommand, UserToken>
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApiGatewaysDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IMd5Hash _md5Hash;
+        private readonly ILogger<SingInCommandHandler> _logger;
 
-        public SingInCommandHandler(ApplicationDbContext context, IMd5Hash md5Hash, IConfiguration configuration)
+        public SingInCommandHandler(ApiGatewaysDbContext context, IMd5Hash md5Hash, IConfiguration configuration, ILogger<SingInCommandHandler> logger)
         {
             _context = context;
             _md5Hash = md5Hash;
             _configuration = configuration;
+            _logger = logger;
         }
 
         public async Task<UserToken> Handle(SingInCommand request, CancellationToken cancellationToken)
@@ -48,6 +51,8 @@ namespace ApiGateways.Domman.Handler
                     SecurityAlgorithms.HmacSha256));
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            _logger?.LogWarning($"user: {request.Email} login");
 
             return new UserToken
             {

@@ -1,28 +1,38 @@
-﻿using ApiGateways.Common.Models.User;
-using ApiGateways.Context;
-using ApiGateways.Domman.Command;
+﻿using ApiGateways.Context;
+using ApiGateways.Dommain.Command.User;
+using ApiGateways.Service.CommandService.Pixel;
 using ApiGateways.Service.Security;
+using Common.Models.User;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ApiGateways.Domman.Handler
+namespace ApiGateways.Dommain.Handler.User
 {
-    public class SingUpCommandHandler : IRequestHandler<SingUpCommand, Users>
+    public class SingUpCommandHandler : IRequestHandler<SingUpCommand, string>
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApiGatewaysDbContext _context;
         private readonly IMd5Hash _md5Hash;
+        private readonly ILogger<SingUpCommandHandler> _logger;
+        private readonly IPixelServiceCommand _pixelCommandService;
 
-        public SingUpCommandHandler(ApplicationDbContext context, IMd5Hash md5Hash)
+        public SingUpCommandHandler(
+            ApiGatewaysDbContext context,
+            IMd5Hash md5Hash,
+            IPixelServiceCommand pixelCommandService,
+            ILogger<SingUpCommandHandler> logger)
         {
             _context = context;
             _md5Hash = md5Hash;
+            _logger = logger;
+            _pixelCommandService = pixelCommandService;
         }
 
-        public async Task<Users> Handle(SingUpCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(SingUpCommand request, CancellationToken cancellationToken)
         {
 
             if (request.Password != request.ConfirmPassword) return null;
@@ -35,8 +45,11 @@ namespace ApiGateways.Domman.Handler
                 await _context.SaveChangesAsync(cancellationToken);
 
                 await tr.CommitAsync(cancellationToken);
+                await _pixelCommandService.CreateUserPixelGroup(userData.Id, "Default user group", true);
 
-                return userData;
+                _logger.LogInformation($"user: {userData.Id}, {userData.Email} has registered");
+
+                return "Ok";
             }
         }
 

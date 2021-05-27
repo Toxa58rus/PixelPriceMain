@@ -1,9 +1,9 @@
-﻿using ApiGateways.Common.Models.User;
+﻿using Common.Models.User;
 using MediatR;
 
-namespace ApiGateways.Domman.Command
+namespace ApiGateways.Dommain.Command.User
 {
-    public class SingUpCommand : IRequest<Users>
+    public class SingUpCommand : IRequest<string>
     {
         public string UserName { get; set; }
         public string Email { get; set; }

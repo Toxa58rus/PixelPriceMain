@@ -1,14 +1,14 @@
-﻿using ApiGateways.Common.Models.User;
+﻿using Common.Models.User;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 
 namespace ApiGateways.Context
 {
-    public class ApplicationDbContext : DbContext
+    public class ApiGatewaysDbContext : DbContext
     {
         private readonly string _connectionString;
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApiGatewaysDbContext(DbContextOptions<ApiGatewaysDbContext> options) : base(options)
         {
             var npgsqlOptions = options.FindExtension<NpgsqlOptionsExtension>();
 
@@ -18,7 +18,7 @@ namespace ApiGateways.Context
             }
         }
 
-        public ApplicationDbContext(string connectionString)
+        public ApiGatewaysDbContext(string connectionString)
         {
             _connectionString = connectionString;
         }

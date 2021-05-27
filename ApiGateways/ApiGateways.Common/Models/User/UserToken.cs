@@ -1,4 +1,4 @@
-﻿namespace ApiGateways.Common.Models.User
+﻿namespace Common.Models.User
 {
     public class UserToken
     {
