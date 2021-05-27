@@ -28,5 +28,17 @@ namespace ApiGateways.Controllers
         [HttpDelete]
         public async Task<bool> RemovePixeGrpup([FromBody] RemovePixeGrpupCommand command) =>
             await Mediator.Send(command);
+
+        [HttpPost]
+        public async Task<string> ChangerPixelsOwner([FromBody] ChangerPixelsOwnerCommand command) =>
+            await Mediator.Send(command);
+
+        [HttpPost]
+        public async Task<string> ChangerPixelGroupOwner([FromBody] ChangerPixelGroupOwnerCommand command) =>
+            await Mediator.Send(command);
+
+        [HttpPost]
+        public async Task<PixelColor> ChangerPixelColor([FromBody] ChangerPixelColorCommand command) =>
+            await Mediator.Send(command);
     }
 }
