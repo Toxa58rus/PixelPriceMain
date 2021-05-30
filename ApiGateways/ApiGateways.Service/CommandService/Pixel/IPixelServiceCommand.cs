@@ -11,6 +11,6 @@ namespace ApiGateways.Service.CommandService.Pixel
         Task<List<Pixels>> ChangerPixelGroup(List<Pixels> pixels, string groupId);
         Task<List<Pixels>> ChangerPixelsOwner(List<Pixels> pixels, string userId);
         Task<List<PixelGroup>> ChangerPixelGroupOwner(List<PixelGroup> groups, string userId);
-        Task<List<PixelColor>> ChangerPixelColor(List<Pixels> pixels, string color);
+        Task<List<PixelColorReslutModel>> ChangerPixelColor(List<Pixels> pixels, string color);
     }
 }

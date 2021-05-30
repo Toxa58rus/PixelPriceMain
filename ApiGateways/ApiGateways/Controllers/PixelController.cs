@@ -38,7 +38,7 @@ namespace ApiGateways.Controllers
             await Mediator.Send(command);
 
         [HttpPost]
-        public async Task<List<PixelColor>> ChangerPixelColor([FromBody] ChangerPixelColorCommand command) =>
+        public async Task<List<PixelColorReslutModel>> ChangerPixelColor([FromBody] ChangerPixelColorCommand command) =>
             await Mediator.Send(command);
     }
 }

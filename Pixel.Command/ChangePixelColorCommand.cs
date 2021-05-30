@@ -19,7 +19,7 @@ namespace Pixel.Command
             await using var context = new PixelDbContext();
 
             var value = jsonValue.ToString().DeserializeToObject<ChangePixelColorResponceModel>();
-            var result = new List<PixelColor>();
+            var result = new List<PixelColorReslutModel>();
 
             foreach (var item in value.Pixels)
             {
@@ -31,8 +31,16 @@ namespace Pixel.Command
                 };
                 await context.PixelColor.AddAsync(pixelColor);
                 await context.SaveChangesAsync();
-                result.Add(pixelColor);
+
+                var resultPixel = new PixelColorReslutModel 
+                {
+                    PixelId = item.Id,
+                    Color = context.PixelColor.Where(t => t.PixelId == item.Id).Select(t => t.Color).ToList()
+                };
+                result.Add(resultPixel);
             }
+
+           
 
             return result.ToJson();
         }
