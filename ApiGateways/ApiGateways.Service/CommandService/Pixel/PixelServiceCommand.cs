@@ -87,7 +87,7 @@ namespace ApiGateways.Service.CommandService.Pixel
             return await SendCommandToServer<List<PixelGroup>>(command);
         }
 
-        public async Task<List<PixelColor>> ChangerPixelColor(List<Pixels> pixels, string color)
+        public async Task<List<PixelColorReslutModel>> ChangerPixelColor(List<Pixels> pixels, string color)
         {
             var command = new CommandResponce
             {
@@ -98,7 +98,7 @@ namespace ApiGateways.Service.CommandService.Pixel
                     Color = color,
                 }
             };
-            return await SendCommandToServer<List<PixelColor>>(command);
+            return await SendCommandToServer<List<PixelColorReslutModel>>(command);
         }
 
 
