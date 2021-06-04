@@ -1,4 +1,5 @@
 using ApiGateways.Context;
+using Chat.Command;
 using Common.Rcp;
 using Common.Rcp.Server;
 using Microsoft.AspNetCore.Builder;
@@ -7,9 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Pixel.Command;
 
-namespace Pixel
+namespace Chat
 {
     public class Startup
     {
@@ -29,8 +29,8 @@ namespace Pixel
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
 
-            var rpcOptions = new RpcOptions("Pixel");
-            services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new PixelCommandGroup()));
+            var rpcOptions = new RpcOptions("Chat");
+            services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new ChatCommandGroup()));
             services.AddLogging();
         }
 

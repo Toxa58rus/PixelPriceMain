@@ -5,27 +5,34 @@ ApiGateways/.vs/
 
 ApiGateways/ApiGateways/bin/
 ApiGateways/ApiGateways/obj/
-
 ApiGateways/ApiGateways.Dommani/bin/
 ApiGateways/ApiGateways.Dommani/obj/
-
 ApiGateways/ApiGateways.Context/bin/
 ApiGateways/ApiGateways.Context/obj/
-
 ApiGateways/ApiGateways.Service/bin/
 ApiGateways/ApiGateways.Service/obj/
 
 Common/Common/bin/
 Common/Common/obj/
 
-Pixel/Pixel.Context/obj/
-Pixel/Pixel.Context/bin/
-
-Pixel/Pixel.Dommain/obj/
-Pixel/Pixel.Dommain/bin/
 
 Pixel/Pixel/obj/
 Pixel/Pixel/bin/
-
 Pixel/Pixel.Command/obj/
 Pixel/Pixel.Command/bin/
+Pixel/Pixel.Dommain/obj/
+Pixel/Pixel.Dommain/bin/
+Pixel/Pixel.Context/obj/
+Pixel/Pixel.Context/bin/
+
+Chat/Chat/obj/
+Chat/Chat/bin/
+Chat/Chat.Command/obj/
+Chat/Chat.Command/bin/
+Chat/Chat.Dommain/obj/
+Chat/Chat.Dommain/bin/
+Chat/Chat.Context/obj/
+Chat/Chat.Context/bin/
+
+Chat/Chat.Context/Chat.Context/obj
+Chat/Chat.Context/Chat.Context/bin

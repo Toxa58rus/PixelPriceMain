@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
+using ApiGateways.Service.CommandService.Chat;
 using ApiGateways.Service.CommandService.Pixel;
 
 namespace ApiGateways
@@ -59,11 +60,15 @@ namespace ApiGateways
 
             services.AddTransient<IMd5Hash, Md5Hash>();
             services.AddTransient<IPixelServiceCommand, PixelServiceCommand>();
+            services.AddTransient<IChatServiceCommand, ChatServiceCommand>();
             services.AddLogging();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseHttpsRedirection();
+            app.UseRouting();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -71,8 +76,6 @@ namespace ApiGateways
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiGateways v1"));
             }
 
-            app.UseHttpsRedirection();
-            app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

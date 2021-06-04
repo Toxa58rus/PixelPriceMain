@@ -31,15 +31,13 @@ namespace Pixel.Command
                 await context.PixelColor.AddAsync(pixelColor);
                 await context.SaveChangesAsync();
 
-                var resultPixel = new PixelColorReslutModel 
+                var resultPixel = new PixelColorReslutModel
                 {
                     PixelId = item.Id,
                     Color = context.PixelColor.Where(t => t.PixelId == item.Id).Select(t => t.Color).ToList()
                 };
                 result.Add(resultPixel);
             }
-
-           
 
             return result.ToJson();
         }

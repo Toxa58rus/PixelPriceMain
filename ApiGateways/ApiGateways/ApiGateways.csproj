@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Chat\Chat.Context\Chat.Context\Chat.Context.csproj" />
     <ProjectReference Include="..\ApiGateways.Context\ApiGateways.Context.csproj" />
     <ProjectReference Include="..\ApiGateways.Dommani\ApiGateways.Dommain.csproj" />
     <ProjectReference Include="..\ApiGateways.Service\ApiGateways.Service.csproj" />
