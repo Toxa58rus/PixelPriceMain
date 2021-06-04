@@ -25,10 +25,6 @@ namespace ApiGateways.Controllers
         public async Task<List<Pixels>> ChangerPixelGroup([FromBody] ChangerPixelGroupCommand command) =>
             await Mediator.Send(command);
 
-        [HttpDelete]
-        public async Task<bool> RemovePixeGrpup([FromBody] RemovePixeGrpupCommand command) =>
-            await Mediator.Send(command);
-
         [HttpPost]
         public async Task<List<Pixels>> ChangerPixelsOwner([FromBody] ChangerPixelsOwnerCommand command) =>
             await Mediator.Send(command);
@@ -39,6 +35,10 @@ namespace ApiGateways.Controllers
 
         [HttpPost]
         public async Task<List<PixelColorReslutModel>> ChangerPixelColor([FromBody] ChangerPixelColorCommand command) =>
+            await Mediator.Send(command);
+
+        [HttpDelete]
+        public async Task<bool> RemovePixeGrpup([FromBody] RemovePixeGrpupCommand command) =>
             await Mediator.Send(command);
     }
 }

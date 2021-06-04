@@ -18,14 +18,14 @@ ApiGateways/ApiGateways.Service/obj/
 ApiGateways/ApiGateways.Common/bin/
 ApiGateways/ApiGateways.Common/obj/
 
-Pixel.Context/obj/
-Pixel.Context/bin/
+Pixel/Pixel.Context/obj/
+Pixel/Pixel.Context/bin/
 
-Pixel.Dommain/obj/
-Pixel.Dommain/bin/
+Pixel/Pixel.Dommain/obj/
+Pixel/Pixel.Dommain/bin/
 
-Pixel/obj/
-Pixel/bin/
+Pixel/Pixel/obj/
+Pixel/Pixel/bin/
 
-Pixel.Command/obj/
-Pixel.Command/bin/
+Pixel/Pixel.Command/obj/
+Pixel/Pixel.Command/bin/
