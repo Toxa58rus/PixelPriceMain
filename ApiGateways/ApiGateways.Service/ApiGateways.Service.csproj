@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApiGateways.Common\Common.csproj" />
+    <ProjectReference Include="..\..\Common\Common\Common.csproj" />
   </ItemGroup>
 
 </Project>
