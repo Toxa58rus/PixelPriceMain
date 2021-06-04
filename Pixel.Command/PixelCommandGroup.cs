@@ -33,7 +33,10 @@ namespace Pixel.Command
                 new GetAllPixelsCommand(),
                 new CreatePixelGroupCommand(),
                 new ChangePixelGroupCommand(),
-                new RemovePixelGroupCommand()
+                new RemovePixelGroupCommand(),
+                new ChangePixelsOwnerCommand(),
+                new ChangePixelGroupOwnerCommand(),
+                new ChangePixelColorCommand()
             };
         }
     }

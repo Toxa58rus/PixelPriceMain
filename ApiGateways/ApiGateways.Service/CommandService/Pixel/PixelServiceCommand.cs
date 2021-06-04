@@ -59,6 +59,49 @@ namespace ApiGateways.Service.CommandService.Pixel
             return await SendCommandToServer<List<Pixels>>(command);
         }
 
+        public async Task<List<Pixels>> ChangerPixelsOwner(List<Pixels> pixels, string userId)
+        {
+            var command = new CommandResponce
+            {
+                CommandName = "ChangerPixelsOwner",
+                Value = new ChangePixelsOwnerResponceModel
+                {
+                    Pixels = pixels,
+                    UserId = userId
+                }
+            };
+            return await SendCommandToServer<List<Pixels>>(command);
+        }
+
+        public async Task<List<PixelGroup>> ChangerPixelGroupOwner(List<PixelGroup> groups, string userId)
+        {
+            var command = new CommandResponce
+            {
+                CommandName = "ChangerPixelGroupOwner",
+                Value = new ChangePixelGroupOwnerResponceModel
+                {
+                    Groups = groups,
+                    UserId = userId
+                }
+            };
+            return await SendCommandToServer<List<PixelGroup>>(command);
+        }
+
+        public async Task<List<PixelColorReslutModel>> ChangerPixelColor(List<Pixels> pixels, string color)
+        {
+            var command = new CommandResponce
+            {
+                CommandName = "ChangerPixelColor",
+                Value = new ChangePixelColorResponceModel
+                {
+                    Pixels = pixels,
+                    Color = color,
+                }
+            };
+            return await SendCommandToServer<List<PixelColorReslutModel>>(command);
+        }
+
+
         private async Task<T> SendCommandToServer<T>(CommandResponce command)
         {
             var responce = await _rpcClient.CallAsync(command.ToJson(), CancellationToken.None);

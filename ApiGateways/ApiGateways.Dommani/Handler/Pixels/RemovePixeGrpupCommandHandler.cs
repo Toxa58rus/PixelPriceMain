@@ -14,8 +14,8 @@ namespace ApiGateways.Dommain.Handler.Pixels
         {
             _pixelService = pixelService;
         }
-
+        //пустрая строка в группе
         public async Task<bool> Handle(RemovePixeGrpupCommand request, CancellationToken cancellationToken) =>
-            await _pixelService.RemovePixelGroup(request.Id);
+            await _pixelService.RemovePixelGroup(request.Id, request.GroupId);
     }
 }
