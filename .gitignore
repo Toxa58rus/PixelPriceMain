@@ -15,8 +15,8 @@ ApiGateways/ApiGateways.Context/obj/
 ApiGateways/ApiGateways.Service/bin/
 ApiGateways/ApiGateways.Service/obj/
 
-ApiGateways/ApiGateways.Common/bin/
-ApiGateways/ApiGateways.Common/obj/
+Common/Common/bin/
+Common/Common/obj/
 
 Pixel/Pixel.Context/obj/
 Pixel/Pixel.Context/bin/
