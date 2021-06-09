@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Models.Chat;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 
@@ -41,5 +42,7 @@ namespace Chat.Context
                 }
             }
         }
+        public DbSet<ChatRooms> ChatRooms { get; set; }
+        public DbSet<ChatMessages> ChatMessages { get; set; }
     }
 }

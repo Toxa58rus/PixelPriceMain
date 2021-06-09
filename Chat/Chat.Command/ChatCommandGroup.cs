@@ -31,7 +31,12 @@ namespace Chat.Command
         {
             return new()
             {
-                new CreateChatCommand()
+                new CreateChatCommand(),
+                new GetChatRoomCommand(),
+                new GetChatMessagesCommand(),
+                new SendChatMessageCommand(),
+                new EditChatMessageCommand(),
+                new DeleteChatMessageCommand()
             };
         }
     }
