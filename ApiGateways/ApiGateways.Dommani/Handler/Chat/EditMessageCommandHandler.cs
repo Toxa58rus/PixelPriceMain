@@ -17,6 +17,6 @@ namespace ApiGateways.Dommain.Handler.Chat
         }
 
         public async Task<ChatMessages> Handle(EditMessageCommand request, CancellationToken cancellationToken) =>
-            await _chatServiceCommand.EditMessage(request.MessageId, request.NewText);
+            await _chatServiceCommand.EditMessage(request.MessageId, request.Text, request.UserId);
     }
 }

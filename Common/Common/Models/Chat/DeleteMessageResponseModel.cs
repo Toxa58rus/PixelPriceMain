@@ -9,5 +9,6 @@ namespace Common.Models.Chat
     public class DeleteMessageResponseModel
     {
         public string MessageId { get; set; }
+        public string UserId { get; set; }
     }
 }

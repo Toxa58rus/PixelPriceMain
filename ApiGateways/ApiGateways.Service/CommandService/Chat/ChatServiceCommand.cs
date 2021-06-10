@@ -67,7 +67,7 @@ namespace ApiGateways.Service.CommandService.Chat
             return await SendCommandToServer<ChatMessages>(command);
         }
 
-        public async Task<ChatMessages> EditMessage(string messageId, string newText)
+        public async Task<ChatMessages> EditMessage(string messageId, string text, string userId)
         {
             var command = new CommandResponce
             {
@@ -75,13 +75,14 @@ namespace ApiGateways.Service.CommandService.Chat
                 Value = new EditMessageResponseModel()
                 {
                     MessageId = messageId,
-                    NewText = newText
+                    Text = text,
+                    UserId = userId
                 }
             };
             return await SendCommandToServer<ChatMessages>(command);
         }
 
-        public async Task<bool> DeleteMessage(string messageId)
+        public async Task<bool> DeleteMessage(string messageId, string userId)
         {
             var command = new CommandResponce
             {
@@ -89,6 +90,7 @@ namespace ApiGateways.Service.CommandService.Chat
                 Value = new DeleteMessageResponseModel()
                 {
                     MessageId = messageId,
+                    UserId = userId
                 }
             };
             return await SendCommandToServer<bool>(command);

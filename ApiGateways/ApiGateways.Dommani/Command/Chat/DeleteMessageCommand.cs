@@ -10,5 +10,6 @@ namespace ApiGateways.Dommain.Command.Chat
     public class DeleteMessageCommand : IRequest<bool>
     {
         public string MessageId { get; set; }
+        public string UserId { get; set; }
     }
 }

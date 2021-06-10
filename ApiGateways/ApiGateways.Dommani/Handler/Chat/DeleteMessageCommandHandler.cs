@@ -20,6 +20,6 @@ namespace ApiGateways.Dommain.Handler.Chat
         }
 
         public async Task<bool> Handle(DeleteMessageCommand request, CancellationToken cancellationToken) =>
-             await _chatServiceCommand.DeleteMessage(request.MessageId);
+             await _chatServiceCommand.DeleteMessage(request.MessageId, request.UserId);
     }
 }

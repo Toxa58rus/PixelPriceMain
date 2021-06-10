@@ -2,6 +2,7 @@
 using Common.Extensions;
 using Common.Models.Chat;
 using Common.Rcp;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Chat.Command
             await using var context = new ChatDbContext();
 
             var value = jsonValue.ToString().DeserializeToObject<GetChatMessagesResponseModel>();
-            var chatMessages = context.ChatMessages.Where(t => t.ChatId.Equals(value.ChatId)).ToList();
+            var chatMessages = context.ChatMessages.AsNoTracking().Where(t => t.ChatId.Equals(value.ChatId)).ToListAsync();
             return JsonConvert.SerializeObject(chatMessages);
         }
     }

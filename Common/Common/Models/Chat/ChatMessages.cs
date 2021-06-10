@@ -15,7 +15,7 @@ namespace Common.Models.Chat
             ChatId = chatId;
             UserId = userId;
             Message = message;
-            WriteDate = DateTime.Now;
+            WriteDate = DateTime.Now.ToLocalTime();
         }
 
         public string Id { get; set; }

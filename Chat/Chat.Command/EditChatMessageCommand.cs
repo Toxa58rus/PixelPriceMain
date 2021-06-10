@@ -19,9 +19,9 @@ namespace Chat.Command
             await using var context = new ChatDbContext();
 
             var value = jsonValue.ToString().DeserializeToObject<EditMessageResponseModel>();
-            var message = context.ChatMessages.FirstOrDefault(t => t.Id.Equals(value.MessageId));
-            message.Message = value.NewText;
-            message.EditDate = DateTime.Now;
+            var message = context.ChatMessages.FirstOrDefault(t => t.Id.Equals(value.MessageId) && t.UserId.Equals(value.UserId));
+            message.Message = value.Text;
+            message.EditDate = DateTime.Now.ToLocalTime();
             await context.SaveChangesAsync();
             return message.ToJson();
         }
