@@ -19,8 +19,11 @@ namespace Chat.Command
 
             var value = jsonValue.ToString().DeserializeToObject<DeleteMessageResponseModel>();
             var message = context.ChatMessages.AsNoTracking().FirstOrDefault(t => t.Id.Equals(value.MessageId) && t.UserId.Equals(value.UserId));
-            context.ChatMessages.Remove(message);
-            await context.SaveChangesAsync();
+            if (message != null)
+            {
+                context.ChatMessages.Remove(message);
+                await context.SaveChangesAsync();
+            }
             return true.ToJson();
         }
     }

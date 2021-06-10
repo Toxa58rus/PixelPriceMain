@@ -20,9 +20,12 @@ namespace Chat.Command
 
             var value = jsonValue.ToString().DeserializeToObject<EditMessageResponseModel>();
             var message = context.ChatMessages.FirstOrDefault(t => t.Id.Equals(value.MessageId) && t.UserId.Equals(value.UserId));
-            message.Message = value.Text;
-            message.EditDate = DateTime.Now.ToLocalTime();
-            await context.SaveChangesAsync();
+            if (message != null)
+            {
+                message.Message = value.Text;
+                message.EditDate = DateTime.Now.ToLocalTime();
+                await context.SaveChangesAsync();
+            }
             return message.ToJson();
         }
     }
