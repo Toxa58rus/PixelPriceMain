@@ -24,6 +24,7 @@ namespace Common.Models.Chat
         public string Message { get; set; }
         public DateTime WriteDate { get; set; }
         public DateTime EditDate { get; set; }
+        public bool Edit { get; set; }
 
     }
 }

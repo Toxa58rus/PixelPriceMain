@@ -24,6 +24,7 @@ namespace Chat.Command
             {
                 message.Message = value.Text;
                 message.EditDate = DateTime.Now.ToLocalTime();
+                message.Edit = true;
                 await context.SaveChangesAsync();
             }
             return message.ToJson();
