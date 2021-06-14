@@ -2,27 +2,28 @@
 using Common.Models;
 using Common.Rcp;
 using Common.Rcp.Client;
+using Microsoft.Extensions.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ApiGateways.Service.CommandService.Chat
+namespace ApiGateways.Service.CommandService.ImageParser
 {
-    public class ChatServiceCommand : IChatServiceCommand
+    public class ImageParserServiceCommand : IImageParserServiceCommand
     {
         private readonly RpcClient _rpcClient;
 
-        public ChatServiceCommand(IConfiguration configuration)
+        public ImageParserServiceCommand(IConfiguration configuration)
         {
-            var query = configuration["RpcServer:Querys:Chat"];
+            var query = configuration["RpcServer:Querys:ImageParser"];
             _rpcClient = new RpcClient(new RpcOptions(query));
         }
 
-        public async Task<string> CreateChatCommand()
+        public async Task<string> ParceImagetoBitmap(string baseString)
         {
             var command = new CommandResponce
             {
-                CommandName = "CreateChat",
-                Value = "test string"
+                CommandName = "ParceImageToBitmap",
+                Value = baseString
             };
             return await SendCommandToServer<string>(command);
         }

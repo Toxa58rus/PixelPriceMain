@@ -3,6 +3,7 @@ using Common.Models;
 using Common.Models.Pixels;
 using Common.Rcp;
 using Common.Rcp.Client;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,9 +14,10 @@ namespace ApiGateways.Service.CommandService.Pixel
     {
         private readonly RpcClient _rpcClient;
 
-        public PixelServiceCommand()
+        public PixelServiceCommand(IConfiguration configuration)
         {
-            _rpcClient = new RpcClient(new RpcOptions("Pixel"));
+            var query = configuration["RpcServer:Querys:Pixel"];
+            _rpcClient = new RpcClient(new RpcOptions(query));
         }
 
         public async Task<PixelGroup> CreateUserPixelGroup(string userId, string name, bool isDefault = false)

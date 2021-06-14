@@ -70,6 +70,12 @@
         "ApiGateways": {},
         "Chat": {}
       }
+    },
+    "ApiGateways + ImageParser": {
+      "Projects": {
+        "ApiGateways": {},
+        "ImageParser": {}
+      }
     }
   }
 }

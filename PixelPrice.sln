@@ -27,11 +27,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common\Com
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chat", "Chat", "{1E9A89F3-B45B-4ABC-B117-2008FD89B3A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat", "Chat\Chat\Chat.csproj", "{32EC314A-8EA4-456C-BA5A-3E59A3803C1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat", "Chat\Chat\Chat.csproj", "{32EC314A-8EA4-456C-BA5A-3E59A3803C1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat.Command", "Chat\Chat.Command\Chat.Command.csproj", "{DA845AC0-3A07-40CA-8491-1213C1E0FDBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Command", "Chat\Chat.Command\Chat.Command.csproj", "{DA845AC0-3A07-40CA-8491-1213C1E0FDBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat.Context", "Chat\Chat.Context\Chat.Context\Chat.Context.csproj", "{87931165-E41F-4B06-A4F3-BA12E98FF1A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Context", "Chat\Chat.Context\Chat.Context\Chat.Context.csproj", "{87931165-E41F-4B06-A4F3-BA12E98FF1A9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImageParser", "ImageParser", "{D973E55C-0AF4-45D5-BC3F-F38027AF98DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageParser", "ImageParser\ImageParser\ImageParser.csproj", "{C5BBE46C-6BFC-4533-9D44-C7BBEA213910}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageParser.Command", "ImageParser\ImageParser.Command\ImageParser.Command\ImageParser.Command.csproj", "{B251316F-BFF1-4BC9-A717-A384DF889CBB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +89,14 @@ Global
 		{87931165-E41F-4B06-A4F3-BA12E98FF1A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87931165-E41F-4B06-A4F3-BA12E98FF1A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87931165-E41F-4B06-A4F3-BA12E98FF1A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5BBE46C-6BFC-4533-9D44-C7BBEA213910}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5BBE46C-6BFC-4533-9D44-C7BBEA213910}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5BBE46C-6BFC-4533-9D44-C7BBEA213910}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5BBE46C-6BFC-4533-9D44-C7BBEA213910}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B251316F-BFF1-4BC9-A717-A384DF889CBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B251316F-BFF1-4BC9-A717-A384DF889CBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B251316F-BFF1-4BC9-A717-A384DF889CBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B251316F-BFF1-4BC9-A717-A384DF889CBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +113,8 @@ Global
 		{32EC314A-8EA4-456C-BA5A-3E59A3803C1D} = {1E9A89F3-B45B-4ABC-B117-2008FD89B3A9}
 		{DA845AC0-3A07-40CA-8491-1213C1E0FDBF} = {1E9A89F3-B45B-4ABC-B117-2008FD89B3A9}
 		{87931165-E41F-4B06-A4F3-BA12E98FF1A9} = {1E9A89F3-B45B-4ABC-B117-2008FD89B3A9}
+		{C5BBE46C-6BFC-4533-9D44-C7BBEA213910} = {D973E55C-0AF4-45D5-BC3F-F38027AF98DC}
+		{B251316F-BFF1-4BC9-A717-A384DF889CBB} = {D973E55C-0AF4-45D5-BC3F-F38027AF98DC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BC67593A-7330-4550-AB55-C9896BBF5735}

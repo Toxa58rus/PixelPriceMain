@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ApiGateways.Controllers
 {
     [ApiController]
-    //[Authorize]
+    [Authorize]
     [Route("[controller]/[action]")]
     public class PixelController : BaseController
     {

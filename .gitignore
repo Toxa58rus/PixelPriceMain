@@ -36,3 +36,11 @@ Chat/Chat.Context/bin/
 
 Chat/Chat.Context/Chat.Context/obj
 Chat/Chat.Context/Chat.Context/bin
+
+ImageParser/ImageParser/obj/
+ImageParser/ImageParser/bin/
+ImageParser/ImageParser.Command/mageParser.Command/obj/
+ImageParser/ImageParser.Command/mageParser.Command/bin/
+
+ImageParser/ImageParser.Command/ImageParser.Command/obj/
+ImageParser/ImageParser.Command/ImageParser.Command/bin/

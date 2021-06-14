@@ -1,12 +1,32 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Common.Rcp
 {
-    public abstract class CommandGroup
+    public class CommandGroup
     {
-        public abstract List<ServiceCommand> GetCommands();
-        public abstract void AddCommand(ServiceCommand command);
-        public abstract void RemoveCommand(string commandName);
-        public abstract ServiceCommand FindCommand(string commandName);
+        private List<ServiceCommand> _commands;
+
+        public CommandGroup()
+        {
+        }
+
+        public CommandGroup(List<ServiceCommand> commands)
+        {
+            _commands = commands;
+        }
+
+        public void AddCommand(ServiceCommand command) => _commands.Add(command);
+
+        public ServiceCommand FindCommand(string commandName) => _commands.FirstOrDefault(s => s.Name == commandName);
+
+        public List<ServiceCommand> GetCommands() => _commands;
+
+        public void RemoveCommand(string commandName) => _commands.RemoveAll(s => s.Name == commandName);
+
+        public void SetDefaultCommands(List<ServiceCommand> commands) 
+        {
+            _commands = commands;
+        }
     }
 }
