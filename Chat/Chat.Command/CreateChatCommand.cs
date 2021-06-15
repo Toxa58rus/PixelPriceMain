@@ -10,16 +10,17 @@ using System.Threading.Tasks;
 
 namespace Chat.Command
 {
-    public class GetChatRoomCommand : ServiceCommand
+    public class CreateChatCommand : ServiceCommand
     {
-        public override string Name => "GetChat";
+        public override string Name => "CreateChat";
 
         public override async Task<string> Execute(object jsonValue)
         {
             await using var context = new ChatDbContext();
             var value = jsonValue.ToString().DeserializeToObject<ChatRooms>();
-            var roomId = context.ChatRooms.FirstOrDefault(t => t.Id.Equals(value.Id))?.Id ?? null;
-            return roomId.ToJson();
+            await context.ChatRooms.AddAsync(value);
+            await context.SaveChangesAsync();
+            return value.ToJson();
         }
     }
 }
