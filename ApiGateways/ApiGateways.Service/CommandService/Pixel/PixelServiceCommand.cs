@@ -101,7 +101,6 @@ namespace ApiGateways.Service.CommandService.Pixel
             return await SendCommandToServer<List<PixelColorReslutModel>>(command);
         }
 
-
         private async Task<T> SendCommandToServer<T>(CommandResponce command)
         {
             var responce = await _rpcClient.CallAsync(command.ToJson(), CancellationToken.None);

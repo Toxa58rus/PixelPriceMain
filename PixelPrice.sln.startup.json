@@ -57,6 +57,19 @@
         "ApiGateways": {},
         "Pixel": {}
       }
+    },
+    "ApiGateways + Pixel + Chat": {
+      "Projects": {
+        "ApiGateways": {},
+        "Pixel": {},
+        "Chat": {}
+      }
+    },
+    "ApiGateways + Chat": {
+      "Projects": {
+        "ApiGateways": {},
+        "Chat": {}
+      }
     }
   }
 }
