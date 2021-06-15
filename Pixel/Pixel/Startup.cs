@@ -24,12 +24,13 @@ namespace Pixel
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("Default");
+            var queryName = Configuration["RpcServer:QueryName"];
 
             services.AddControllers();
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
 
-            var rpcOptions = new RpcOptions("Pixel");
+            var rpcOptions = new RpcOptions(queryName);
             services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new PixelCommandGroup()));
             services.AddLogging();
         }

@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Text;
 using ApiGateways.Service.CommandService.Chat;
 using ApiGateways.Service.CommandService.Pixel;
+using ApiGateways.Service.CommandService.ImageParser;
 
 namespace ApiGateways
 {
@@ -61,6 +62,7 @@ namespace ApiGateways
             services.AddTransient<IMd5Hash, Md5Hash>();
             services.AddTransient<IPixelServiceCommand, PixelServiceCommand>();
             services.AddTransient<IChatServiceCommand, ChatServiceCommand>();
+            services.AddTransient<IImageParserServiceCommand, ImageParserServiceCommand>();
             services.AddLogging();
         }
 

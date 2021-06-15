@@ -13,9 +13,10 @@ namespace ApiGateways.Service.CommandService.Chat
     {
         private readonly RpcClient _rpcClient;
 
-        public ChatServiceCommand()
+        public ChatServiceCommand(IConfiguration configuration)
         {
-            _rpcClient = new RpcClient(new RpcOptions("Chat"));
+            var query = configuration["RpcServer:Querys:Chat"];
+            _rpcClient = new RpcClient(new RpcOptions(query));
         }
 
         public async Task<string> CreateChatCommand()

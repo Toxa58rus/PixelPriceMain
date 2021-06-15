@@ -1,15 +1,13 @@
-using ApiGateways.Context;
-using Chat.Command;
 using Common.Rcp;
 using Common.Rcp.Server;
+using ImageParser.Command;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Chat
+namespace ImageParser
 {
     public class Startup
     {
@@ -23,15 +21,11 @@ namespace Chat
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("Default");
             var queryName = Configuration["RpcServer:QueryName"];
 
             services.AddControllers();
-            services.AddEntityFrameworkNpgsql()
-                .AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
-
             var rpcOptions = new RpcOptions(queryName);
-            services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new ChatCommandGroup()));
+            services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new ImageParserCommandGroup()));
             services.AddLogging();
         }
 
