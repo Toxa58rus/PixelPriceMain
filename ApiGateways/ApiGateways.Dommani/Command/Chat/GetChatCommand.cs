@@ -1,15 +1,10 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common.Models.Chat;
+using MediatR;
 
 namespace ApiGateways.Dommain.Command.Chat
 {
-    public class GetChatCommand : IRequest<string>
+    public class GetChatCommand : IRequest<ChatRooms>
     {
-        public string CreateUserId { get; set; }
-        public string JoinUserId { get; set; } 
+        public string RoomId { get; set; }
     }
 }

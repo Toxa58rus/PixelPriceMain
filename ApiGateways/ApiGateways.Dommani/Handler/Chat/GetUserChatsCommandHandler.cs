@@ -11,17 +11,16 @@ using System.Threading.Tasks;
 
 namespace ApiGateways.Dommain.Handler.Chat
 {
-    public class GetChatCommandHandler : IRequestHandler<GetChatCommand, ChatRooms>
+    public class GetUserChatsCommandHandler : IRequestHandler<GetUserChatsCommand, List<ChatRooms>>
     {
         private readonly IChatServiceCommand _chatServiceCommand;
 
-        public GetChatCommandHandler(IChatServiceCommand chatServiceCommand)
+        public GetUserChatsCommandHandler(IChatServiceCommand chatServiceCommand)
         {
             _chatServiceCommand = chatServiceCommand;
         }
 
-        public async Task<ChatRooms> Handle(GetChatCommand request, CancellationToken cancellationToken) =>
-             await _chatServiceCommand.GetChat(request.RoomId);
+        public async Task<List<ChatRooms>> Handle(GetUserChatsCommand request, CancellationToken cancellationToken) =>
+             await _chatServiceCommand.GetChatRooms(request.UserId);
     }
 }
-

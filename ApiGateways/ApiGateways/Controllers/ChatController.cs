@@ -11,12 +11,8 @@ namespace ApiGateways.Controllers
     [Route("[controller]/[action]")]
     public class ChatController : BaseController
     {
-        //Не факт что будет необходимо
         [HttpPost]
-        public async Task<string> CreateUserChat() => await Mediator.Send(new CreateChatCommand());
-
-        [HttpPost]
-        public async Task<string> GetUserChat([FromBody] GetChatCommand command) => 
+        public async Task<ChatRooms> GetUserChat([FromBody] GetChatCommand command) => 
             await Mediator.Send(command);
 
         [HttpPost]
@@ -35,5 +31,12 @@ namespace ApiGateways.Controllers
         public async Task<bool> DeleteMessage([FromBody] DeleteMessageCommand command) =>
           await Mediator.Send(command);
 
+        [HttpPost]
+        public async Task<ChatRooms> CreateChat([FromBody] CreateChatCommand command) =>
+          await Mediator.Send(command);
+
+        [HttpPost]
+        public async Task<List<ChatRooms>> GetUserChats([FromBody] GetUserChatsCommand command) =>
+        await Mediator.Send(command);
     }
 }

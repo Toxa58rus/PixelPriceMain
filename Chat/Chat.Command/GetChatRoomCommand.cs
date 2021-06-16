@@ -17,8 +17,8 @@ namespace Chat.Command
         public override async Task<string> Execute(object jsonValue)
         {
             await using var context = new ChatDbContext();
-            var value = jsonValue.ToString().DeserializeToObject<ChatRooms>();
-            var roomId = context.ChatRooms.FirstOrDefault(t => t.Id.Equals(value.Id))?.Id ?? null;
+            var value = jsonValue.ToString().DeserializeToObject<GetChatResponseModel>();
+            var roomId = context.ChatRooms.FirstOrDefault(t => t.Id.Equals(value.RoomId))?.Id ?? null;
             return roomId.ToJson();
         }
     }

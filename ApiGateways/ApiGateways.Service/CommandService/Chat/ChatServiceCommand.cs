@@ -3,6 +3,7 @@ using Common.Models;
 using Common.Models.Chat;
 using Common.Rcp;
 using Common.Rcp.Client;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,29 +20,28 @@ namespace ApiGateways.Service.CommandService.Chat
             _rpcClient = new RpcClient(new RpcOptions(query));
         }
 
-        public async Task<string> CreateChatCommand()
+        public async Task<ChatRooms> CreateChatCommand(string createUserId, string joinUserId)
         {
             var command = new CommandResponce
             {
                 CommandName = "CreateChat",
-                Value = "test string"
+                Value = new ChatRooms(createUserId, joinUserId)
             };
-            return await SendCommandToServer<string>(command);
+            return await SendCommandToServer<ChatRooms>(command);
         }
 
-        public async Task<string> GetChat(string createUserId, string joinUserId)
+        public async Task<ChatRooms> GetChat(string roomId)
         {
             var command = new CommandResponce
             {
                 CommandName = "GetChat",
-                Value = new ChatRooms()
+                Value = new GetChatResponseModel()
                 {
-                    CreateUserId = createUserId,
-                    JoinUserId = joinUserId
+                   RoomId = roomId
                 }
             };
 
-            return await SendCommandToServer<string>(command);
+            return await SendCommandToServer<ChatRooms>(command);
         }
 
         public async Task<List<ChatMessages>> GetMessages(string chatId)
@@ -97,6 +97,18 @@ namespace ApiGateways.Service.CommandService.Chat
             return await SendCommandToServer<bool>(command);
         }
 
+        public async Task<List<ChatRooms>> GetChatRooms(string userId)
+        {
+            var command = new CommandResponce
+            {
+                CommandName = "GetRooms",
+                Value = new GetRoomsResponseModel()
+                {
+                    UserId = userId
+                }
+            };
+            return await SendCommandToServer<List<ChatRooms>>(command);
+        }
 
         private async Task<T> SendCommandToServer<T>(CommandResponce command)
         {
