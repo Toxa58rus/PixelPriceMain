@@ -1,9 +1,11 @@
-﻿using MediatR;
+﻿using Common.Models.Chat;
+using MediatR;
 
 namespace ApiGateways.Dommain.Command.Chat
 {
-    public class CreateChatCommand : IRequest<string>
+    public class CreateChatCommand : IRequest<ChatRooms>
     {
-        public string UsetId { get; set; }
+        public string CreateUserId { get; set; }
+        public string JoinUserId { get; set; }
     }
 }

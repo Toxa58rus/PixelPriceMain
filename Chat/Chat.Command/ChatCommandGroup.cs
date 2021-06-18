@@ -10,7 +10,12 @@ namespace Chat.Command
         {
             var commands = new List<ServiceCommand>()
             {
-                new CreateChatCommand()
+                new CreateChatCommand(),
+                new GetChatRoomCommand(),
+                new GetChatMessagesCommand(),
+                new SendChatMessageCommand(),
+                new EditChatMessageCommand(),
+                new DeleteChatMessageCommand()
             };
 
             SetDefaultCommands(commands);
