@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Common.Models.ImageParser;
 
 namespace ApiGateways.Controllers
 {
@@ -12,6 +13,6 @@ namespace ApiGateways.Controllers
     {
         [HttpPost]
         [AllowAnonymous]
-        public async Task<string> ParceImagetoBitmap([FromBody] ParceImagetoBitmapCommand command) => await Mediator.Send(command);
+        public async Task<ImageData> ParceImagetoBitmap([FromBody] ParceImagetoBitmapCommand command) => await Mediator.Send(command);
     }
 }

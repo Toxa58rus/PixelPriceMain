@@ -1,5 +1,6 @@
 ﻿using Common.Extensions;
 using Common.Models;
+using Common.Models.ImageParser;
 using Common.Rcp;
 using Common.Rcp.Client;
 using Microsoft.Extensions.Configuration;
@@ -18,14 +19,14 @@ namespace ApiGateways.Service.CommandService.ImageParser
             _rpcClient = new RpcClient(new RpcOptions(query));
         }
 
-        public async Task<string> ParceImagetoBitmap(string baseString)
+        public async Task<ImageData> ParceImagetoBitmap(ImageData data)
         {
             var command = new CommandResponce
             {
                 CommandName = "ParceImageToBitmap",
-                Value = baseString
+                Value = data
             };
-            return await SendCommandToServer<string>(command);
+            return await SendCommandToServer<ImageData>(command);
         }
 
         private async Task<T> SendCommandToServer<T>(CommandResponce command)
