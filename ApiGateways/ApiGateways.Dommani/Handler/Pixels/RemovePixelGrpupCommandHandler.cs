@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace ApiGateways.Dommain.Handler.Pixels
 {
-    public class RemovePixeGrpupCommandHandler : IRequestHandler<RemovePixeGrpupCommand, bool>
+    public class RemovePixelGrpupCommandHandler : IRequestHandler<RemovePixeGrpupCommand, bool>
     {
         private readonly IPixelServiceCommand _pixelService;
 
-        public RemovePixeGrpupCommandHandler(IPixelServiceCommand pixelService)
+        public RemovePixelGrpupCommandHandler(IPixelServiceCommand pixelService)
         {
             _pixelService = pixelService;
         }

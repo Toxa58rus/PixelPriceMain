@@ -2,7 +2,7 @@
 
 namespace Common.Models.Pixels
 {
-    public class ChangePixelsResponceModel
+    public class ChangePixelsResponseModel
     {
         public List<Pixels> Pixels;
         public string GroupId { get; set; }

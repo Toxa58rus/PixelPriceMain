@@ -19,22 +19,22 @@ namespace ApiGateways.Service.CommandService.ImageParser
             _rpcClient = new RpcClient(new RpcOptions(query));
         }
 
-        public async Task<ImageData> ParceImagetoBitmap(ImageData data)
+        public async Task<ImageData> ParseImage(ImageData data)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
-                CommandName = "ParceImageToBitmap",
+                CommandName = "ParseImage",
                 Value = data
             };
             return await SendCommandToServer<ImageData>(command);
         }
 
-        private async Task<T> SendCommandToServer<T>(CommandResponce command)
+        private async Task<T> SendCommandToServer<T>(CommandResponse command)
         {
-            var responce = await _rpcClient.CallAsync(command.ToJson(), CancellationToken.None);
+            var response = await _rpcClient.CallAsync(command.ToJson(), CancellationToken.None);
             _rpcClient.Dispose();
 
-            return responce.DeserializeToObject<T>();
+            return response.DeserializeToObject<T>();
         }
     }
 }

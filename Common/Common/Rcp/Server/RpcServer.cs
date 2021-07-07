@@ -56,7 +56,7 @@ namespace Common.Rcp.Server
 
         private async Task OnReceived(object model, BasicDeliverEventArgs eventArgs)
         {
-            string responce = null;
+            string response = null;
 
             var body = eventArgs.Body.ToArray();
             var props = eventArgs.BasicProperties;
@@ -66,28 +66,28 @@ namespace Common.Rcp.Server
             try
             {
                 var message = Encoding.UTF8.GetString(body);
-                var commandResponce = message.DeserializeToObject<CommandResponce>();
+                var commandResponse = message.DeserializeToObject<CommandResponse>();
 
-                var command = _commands.FindCommand(commandResponce.CommandName);
+                var command = _commands.FindCommand(commandResponse.CommandName);
 
                 if (command != null)
                 {
-                    responce = await command.Execute(commandResponce.Value);
+                    response = await command.Execute(commandResponse.Value);
                 }
             }
             catch (Exception ex)
             {
-                responce = string.Empty;
+                response = string.Empty;
             }
             finally
             {
-                var responceByte = Encoding.UTF8.GetBytes(responce);
+                var responseByte = Encoding.UTF8.GetBytes(response);
 
                 _channel.BasicPublish(
                     exchange: string.Empty,
                     routingKey: props.ReplyTo,
                     replayProps,
-                    responceByte);
+                    responseByte);
 
                 _channel.BasicAck(eventArgs.DeliveryTag, multiple: false);
             }

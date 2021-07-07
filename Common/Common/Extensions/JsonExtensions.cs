@@ -18,21 +18,21 @@ namespace Common.Extensions
             }
         }
 
-        public static string ToCommandResponceJson(this object value, string commandName)
+        public static string ToCommandresponseJson(this object value, string commandName)
         {
             try
             {
-                var commandResponce = new CommandResponce
+                var commandresponse = new CommandResponse
                 {
                     CommandName = commandName,
                     Value = value
                 };
 
-                return JsonConvert.SerializeObject(commandResponce);
+                return JsonConvert.SerializeObject(commandresponse);
             }
             catch (Exception e)
             {
-                throw new Exception("Не удалось преобразовать объект в CommandResponce", e);
+                throw new Exception("Не удалось преобразовать объект в Commandresponse", e);
             }
         }
 

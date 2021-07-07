@@ -5,6 +5,6 @@ namespace ApiGateways.Service.CommandService.ImageParser
 {
     public interface IImageParserServiceCommand
     {
-        Task<ImageData> ParceImagetoBitmap(ImageData data);
+        Task<ImageData> ParseImage(ImageData data);
     }
 }

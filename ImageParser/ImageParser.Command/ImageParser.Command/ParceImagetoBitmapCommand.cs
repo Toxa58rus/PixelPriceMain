@@ -3,17 +3,22 @@ using Common.Models.ImageParser;
 using Common.Models.Pixels;
 using Common.Rcp;
 using Newtonsoft.Json;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ImageParser.Command
 {
-    public class ParceImagetoBitmapCommand : ServiceCommand
+    public class ParseImageCommand : ServiceCommand
     {
-        public override string Name => "ParceImageToBitmap";
+        public override string Name => "ParseImage";
 
         public override async Task<string> Execute(object jsonValue)
         {
@@ -24,32 +29,28 @@ namespace ImageParser.Command
 
                 await using (var memory = new MemoryStream(bytes))
                 {
-                    var bitmap = new Bitmap((Bitmap)Image.FromStream(memory));
-                    bitmap = Scale(bitmap, imageData.XCount);
+                    using (var image = Image.Load(memory, out var format))
+                    {
+                        var options = new ResizeOptions();
+                        
+                        options.Size = new Size(imageData.XCount, imageData.YCount);
+                        options.Compand = false;
+                        options.Mode = ResizeMode.BoxPad;
+                        
+                        image.Mutate(x => x.Resize(options));
+                        var base64 = image.ToBase64String(format);
 
-                    var converter = new ImageConverter();
-                    var base64 = Convert.ToBase64String((byte[])converter.ConvertTo(bitmap, typeof(byte[])));
-                    var result = new ImageData(base64, imageData.XCount, imageData.YCount);
+                        var result = new ImageData(base64, imageData.XCount, imageData.YCount);
 
-                    return result.ToJson();
+                        return result.ToJson();
+                    }
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return null;
+                throw;
             }
-        }
-
-        private Bitmap Scale(Bitmap bitmap, int maxX)
-        {
-            var newHeight = bitmap.Height / 1 * maxX / bitmap.Width;
-            if (bitmap.Width > maxX || bitmap.Height > newHeight)
-            {
-                bitmap = new Bitmap(bitmap, new Size(maxX, (int)newHeight));
-            }
-
-            return bitmap;
         }
     }
 }

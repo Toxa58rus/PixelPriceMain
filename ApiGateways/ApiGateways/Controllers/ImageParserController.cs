@@ -13,6 +13,6 @@ namespace ApiGateways.Controllers
     {
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ImageData> ParceImagetoBitmap([FromBody] ParceImagetoBitmapCommand command) => await Mediator.Send(command);
+        public async Task<ImageData> ParseImage([FromBody] ParseImageCommand command) => await Mediator.Send(command);
     }
 }

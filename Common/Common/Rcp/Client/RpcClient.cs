@@ -74,9 +74,9 @@ namespace Common.Rcp.Client
             if (!suchTaskExists) return;
 
             var body = eventArgs.Body.ToArray();
-            var responce = Encoding.UTF8.GetString(body);
+            var response = Encoding.UTF8.GetString(body);
 
-            tcs.TrySetResult(responce);
+            tcs.TrySetResult(response);
         }
 
         public void Dispose()

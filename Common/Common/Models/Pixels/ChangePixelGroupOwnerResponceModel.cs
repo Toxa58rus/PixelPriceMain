@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Common.Models.Pixels
 {
-    public class ChangePixelGroupOwnerResponceModel
+    public class ChangePixelGroupOwnerResponseModel
     {
         public List<PixelGroup> Groups;
         public string UserId { get; set; }

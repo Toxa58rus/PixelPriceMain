@@ -16,7 +16,7 @@ namespace Pixel.Command
         {
             await using var context = new PixelDbContext();
 
-            var value = jsonValue.ToString().DeserializeToObject<RemovePixelGroupResponceModel>();
+            var value = jsonValue.ToString().DeserializeToObject<RemovePixelGroupResponseModel>();
             var group = await context.PixelGroup.FirstOrDefaultAsync(s => s.Id == value.GroupId);
 
             if (!group.IsDefault)

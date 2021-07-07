@@ -9,7 +9,7 @@ namespace ImageParser.Command
         {
             var command = new List<ServiceCommand>
             {
-                new ParceImagetoBitmapCommand()
+                new ParseImageCommand()
             };
 
             SetDefaultCommands(command);

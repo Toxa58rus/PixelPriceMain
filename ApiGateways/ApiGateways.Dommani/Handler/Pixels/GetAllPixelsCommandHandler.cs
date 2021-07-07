@@ -32,14 +32,14 @@ namespace ApiGateways.Dommain.Handler.Pixels
             {
                 _logger.LogInformation("get all pixel");
 
-                var command = new CommandResponce
+                var command = new CommandResponse
                 {
                     CommandName = "GetAllPixelsCommand",
                     Value = null
                 };
 
-                var responce = await rpcClient.CallAsync(command.ToJson(), cancellationToken);
-                return responce.DeserializeToObject<List<PixelsData>>();
+                var response = await rpcClient.CallAsync(command.ToJson(), cancellationToken);
+                return response.DeserializeToObject<List<PixelsData>>();
             }
         }
     }

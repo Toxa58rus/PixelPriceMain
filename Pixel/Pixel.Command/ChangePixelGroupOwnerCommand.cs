@@ -19,7 +19,7 @@ namespace Pixel.Command
         {
             await using var context = new PixelDbContext();
 
-            var value = jsonValue.ToString().DeserializeToObject<ChangePixelGroupOwnerResponceModel>();
+            var value = jsonValue.ToString().DeserializeToObject<ChangePixelGroupOwnerResponseModel>();
             var result = new List<PixelGroup>();
 
 

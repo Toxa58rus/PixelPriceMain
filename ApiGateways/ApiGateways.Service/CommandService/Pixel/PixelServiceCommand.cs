@@ -22,7 +22,7 @@ namespace ApiGateways.Service.CommandService.Pixel
 
         public async Task<PixelGroup> CreateUserPixelGroup(string userId, string name, bool isDefault = false)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
                 CommandName = "CreatePixelGroup",
                 Value = new PixelGroup(name, userId, isDefault)
@@ -33,10 +33,10 @@ namespace ApiGateways.Service.CommandService.Pixel
 
         public async Task<bool> RemovePixelGroup(string userId, string groupId)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
                 CommandName = "RemovePixelGroup",
-                Value = new RemovePixelGroupResponceModel
+                Value = new RemovePixelGroupResponseModel
                 {
                     UserId = userId,
                     GroupId = groupId
@@ -48,10 +48,10 @@ namespace ApiGateways.Service.CommandService.Pixel
 
         public async Task<List<Pixels>> ChangerPixelGroup(List<Pixels> pixels, string groupId)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
                 CommandName = "ChangerPixelGroup",
-                Value = new ChangePixelsResponceModel
+                Value = new ChangePixelsResponseModel
                 {
                     Pixels = pixels,
                     GroupId = groupId
@@ -63,10 +63,10 @@ namespace ApiGateways.Service.CommandService.Pixel
 
         public async Task<List<Pixels>> ChangerPixelsOwner(List<Pixels> pixels, string userId)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
                 CommandName = "ChangerPixelsOwner",
-                Value = new ChangePixelsOwnerResponceModel
+                Value = new ChangePixelsOwnerResponseModel
                 {
                     Pixels = pixels,
                     UserId = userId
@@ -77,10 +77,10 @@ namespace ApiGateways.Service.CommandService.Pixel
 
         public async Task<List<PixelGroup>> ChangerPixelGroupOwner(List<PixelGroup> groups, string userId)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
                 CommandName = "ChangerPixelGroupOwner",
-                Value = new ChangePixelGroupOwnerResponceModel
+                Value = new ChangePixelGroupOwnerResponseModel
                 {
                     Groups = groups,
                     UserId = userId
@@ -91,10 +91,10 @@ namespace ApiGateways.Service.CommandService.Pixel
 
         public async Task<List<PixelColorReslutModel>> ChangerPixelColor(List<Pixels> pixels, string color)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
                 CommandName = "ChangerPixelColor",
-                Value = new ChangePixelColorResponceModel
+                Value = new ChangePixelColorResponseModel
                 {
                     Pixels = pixels,
                     Color = color,
@@ -103,12 +103,12 @@ namespace ApiGateways.Service.CommandService.Pixel
             return await SendCommandToServer<List<PixelColorReslutModel>>(command);
         }
 
-        private async Task<T> SendCommandToServer<T>(CommandResponce command)
+        private async Task<T> SendCommandToServer<T>(CommandResponse command)
         {
-            var responce = await _rpcClient.CallAsync(command.ToJson(), CancellationToken.None);
+            var response = await _rpcClient.CallAsync(command.ToJson(), CancellationToken.None);
             _rpcClient.Dispose();
 
-            return responce.DeserializeToObject<T>();
+            return response.DeserializeToObject<T>();
         }
     }
 }

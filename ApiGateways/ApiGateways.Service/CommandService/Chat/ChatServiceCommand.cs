@@ -22,7 +22,7 @@ namespace ApiGateways.Service.CommandService.Chat
 
         public async Task<ChatRooms> CreateChatCommand(string createUserId, string joinUserId)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
                 CommandName = "CreateChat",
                 Value = new ChatRooms(createUserId, joinUserId)
@@ -32,7 +32,7 @@ namespace ApiGateways.Service.CommandService.Chat
 
         public async Task<ChatRooms> GetChat(string roomId)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
                 CommandName = "GetChat",
                 Value = new GetChatResponseModel()
@@ -46,7 +46,7 @@ namespace ApiGateways.Service.CommandService.Chat
 
         public async Task<List<ChatMessages>> GetMessages(string chatId)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
                 CommandName = "GetMessages",
                 Value = new GetChatMessagesResponseModel()
@@ -59,7 +59,7 @@ namespace ApiGateways.Service.CommandService.Chat
 
         public async Task<ChatMessages> SendMessage(string chatId, string userId, string message)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
                 CommandName = "SendMessage",
                 Value = new ChatMessages(chatId, userId, message)
@@ -70,7 +70,7 @@ namespace ApiGateways.Service.CommandService.Chat
 
         public async Task<ChatMessages> EditMessage(string messageId, string text, string userId)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
                 CommandName = "EditMessage",
                 Value = new EditMessageResponseModel()
@@ -85,7 +85,7 @@ namespace ApiGateways.Service.CommandService.Chat
 
         public async Task<bool> DeleteMessage(string messageId, string userId)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
                 CommandName = "DeleteMessage",
                 Value = new DeleteMessageResponseModel()
@@ -99,7 +99,7 @@ namespace ApiGateways.Service.CommandService.Chat
 
         public async Task<List<ChatRooms>> GetChatRooms(string userId)
         {
-            var command = new CommandResponce
+            var command = new CommandResponse
             {
                 CommandName = "GetRooms",
                 Value = new GetRoomsResponseModel()
@@ -110,12 +110,12 @@ namespace ApiGateways.Service.CommandService.Chat
             return await SendCommandToServer<List<ChatRooms>>(command);
         }
 
-        private async Task<T> SendCommandToServer<T>(CommandResponce command)
+        private async Task<T> SendCommandToServer<T>(CommandResponse command)
         {
-            var responce = await _rpcClient.CallAsync(command.ToJson(), CancellationToken.None);
+            var response = await _rpcClient.CallAsync(command.ToJson(), CancellationToken.None);
             _rpcClient.Dispose();
 
-            return responce.DeserializeToObject<T>();
+            return response.DeserializeToObject<T>();
         }
     }
 }

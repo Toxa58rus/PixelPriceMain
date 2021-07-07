@@ -4,10 +4,11 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Models.ImageParser;
+using System;
 
 namespace ApiGateways.Dommain.Handler.ImageParser
 {
-    public class ParceImagetoBitmapCommandHandler : IRequestHandler<ParceImagetoBitmapCommand, ImageData>
+    public class ParceImagetoBitmapCommandHandler : IRequestHandler<ParseImageCommand, ImageData>
     {
         private readonly IImageParserServiceCommand _imageParserServiceCommand;
 
@@ -16,11 +17,11 @@ namespace ApiGateways.Dommain.Handler.ImageParser
             _imageParserServiceCommand = imageParserServiceCommand;
         }
 
-        public async Task<ImageData> Handle(ParceImagetoBitmapCommand request, CancellationToken cancellationToken)
+        public async Task<ImageData> Handle(ParseImageCommand request, CancellationToken cancellationToken)
         {
             var result = 
                 await _imageParserServiceCommand
-                    .ParceImagetoBitmap(new ImageData(request.ImageBaseString, request.XCount, request.YCount));
+                    .ParseImage(new ImageData(request.ImageBaseString, request.XCount, request.YCount));
             
             return result;
         }

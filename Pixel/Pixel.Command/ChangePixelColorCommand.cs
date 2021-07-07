@@ -17,7 +17,7 @@ namespace Pixel.Command
         {
             await using var context = new PixelDbContext();
 
-            var value = jsonValue.ToString().DeserializeToObject<ChangePixelColorResponceModel>();
+            var value = jsonValue.ToString().DeserializeToObject<ChangePixelColorResponseModel>();
             var result = new List<PixelColorReslutModel>();
 
             foreach (var item in value.Pixels)

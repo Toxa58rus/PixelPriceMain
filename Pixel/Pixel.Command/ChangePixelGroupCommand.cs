@@ -16,7 +16,7 @@ namespace Pixel.Command
         {
             await using var context = new PixelDbContext();
 
-            var value = jsonValue.ToString().DeserializeToObject<ChangePixelsResponceModel>();
+            var value = jsonValue.ToString().DeserializeToObject<ChangePixelsResponseModel>();
             var hasGroup = await context.PixelGroup.AsNoTracking().AnyAsync(s => s.Id == value.GroupId);
 
             if (hasGroup)
