@@ -27,7 +27,7 @@ namespace ApiGateways.Service.CommandService.Chat
                 CommandName = "CreateChat",
                 Value = new ChatRooms(createUserId, joinUserId)
             };
-            return await SendCommandToServer<ChatRooms>(command);
+            return await _rpcClient.SendCommandToServer<ChatRooms>(command);
         }
 
         public async Task<ChatRooms> GetChat(string roomId)
@@ -40,8 +40,7 @@ namespace ApiGateways.Service.CommandService.Chat
                    RoomId = roomId
                 }
             };
-
-            return await SendCommandToServer<ChatRooms>(command);
+            return await _rpcClient.SendCommandToServer< ChatRooms>(command);
         }
 
         public async Task<List<ChatMessages>> GetMessages(string chatId)
@@ -54,7 +53,7 @@ namespace ApiGateways.Service.CommandService.Chat
                     ChatId = chatId
                 }
             };
-            return await SendCommandToServer<List<ChatMessages>>(command);
+            return await _rpcClient.SendCommandToServer<List<ChatMessages>>(command);
         }
 
         public async Task<ChatMessages> SendMessage(string chatId, string userId, string message)
@@ -65,7 +64,7 @@ namespace ApiGateways.Service.CommandService.Chat
                 Value = new ChatMessages(chatId, userId, message)
 
             };
-            return await SendCommandToServer<ChatMessages>(command);
+            return await _rpcClient.SendCommandToServer<ChatMessages>(command);
         }
 
         public async Task<ChatMessages> EditMessage(string messageId, string text, string userId)
@@ -80,7 +79,7 @@ namespace ApiGateways.Service.CommandService.Chat
                     UserId = userId
                 }
             };
-            return await SendCommandToServer<ChatMessages>(command);
+            return await _rpcClient.SendCommandToServer<ChatMessages>(command);
         }
 
         public async Task<bool> DeleteMessage(string messageId, string userId)
@@ -94,7 +93,7 @@ namespace ApiGateways.Service.CommandService.Chat
                     UserId = userId
                 }
             };
-            return await SendCommandToServer<bool>(command);
+            return await _rpcClient.SendCommandToServer<bool>(command);
         }
 
         public async Task<List<ChatRooms>> GetChatRooms(string userId)
@@ -107,15 +106,8 @@ namespace ApiGateways.Service.CommandService.Chat
                     UserId = userId
                 }
             };
-            return await SendCommandToServer<List<ChatRooms>>(command);
-        }
-
-        private async Task<T> SendCommandToServer<T>(CommandResponse command)
-        {
-            var response = await _rpcClient.CallAsync(command.ToJson(), CancellationToken.None);
-            _rpcClient.Dispose();
-
-            return response.DeserializeToObject<T>();
+            return await _rpcClient.SendCommandToServer<List<ChatRooms>>(command);
+            
         }
     }
 }

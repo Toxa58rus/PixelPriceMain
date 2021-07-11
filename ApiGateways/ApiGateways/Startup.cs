@@ -16,6 +16,7 @@ using System.Text;
 using ApiGateways.Service.CommandService.Chat;
 using ApiGateways.Service.CommandService.Pixel;
 using ApiGateways.Service.CommandService.ImageParser;
+using ApiGateways.Service.CommandService.Mail;
 
 namespace ApiGateways
 {
@@ -63,6 +64,7 @@ namespace ApiGateways
             services.AddTransient<IPixelServiceCommand, PixelServiceCommand>();
             services.AddTransient<IChatServiceCommand, ChatServiceCommand>();
             services.AddTransient<IImageParserServiceCommand, ImageParserServiceCommand>();
+            services.AddTransient<IMailServiceCommand, MailServiceCommand>();
             services.AddLogging();
         }
 

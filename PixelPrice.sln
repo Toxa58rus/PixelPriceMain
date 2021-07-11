@@ -35,9 +35,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chat.Context", "Chat\Chat.C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImageParser", "ImageParser", "{D973E55C-0AF4-45D5-BC3F-F38027AF98DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageParser", "ImageParser\ImageParser\ImageParser.csproj", "{C5BBE46C-6BFC-4533-9D44-C7BBEA213910}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageParser", "ImageParser\ImageParser\ImageParser.csproj", "{C5BBE46C-6BFC-4533-9D44-C7BBEA213910}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageParser.Command", "ImageParser\ImageParser.Command\ImageParser.Command\ImageParser.Command.csproj", "{B251316F-BFF1-4BC9-A717-A384DF889CBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageParser.Command", "ImageParser\ImageParser.Command\ImageParser.Command\ImageParser.Command.csproj", "{B251316F-BFF1-4BC9-A717-A384DF889CBB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mail", "Mail", "{B6B4A19C-66F7-43B8-851E-A5FB5187F911}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mail", "Mail\Mail\Mail.csproj", "{72D37C78-AFD8-4EE8-8C47-AFB01C763120}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mail.Command", "Mail\Mail.Command\Mail.Command.csproj", "{E91ACD3F-DC8A-4E46-AA00-59B79D446F08}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +103,14 @@ Global
 		{B251316F-BFF1-4BC9-A717-A384DF889CBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B251316F-BFF1-4BC9-A717-A384DF889CBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B251316F-BFF1-4BC9-A717-A384DF889CBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72D37C78-AFD8-4EE8-8C47-AFB01C763120}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72D37C78-AFD8-4EE8-8C47-AFB01C763120}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72D37C78-AFD8-4EE8-8C47-AFB01C763120}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72D37C78-AFD8-4EE8-8C47-AFB01C763120}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E91ACD3F-DC8A-4E46-AA00-59B79D446F08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E91ACD3F-DC8A-4E46-AA00-59B79D446F08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E91ACD3F-DC8A-4E46-AA00-59B79D446F08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E91ACD3F-DC8A-4E46-AA00-59B79D446F08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +129,8 @@ Global
 		{87931165-E41F-4B06-A4F3-BA12E98FF1A9} = {1E9A89F3-B45B-4ABC-B117-2008FD89B3A9}
 		{C5BBE46C-6BFC-4533-9D44-C7BBEA213910} = {D973E55C-0AF4-45D5-BC3F-F38027AF98DC}
 		{B251316F-BFF1-4BC9-A717-A384DF889CBB} = {D973E55C-0AF4-45D5-BC3F-F38027AF98DC}
+		{72D37C78-AFD8-4EE8-8C47-AFB01C763120} = {B6B4A19C-66F7-43B8-851E-A5FB5187F911}
+		{E91ACD3F-DC8A-4E46-AA00-59B79D446F08} = {B6B4A19C-66F7-43B8-851E-A5FB5187F911}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BC67593A-7330-4550-AB55-C9896BBF5735}

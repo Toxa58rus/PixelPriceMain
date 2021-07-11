@@ -26,15 +26,8 @@ namespace ApiGateways.Service.CommandService.ImageParser
                 CommandName = "ParseImage",
                 Value = data
             };
-            return await SendCommandToServer<ImageData>(command);
+            return await _rpcClient.SendCommandToServer<ImageData>(command);
         }
 
-        private async Task<T> SendCommandToServer<T>(CommandResponse command)
-        {
-            var response = await _rpcClient.CallAsync(command.ToJson(), CancellationToken.None);
-            _rpcClient.Dispose();
-
-            return response.DeserializeToObject<T>();
-        }
     }
 }

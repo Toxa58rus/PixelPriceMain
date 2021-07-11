@@ -27,8 +27,8 @@ namespace ApiGateways.Service.CommandService.Pixel
                 CommandName = "CreatePixelGroup",
                 Value = new PixelGroup(name, userId, isDefault)
             };
-
-            return await SendCommandToServer<PixelGroup>(command);
+            return await _rpcClient.SendCommandToServer<PixelGroup>(command);
+         
         }
 
         public async Task<bool> RemovePixelGroup(string userId, string groupId)
@@ -43,7 +43,7 @@ namespace ApiGateways.Service.CommandService.Pixel
                 }
             };
 
-            return await SendCommandToServer<bool>(command);
+            return await _rpcClient.SendCommandToServer<bool>(command);          
         }
 
         public async Task<List<Pixels>> ChangerPixelGroup(List<Pixels> pixels, string groupId)
@@ -58,7 +58,7 @@ namespace ApiGateways.Service.CommandService.Pixel
                 }
             };
 
-            return await SendCommandToServer<List<Pixels>>(command);
+            return await _rpcClient.SendCommandToServer<List<Pixels>>(command);
         }
 
         public async Task<List<Pixels>> ChangerPixelsOwner(List<Pixels> pixels, string userId)
@@ -72,7 +72,9 @@ namespace ApiGateways.Service.CommandService.Pixel
                     UserId = userId
                 }
             };
-            return await SendCommandToServer<List<Pixels>>(command);
+
+            return await _rpcClient.SendCommandToServer<List<Pixels>>(command);
+           
         }
 
         public async Task<List<PixelGroup>> ChangerPixelGroupOwner(List<PixelGroup> groups, string userId)
@@ -86,7 +88,8 @@ namespace ApiGateways.Service.CommandService.Pixel
                     UserId = userId
                 }
             };
-            return await SendCommandToServer<List<PixelGroup>>(command);
+            return await _rpcClient.SendCommandToServer<List<PixelGroup>>(command);
+
         }
 
         public async Task<List<PixelColorReslutModel>> ChangerPixelColor(List<Pixels> pixels, string color)
@@ -100,15 +103,8 @@ namespace ApiGateways.Service.CommandService.Pixel
                     Color = color,
                 }
             };
-            return await SendCommandToServer<List<PixelColorReslutModel>>(command);
-        }
 
-        private async Task<T> SendCommandToServer<T>(CommandResponse command)
-        {
-            var response = await _rpcClient.CallAsync(command.ToJson(), CancellationToken.None);
-            _rpcClient.Dispose();
-
-            return response.DeserializeToObject<T>();
+            return await _rpcClient.SendCommandToServer<List<PixelColorReslutModel>>(command);
         }
     }
 }
