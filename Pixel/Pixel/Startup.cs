@@ -1,6 +1,6 @@
 using ApiGateways.Context;
-using Common.Rcp;
-using Common.Rcp.Server;
+using Mail.Command.Consumers;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pixel.Command;
+using Pixel.Context;
+using System.Reflection;
 
 namespace Pixel
 {
@@ -28,22 +30,39 @@ namespace Pixel
 
             services.AddControllers();
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
+                .AddDbContext<PixelDbContext>(options => options.UseNpgsql(connectionString));
+          
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumers(Assembly.Load("Pixel.Command"));
 
-            var rpcOptions = new RpcOptions(queryName);
-            services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new PixelCommandGroup()));
+                x.UsingRabbitMq(
+                 (context, cfg) =>
+                 {
+
+                     cfg.Host(Configuration["RabbitMQ:Host"], conf =>
+                     {
+                         conf.Password(Configuration["RabbitMQ:Password"]);
+                         conf.Username(Configuration["RabbitMQ:UserName"]);
+                     });
+
+                     cfg.ConfigureEndpoints(context);
+
+                 });
+
+
+            });
+            services.AddMassTransitHostedService();
             services.AddLogging();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IRpcServer rpcServer)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            rpcServer.Start();
 
             app.UseHttpsRedirection();
             app.UseRouting();

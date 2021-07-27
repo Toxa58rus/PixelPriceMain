@@ -1,16 +1,13 @@
 ﻿using ApiGateways.Dommain.Command.Mail;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ApiGateways.Service.CommandService.Mail;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateways.Dommain.Handler.Mail
 {
-    class SendMailCommandHandler : IRequestHandler<SendMailCommand, string>
+   public class SendMailCommandHandler : IRequestHandler<SendMailCommand, IActionResult>
     {
         private readonly IMailServiceCommand _mailServiceCommand;
 
@@ -18,9 +15,11 @@ namespace ApiGateways.Dommain.Handler.Mail
         {
             this._mailServiceCommand = mailServiceCommand;
         }
-        public async Task<string> Handle(SendMailCommand request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Handle(SendMailCommand request, CancellationToken cancellationToken)
         {
-           return await _mailServiceCommand.SendMessage(request.UserId);
+           var temp =  await _mailServiceCommand.SendMessage(request.UserId);
+            
+           return new OkObjectResult(temp);
         }
     }
 }

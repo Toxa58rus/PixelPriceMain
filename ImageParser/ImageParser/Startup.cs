@@ -1,6 +1,7 @@
 using Common.Rcp;
 using Common.Rcp.Server;
 using ImageParser.Command;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,19 +26,39 @@ namespace ImageParser
 
             services.AddControllers();
             var rpcOptions = new RpcOptions(queryName);
-            services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new ImageParserCommandGroup()));
+           // services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new ImageParserCommandGroup()));
             services.AddLogging();
+
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<SendMailCommand>();
+                x.UsingRabbitMq(
+                 (context, cfg) =>
+                 {
+                     cfg.Host(Configuration["RabbitMQ:Host"], conf =>
+                     {
+                         conf.Password(Configuration["RabbitMQ:Password"]);
+                         conf.Username(Configuration["RabbitMQ:UserName"]);
+                     });
+                     cfg.ReceiveEndpoint("Event",
+                         e => { e.ConfigureConsumer<SendMailCommand>(context); });
+                 });
+
+
+            });
+
+            services.AddMassTransitHostedService();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IRpcServer rpcServer)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            rpcServer.Start();
+            //rpcServer.Start();
 
             app.UseHttpsRedirection();
             app.UseRouting();

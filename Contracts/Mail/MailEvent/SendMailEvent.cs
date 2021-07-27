@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.Models.Mail
+namespace Contracts.Mail.MailEvent
 {
-
+    public class SendMailEvent 
+    {
+        public Guid UserId { get; set; }
+    }
 }

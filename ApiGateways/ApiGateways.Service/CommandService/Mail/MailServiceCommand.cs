@@ -2,6 +2,9 @@
 using Common.Models.Mail;
 using Common.Rcp;
 using Common.Rcp.Client;
+using Contracts.Mail.MailRequest;
+using Contracts.Mail.MailRespounse;
+using MassTransit;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -13,25 +16,23 @@ namespace ApiGateways.Service.CommandService.Mail
 {
     public class MailServiceCommand : IMailServiceCommand
     {
-        private readonly RpcClient _rpcClient;
+        private readonly IRequestClient<SendMailRequest> _requestClient;
 
-        public MailServiceCommand(IConfiguration configuration)
+        public MailServiceCommand(IConfiguration configuration, IRequestClient<SendMailRequest> requestClien)
         {
-            var query = configuration["RpcServer:Querys:Mail"];
-            _rpcClient = new RpcClient(new RpcOptions(query));
+            this._requestClient = requestClien;
         }
-        public async Task<string> SendMessage(string UserId )
+        public async Task<SendMailRespounse> SendMessage(string UserId )
         {
-            var command = new CommandResponse
+            var Value = new SendMailRequest()
             {
-                CommandName = "SendMail",
-                Value = new SendMailModel
-                {
-                    UserId = UserId
-                }
+                UserId = Guid.Parse(UserId)
             };
-
-            return await _rpcClient.SendCommandToServer<string>(command);
+            
+            
+            var result = await _requestClient.GetResponse<SendMailRespounse>(Value);
+            
+            return result.Message;
         }
     }
 }

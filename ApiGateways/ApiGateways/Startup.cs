@@ -17,6 +17,8 @@ using ApiGateways.Service.CommandService.Chat;
 using ApiGateways.Service.CommandService.Pixel;
 using ApiGateways.Service.CommandService.ImageParser;
 using ApiGateways.Service.CommandService.Mail;
+using MassTransit;
+using Contracts.Mail.MailRequest;
 
 namespace ApiGateways
 {
@@ -50,6 +52,23 @@ namespace ApiGateways
                         };
                 });
 
+            services.AddMassTransit(x =>
+            {
+               
+                x.UsingRabbitMq(
+                (context, cfg) =>
+                {
+                    cfg.Host(Configuration["RabbitMQ:Host"], conf =>
+                    {
+                        conf.Password(Configuration["RabbitMQ:Password"]);
+                        conf.Username(Configuration["RabbitMQ:UserName"]);
+                    });
+                });
+                x.AddRequestClient<SendMailRequest>();
+               
+            });
+
+            services.AddMassTransitHostedService();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

@@ -9,11 +9,13 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
-using ApiGateways.Context;
 using Microsoft.EntityFrameworkCore;
-using Common.Rcp;
-using Common.Rcp.Server;
 using Mail.Command;
+using Microsoft.Extensions.Options;
+using MassTransit;
+using Mail.Context;
+using Mail.Command.Consumers;
+using System.Reflection;
 
 namespace Mail
 {
@@ -29,26 +31,55 @@ namespace Mail
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("Default");
-            var queryName = Configuration["RpcServer:QueryName"];
-
             services.AddControllers();
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
-
-            var rpcOptions = new RpcOptions(queryName);
-            services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new MailCommandGroup()));
+                .AddDbContext<MailDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
+           
             services.AddLogging();
+
+            services.Configure<MailConfig>(Configuration.GetSection("SettingSMTP"));
+          
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumers(Assembly.Load("Mail.Command"));
+
+                x.UsingRabbitMq(
+                 (context, cfg) =>
+                 {
+
+                    cfg.Host(Configuration["RabbitMQ:Host"], conf =>
+                    {
+                        conf.Password(Configuration["RabbitMQ:Password"]);
+                        conf.Username(Configuration["RabbitMQ:UserName"]);
+                    });
+
+                    cfg.ConfigureEndpoints(context);
+  
+                 });
+                
+                
+            });
+
+            services.AddMassTransitHostedService();
+
+            services.AddHttpClient("smtpMail", (serv,conf) =>
+            {
+                var mailConf = serv.GetService<IOptions<MailConfig>>().Value;
+                conf.BaseAddress = new Uri(mailConf.BaseAddress);
+                conf.DefaultRequestHeaders.Add("authorization", mailConf.ApiKey);
+                conf.DefaultRequestHeaders.Add("content-type", "multipart/form-data");
+
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,IRpcServer rpcServer)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            rpcServer.Start();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();

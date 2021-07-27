@@ -1,5 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MassTransit.RabbitMqTransport;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace Common
 {

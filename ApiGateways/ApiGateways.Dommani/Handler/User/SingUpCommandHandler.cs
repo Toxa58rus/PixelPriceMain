@@ -3,6 +3,8 @@ using ApiGateways.Dommain.Command.User;
 using ApiGateways.Service.CommandService.Pixel;
 using ApiGateways.Service.Security;
 using Common.Models.User;
+using Contracts.User.UserEvent;
+using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -18,18 +20,22 @@ namespace ApiGateways.Dommain.Handler.User
         private readonly ApiGatewaysDbContext _context;
         private readonly IMd5Hash _md5Hash;
         private readonly ILogger<SingUpCommandHandler> _logger;
+        private readonly IPublishEndpoint _publish;
         private readonly IPixelServiceCommand _pixelCommandService;
 
         public SingUpCommandHandler(
             ApiGatewaysDbContext context,
             IMd5Hash md5Hash,
             IPixelServiceCommand pixelCommandService,
-            ILogger<SingUpCommandHandler> logger)
+            ILogger<SingUpCommandHandler> logger,
+            IPublishEndpoint publish)
         {
             _context = context;
             _md5Hash = md5Hash;
             _logger = logger;
+            _publish = publish;
             _pixelCommandService = pixelCommandService;
+            
         }
 
         public async Task<string> Handle(SingUpCommand request, CancellationToken cancellationToken)
@@ -45,7 +51,8 @@ namespace ApiGateways.Dommain.Handler.User
                 await _context.SaveChangesAsync(cancellationToken);
 
                 await tr.CommitAsync(cancellationToken);
-                await _pixelCommandService.CreateUserPixelGroup(userData.Id, "Default user group", true);
+                
+                await _publish.Publish(new CreateUserEvent { Userid = Guid.Parse(userData.Id), MailAddress = userData.Email });
 
                 _logger.LogInformation($"user: {userData.Id}, {userData.Email} has registered");
 
@@ -56,7 +63,7 @@ namespace ApiGateways.Dommain.Handler.User
         private Users CreateUserData(SingUpCommand userData) =>
             new()
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = NewId.NextGuid().ToString(),
                 Email = userData.Email.Contains("@") ? userData.Email : string.Empty,
                 PasswordHash = _md5Hash.GetMd5Hash(userData.Password),
                 UserName = userData.UserName,

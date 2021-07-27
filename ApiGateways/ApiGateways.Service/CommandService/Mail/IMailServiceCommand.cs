@@ -1,4 +1,6 @@
 ﻿using Common.Models.Mail;
+using Contracts.Mail.MailRespounse;
+using MassTransit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +11,6 @@ namespace ApiGateways.Service.CommandService.Mail
 {
     public interface IMailServiceCommand
     {
-        Task<string> SendMessage(string UserId);
+        Task<SendMailRespounse> SendMessage(string UserId);
     }
 }

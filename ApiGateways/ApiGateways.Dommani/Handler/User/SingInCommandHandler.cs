@@ -24,7 +24,11 @@ namespace ApiGateways.Dommain.Handler.User
         private readonly IMd5Hash _md5Hash;
         private readonly ILogger<SingInCommandHandler> _logger;
 
-        public SingInCommandHandler(ApiGatewaysDbContext context, IMd5Hash md5Hash, IConfiguration configuration, ILogger<SingInCommandHandler> logger)
+        public SingInCommandHandler(
+            ApiGatewaysDbContext context, 
+            IMd5Hash md5Hash, 
+            IConfiguration configuration, 
+            ILogger<SingInCommandHandler> logger)
         {
             _context = context;
             _md5Hash = md5Hash;
@@ -35,7 +39,8 @@ namespace ApiGateways.Dommain.Handler.User
         public async Task<UserToken> Handle(SingInCommand request, CancellationToken cancellationToken)
         {
             var identity = await GetIdentity(request.Email, request.Password);
-
+            
+            //TODO: Обработку сделать 
             if (identity is null) return new UserToken();
 
             var now = DateTime.UtcNow;

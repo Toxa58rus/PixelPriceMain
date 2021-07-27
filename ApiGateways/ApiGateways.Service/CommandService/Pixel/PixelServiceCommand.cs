@@ -16,8 +16,8 @@ namespace ApiGateways.Service.CommandService.Pixel
 
         public PixelServiceCommand(IConfiguration configuration)
         {
-            var query = configuration["RpcServer:Querys:Pixel"];
-            _rpcClient = new RpcClient(new RpcOptions(query));
+ 
+          
         }
 
         public async Task<PixelGroup> CreateUserPixelGroup(string userId, string name, bool isDefault = false)
@@ -53,7 +53,7 @@ namespace ApiGateways.Service.CommandService.Pixel
                 CommandName = "ChangerPixelGroup",
                 Value = new ChangePixelsResponseModel
                 {
-                    Pixels = pixels,
+                   // Pixels = pixels,
                     GroupId = groupId
                 }
             };

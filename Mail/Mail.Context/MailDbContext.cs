@@ -1,6 +1,5 @@
-﻿using Common;
-using Common.Models.Mail;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 using System;
 
@@ -9,8 +8,10 @@ namespace Mail.Context
     public class MailDbContext:DbContext
     {
         private readonly string _connectionString;
-
-        public MailDbContext(DbContextOptions<MailDbContext> options) : base(options)
+        private readonly IConfiguration _configuration;
+        
+        
+        public MailDbContext(DbContextOptions<MailDbContext> options, IConfiguration configuration) : base(options)
         {
             var npgsqlOptions = options.FindExtension<NpgsqlOptionsExtension>();
 
@@ -18,6 +19,8 @@ namespace Mail.Context
             {
                 _connectionString = npgsqlOptions.ConnectionString;
             }
+
+            this._configuration = configuration;
         }
 
         public MailDbContext()
@@ -35,7 +38,7 @@ namespace Mail.Context
             {
                 if (string.IsNullOrEmpty(_connectionString))
                 {
-                    optionsBuilder.UseNpgsql(SettingsConfigHelper.AppSetting("ConnectionStrings", "Default"));
+                    optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Default"));
                 }
                 else
                 {
@@ -44,7 +47,7 @@ namespace Mail.Context
             }
         }
 
-        public DbSet<MailModel> Mails { get; set; }
-      
+
+        public DbSet<Domain.Model.DB.Mail> Mail { get; set; }
     }
 }

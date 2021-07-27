@@ -1,20 +1,56 @@
-﻿using Common.Extensions;
-using Common.Models.Mail;
-using Common.Rcp;
+﻿using Contracts.Mail.MailEvent;
+using Contracts.Mail.MailRequest;
+using Contracts.Mail.MailRespounse;
+using GreenPipes;
+using Mail.Context;
+using MassTransit;
+using MassTransit.ConsumeConfigurators;
+using MassTransit.Definition;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mail.Command
 {
-    public class SendMailCommand : ServiceCommand
+
+    public class SendMailCommand : IConsumer<SendMailRequest>
     {
-        public override string Name => "SendMail";
+        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly MailDbContext _dbContext;
 
-        public override async Task<string> Execute(object jsonValue)
+        public SendMailCommand(IPublishEndpoint publishEndpoint, MailDbContext dbContext)
         {
-            var value = jsonValue.ToString().DeserializeToObject<SendMailModel>();
+            _publishEndpoint = publishEndpoint;
+            _dbContext = dbContext;
+        }
 
-            return "123123123".ToJson();
+
+        public async Task Consume(ConsumeContext<SendMailRequest> context)
+        {
+            var temp = await _dbContext.Mail.FirstOrDefaultAsync(x => x.UserId == context.Message.UserId);
+
+            await _publishEndpoint.Publish(new SendMailEvent() { UserId = context.Message.UserId });
+
+            await context.RespondAsync(new SendMailRespounse() { RespounseJson = "asda" });
+        }
+    }
+
+    public class SendMailCommandDefinition :
+    ConsumerDefinition<SendMailCommand>
+    {
+        public SendMailCommandDefinition()
+        {
+            EndpointName = "SendMailCommand";
+        }
+        
+        protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator,
+            IConsumerConfigurator<SendMailCommand> consumerConfigurator)
+        {
+           
         }
     }
 }
