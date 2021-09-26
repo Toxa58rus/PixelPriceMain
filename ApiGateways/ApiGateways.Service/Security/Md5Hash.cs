@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
+using ApiGateways.Dommain;
 
 namespace ApiGateways.Service.Security
 {

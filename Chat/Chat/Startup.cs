@@ -1,5 +1,5 @@
 using ApiGateways.Context;
-using Chat.Command;
+using ChatService.Command;
 using Common.Rcp;
 using Common.Rcp.Server;
 using Microsoft.AspNetCore.Builder;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Chat
+namespace ChatService
 {
     public class Startup
     {

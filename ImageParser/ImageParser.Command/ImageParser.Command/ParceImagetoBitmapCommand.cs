@@ -14,7 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ImageParser.Command
+namespace ImageParserService.Command
 {
     public class ParseImageCommand : ServiceCommand
     {
@@ -32,11 +32,11 @@ namespace ImageParser.Command
                     using (var image = Image.Load(memory, out var format))
                     {
                         var options = new ResizeOptions();
-                        
+
                         options.Size = new Size(imageData.XCount, imageData.YCount);
                         options.Compand = false;
                         options.Mode = ResizeMode.BoxPad;
-                        
+
                         image.Mutate(x => x.Resize(options));
                         var base64 = image.ToBase64String(format);
 

@@ -14,7 +14,7 @@ namespace ApiGateways.Controllers
     {
         [HttpGet]
         [AllowAnonymous]
-        public async Task<List<Pixels>> GetAllPixels() => 
+        public async Task<List<Pixel>> GetAllPixels() => 
             await Mediator.Send(new GetAllPixelsCommand());
 
         [HttpPost]
@@ -22,11 +22,11 @@ namespace ApiGateways.Controllers
             await Mediator.Send(command);
 
         [HttpPost]
-        public async Task<List<Pixels>> ChangerPixelGroup([FromBody] ChangerPixelGroupCommand command) =>
+        public async Task<List<Pixel>> ChangerPixelGroup([FromBody] ChangerPixelGroupCommand command) =>
             await Mediator.Send(command);
 
         [HttpPost]
-        public async Task<List<Pixels>> ChangerPixelsOwner([FromBody] ChangerPixelsOwnerCommand command) =>
+        public async Task<List<Pixel>> ChangerPixelsOwner([FromBody] ChangerPixelsOwnerCommand command) =>
             await Mediator.Send(command);
 
         [HttpPost]

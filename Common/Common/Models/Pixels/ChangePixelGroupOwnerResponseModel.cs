@@ -8,7 +8,12 @@ namespace Common.Models.Pixels
 {
     public class ChangePixelGroupOwnerResponseModel
     {
-        public List<PixelGroup> Groups;
-        public string UserId { get; set; }
+	    public ChangePixelGroupOwnerResponseModel(List<PixelGroup> groups, Guid userId)
+	    {
+		    Groups = groups;
+		    UserId = userId;
+	    }
+        public List<PixelGroup> Groups { get; private set; }
+        public Guid UserId { get; private set; }
     }
 }

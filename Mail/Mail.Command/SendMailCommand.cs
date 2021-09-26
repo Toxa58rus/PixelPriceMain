@@ -1,9 +1,4 @@
-﻿using Contracts.Mail.MailEvent;
-using Contracts.Mail.MailRequest;
-using Contracts.Mail.MailRespounse;
-using GreenPipes;
-using Mail.Context;
-using MassTransit;
+﻿using MassTransit;
 using MassTransit.ConsumeConfigurators;
 using MassTransit.Definition;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,8 +8,12 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Contracts.MailContract.MailRequest;
+using MailService.Context;
+using Contracts.MailContract.MailEvent;
+using Contracts.MailContract.MailRespounse;
 
-namespace Mail.Command
+namespace MailService.Command
 {
 
     public class SendMailCommand : IConsumer<SendMailRequest>
@@ -46,11 +45,11 @@ namespace Mail.Command
         {
             EndpointName = "SendMailCommand";
         }
-        
+
         protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator,
             IConsumerConfigurator<SendMailCommand> consumerConfigurator)
         {
-           
+
         }
     }
 }

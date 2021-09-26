@@ -1,5 +1,3 @@
-using ApiGateways.Context;
-using Mail.Command.Consumers;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,11 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Pixel.Command;
-using Pixel.Context;
+using PixelService.Context.Models;
 using System.Reflection;
 
-namespace Pixel
+namespace PixelService
 {
     public class Startup
     {
@@ -30,11 +27,11 @@ namespace Pixel
 
             services.AddControllers();
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<PixelDbContext>(options => options.UseNpgsql(connectionString));
-          
+                .AddDbContext<PixelContext>(options => options.UseNpgsql(connectionString));
+
             services.AddMassTransit(x =>
             {
-                x.AddConsumers(Assembly.Load("Pixel.Command"));
+                x.AddConsumers(Assembly.Load("PixelService.Command"));
 
                 x.UsingRabbitMq(
                  (context, cfg) =>
@@ -50,13 +47,11 @@ namespace Pixel
 
                  });
 
-
             });
             services.AddMassTransitHostedService();
             services.AddLogging();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

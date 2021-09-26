@@ -1,7 +1,7 @@
 ﻿using Common.Rcp;
 using System.Collections.Generic;
 
-namespace ImageParser.Command
+namespace ImageParserService.Command
 {
     public class ImageParserCommandGroup : CommandGroup
     {

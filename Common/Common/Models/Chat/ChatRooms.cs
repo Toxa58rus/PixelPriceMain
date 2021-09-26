@@ -2,8 +2,7 @@
 
 namespace Common.Models.Chat
 {
-
-    public class ChatRooms
+	public class ChatRooms 
     {
         public ChatRooms()
         {

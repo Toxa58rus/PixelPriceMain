@@ -1,8 +1,7 @@
-﻿using Chat.Context;
-using Common.Rcp;
+﻿using Common.Rcp;
 using System.Collections.Generic;
 
-namespace Chat.Command
+namespace ChatService.Command
 {
     public class ChatCommandGroup : CommandGroup
     {

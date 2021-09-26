@@ -13,12 +13,16 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
-using ApiGateways.Service.CommandService.Chat;
-using ApiGateways.Service.CommandService.Pixel;
-using ApiGateways.Service.CommandService.ImageParser;
-using ApiGateways.Service.CommandService.Mail;
+using ApiGateways.Dommain;
+using ApiGateways.Dommain.Handler.Chat;
+using ApiGateways.Dommain.Handler.ImageParser;
+using ApiGateways.Dommain.Handler.Mail;
+using ApiGateways.Dommain.Handler.Pixels;
 using MassTransit;
-using Contracts.Mail.MailRequest;
+using ApiGateways.Service.CommandService.PixelService;
+using ApiGateways.Service.CommandService.ImageParserService;
+using ApiGateways.Service.CommandService.Mail;
+using Contracts.MailContract.MailRequest;
 
 namespace ApiGateways
 {
@@ -80,10 +84,10 @@ namespace ApiGateways
                 .AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
 
             services.AddTransient<IMd5Hash, Md5Hash>();
-            services.AddTransient<IPixelServiceCommand, PixelServiceCommand>();
-            services.AddTransient<IChatServiceCommand, ChatServiceCommand>();
-            services.AddTransient<IImageParserServiceCommand, ImageParserServiceCommand>();
-            services.AddTransient<IMailServiceCommand, MailServiceCommand>();
+            services.AddTransient<IPixelServiceCommand, PixelService>();
+            services.AddTransient<IChatServiceCommand, Service.CommandService.Chat.ChatService>();
+            services.AddTransient<IImageParserServiceCommand, ImageParserService>();
+            services.AddTransient<IMailServiceCommand, MailService>();
             services.AddLogging();
         }
 

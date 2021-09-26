@@ -3,7 +3,7 @@ using Common.Models.Chat;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 
-namespace Chat.Context
+namespace ChatService.Context
 {
     public class ChatDbContext : DbContext
     {

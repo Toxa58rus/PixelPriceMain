@@ -1,4 +1,4 @@
-﻿using Chat.Context;
+﻿using ChatService.Context;
 using Common.Extensions;
 using Common.Models.Chat;
 using Common.Rcp;
@@ -7,7 +7,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Chat.Command
+namespace ChatService.Command
 {
     public class DeleteChatMessageCommand : ServiceCommand
     {

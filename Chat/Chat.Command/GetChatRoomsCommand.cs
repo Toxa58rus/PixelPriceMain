@@ -1,4 +1,4 @@
-﻿using Chat.Context;
+﻿using ChatService.Context;
 using Common.Extensions;
 using Common.Models.Chat;
 using Common.Rcp;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chat.Command
+namespace ChatService.Command
 {
     public class GetChatRoomsCommand : ServiceCommand
     {
@@ -19,7 +19,7 @@ namespace Chat.Command
         {
             await using var context = new ChatDbContext();
             var value = jsonValue.ToString().DeserializeToObject<GetRoomsResponseModel>();
-            var rooms = context.ChatRooms.Where(t => (t.CreateUserId.Equals(value.UserId) || t.JoinUserId.Equals(value.UserId))).AsNoTracking().ToListAsync();
+            var rooms = context.ChatRooms.Where(t => t.CreateUserId.Equals(value.UserId) || t.JoinUserId.Equals(value.UserId)).AsNoTracking().ToListAsync();
             return rooms.ToJson();
         }
     }

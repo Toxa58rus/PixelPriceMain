@@ -8,7 +8,7 @@ namespace Common.Models.Pixels
 {
      public class PixelColorReslutModel
     {
-        public string PixelId { get; set; }
-        public List<string> Color { get; set; }
+        public Guid PixelId { get; set; }
+        public List<int> Color { get; set; }
     }
 }

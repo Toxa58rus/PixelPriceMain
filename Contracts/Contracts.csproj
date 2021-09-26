@@ -8,4 +8,10 @@
     <ProjectReference Include="..\Common\Common\Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ChatContarct\ChatEvent\" />
+    <Folder Include="ChatContarct\ChatRequest\" />
+    <Folder Include="ChatContarct\ChatRespounse\" />
+  </ItemGroup>
+
 </Project>

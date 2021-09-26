@@ -6,7 +6,7 @@ using NLog.Web;
 using System.Reflection;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-namespace Chat
+namespace ChatService
 {
     public class Program
     {

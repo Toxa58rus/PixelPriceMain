@@ -1,6 +1,7 @@
 ﻿using Common.Models.User;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
+using System;
 
 namespace ApiGateways.Context
 {
@@ -29,6 +30,7 @@ namespace ApiGateways.Context
             {
                 optionsBuilder.UseNpgsql(_connectionString);
             }
+            optionsBuilder.LogTo(Console.WriteLine);
         }
 
         public DbSet<Users> Users { get; set; }

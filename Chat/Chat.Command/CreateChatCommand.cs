@@ -1,4 +1,4 @@
-﻿using Chat.Context;
+﻿using ChatService.Context;
 using Common.Extensions;
 using Common.Models.Chat;
 using Common.Rcp;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chat.Command
+namespace ChatService.Command
 {
     public class CreateChatCommand : ServiceCommand
     {

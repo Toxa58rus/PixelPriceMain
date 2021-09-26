@@ -1,24 +1,21 @@
-﻿using System;
+﻿using MassTransit;
+using System;
 
 namespace Common.Models.Pixels
 {
     public class PixelGroup
     {
-        public PixelGroup()
+	    public PixelGroup(string name, Guid userId, bool isDefault = false)
         {
-        }
-
-        public PixelGroup(string name, string userId, bool isDefault = false)
-        {
-            Id = Guid.NewGuid().ToString();
+            Id = NewId.NextGuid();
             Name = name;
             UserId = userId;
             IsDefault = isDefault;
         }
 
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string UserId { get; set; }
-        public bool IsDefault { get; set; }
+        public Guid Id { get; private set; }
+        public string Name { get; private set; }
+        public Guid UserId { get; private set; }
+        public bool IsDefault { get; private set; }
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace Common.Models.Pixels
+﻿using System;
+
+namespace Common.Models.Pixels
 {
     public class RemovePixelGroupResponseModel
     {
-        public string UserId { get; set; }
-        public string GroupId { get; set; }
+        public Guid UserId { get; set; }
+        public Guid GroupId { get; set; }
     }
 }

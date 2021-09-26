@@ -1,6 +1,5 @@
-﻿using Contracts.Mail.MailEvent;
-using Contracts.Mail.MailRequest;
-using Contracts.Mail.MailRespounse;
+﻿using Contracts.MailContract.MailEvent;
+using Contracts.MailContract.MailRespounse;
 using GreenPipes;
 using MassTransit;
 using MassTransit.ConsumeConfigurators;
@@ -11,7 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace ImageParser.Command
+namespace ImageParserService.Command
 {
 
     public class SendMailCommand : IConsumer<SendMailEvent>
@@ -27,7 +26,7 @@ namespace ImageParser.Command
 
         public async Task Consume(ConsumeContext<SendMailEvent> context)
         {
-            
+
             await publishEndpoint.Publish(new SendMailEvent() { UserId = context.Message.UserId });
 
             await context.RespondAsync(new SendMailRespounse() { RespounseJson = "asda" });

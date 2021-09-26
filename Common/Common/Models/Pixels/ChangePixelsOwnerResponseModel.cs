@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Common.Models.Pixels
 {
     public class ChangePixelsOwnerResponseModel
     {
-        public List<Pixels> Pixels;
-        public string UserId { get; set; }
+        public List<Pixel> Pixels;
+        public Guid UserId { get; set; }
     }
 }

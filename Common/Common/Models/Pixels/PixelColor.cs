@@ -1,22 +1,19 @@
-﻿using System;
+﻿using MassTransit;
+using System;
 
 namespace Common.Models.Pixels
 {
     public class PixelColor
     {
-        public PixelColor()
+	    public PixelColor(Guid pixelId, int color)
         {
-        }
-
-        public PixelColor(string pixelId, string color)
-        {
-            Id = Guid.NewGuid().ToString();
+            Id = NewId.NextGuid();
             PixelId = pixelId;
             Color = color;
         }
 
-        public string Id { get; set; }
-        public string PixelId { get; set; }
-        public string Color { get; set; }
+        public Guid Id { get; set; }
+        public Guid PixelId { get; set; }
+        public int Color { get; set; }
     }
 }

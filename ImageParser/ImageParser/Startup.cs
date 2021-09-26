@@ -1,6 +1,6 @@
 using Common.Rcp;
 using Common.Rcp.Server;
-using ImageParser.Command;
+using ImageParserService.Command;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace ImageParser
+namespace ImageParserService
 {
     public class Startup
     {
@@ -26,7 +26,7 @@ namespace ImageParser
 
             services.AddControllers();
             var rpcOptions = new RpcOptions(queryName);
-           // services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new ImageParserCommandGroup()));
+            // services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new ImageParserCommandGroup()));
             services.AddLogging();
 
             services.AddMassTransit(x =>

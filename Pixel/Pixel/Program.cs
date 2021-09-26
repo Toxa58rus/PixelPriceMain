@@ -6,12 +6,13 @@ using NLog.Web;
 using System.Reflection;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
-namespace Pixel
+namespace PixelService
 {
     public class Program
     {
         public static void Main(string[] args)
         {
+
             CreateHostBuilder(args).Build().Run();
         }
 

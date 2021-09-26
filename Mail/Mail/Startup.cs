@@ -10,14 +10,14 @@ using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Mail.Command;
+using MailService.Command;
 using Microsoft.Extensions.Options;
 using MassTransit;
-using Mail.Context;
-using Mail.Command.Consumers;
+using MailService.Command.Consumers;
 using System.Reflection;
+using MailService.Context;
 
-namespace Mail
+namespace MailService
 {
     public class Startup
     {
@@ -34,11 +34,11 @@ namespace Mail
             services.AddControllers();
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<MailDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
-           
+
             services.AddLogging();
 
             services.Configure<MailConfig>(Configuration.GetSection("SettingSMTP"));
-          
+
             services.AddMassTransit(x =>
             {
                 x.AddConsumers(Assembly.Load("Mail.Command"));
@@ -47,22 +47,22 @@ namespace Mail
                  (context, cfg) =>
                  {
 
-                    cfg.Host(Configuration["RabbitMQ:Host"], conf =>
-                    {
-                        conf.Password(Configuration["RabbitMQ:Password"]);
-                        conf.Username(Configuration["RabbitMQ:UserName"]);
-                    });
+                     cfg.Host(Configuration["RabbitMQ:Host"], conf =>
+                     {
+                         conf.Password(Configuration["RabbitMQ:Password"]);
+                         conf.Username(Configuration["RabbitMQ:UserName"]);
+                     });
 
-                    cfg.ConfigureEndpoints(context);
-  
+                     cfg.ConfigureEndpoints(context);
+
                  });
-                
-                
+
+
             });
 
             services.AddMassTransitHostedService();
 
-            services.AddHttpClient("smtpMail", (serv,conf) =>
+            services.AddHttpClient("smtpMail", (serv, conf) =>
             {
                 var mailConf = serv.GetService<IOptions<MailConfig>>().Value;
                 conf.BaseAddress = new Uri(mailConf.BaseAddress);

@@ -1,27 +1,18 @@
-﻿using Contracts.Mail.MailEvent;
-using Contracts.Mail.MailRequest;
-using Contracts.Mail.MailRespounse;
-using GreenPipes;
+﻿using Contracts.UserContract.UserEvent;
 using MassTransit;
 using MassTransit.ConsumeConfigurators;
 using MassTransit.Definition;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
+using PixelService.Context.Models;
 using System.Threading.Tasks;
-using System.Linq;
-using Contracts.User.UserEvent;
-using Pixel.Context;
 
-namespace Mail.Command.Consumers
+namespace PixelService.Command.Consumers.Event
 {
     public class CreateUser : IConsumer<CreateUserEvent>
     {
-        private readonly PixelDbContext _dbContext;
+        private readonly PixelContext _dbContext;
         private readonly IPublishEndpoint publish;
 
-        public CreateUser(PixelDbContext dbContext, IPublishEndpoint publish)
+        public CreateUser(PixelContext dbContext, IPublishEndpoint publish)
         {
             _dbContext = dbContext;
             this.publish = publish;
@@ -30,16 +21,16 @@ namespace Mail.Command.Consumers
         public async Task Consume(ConsumeContext<CreateUserEvent> context)
         {
 
-            await _dbContext.PixelGroup.AddAsync(
-                new Common.Models.Pixels.PixelGroup()
-                {
-                    Id = NewId.NextGuid().ToString(),
-                    Name = "Default user group",
-                    IsDefault = true,
-                    UserId = context.Message.Userid.ToString()
-                });
+            //await _dbContext.PixelGroups.AddAsync(
+            //    new PixelGroup()
+            //    {
+            //        Id = NewId.NextGuid(),
+            //        Name = "Default user group",
+            //        IsDefault = true,
+            //        UserId = context.Message.Userid
+            //    });
 
-            await _dbContext.SaveChangesAsync();
+            //await _dbContext.SaveChangesAsync();
             return;
         }
     }

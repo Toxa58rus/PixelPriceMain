@@ -2,7 +2,12 @@
 {
     public class UserToken
     {
-        public string Token { get; set; }
-        public string UserId { get; set; }
+	    public UserToken(string token, string userId)
+	    {
+		    Token = token;
+		    UserId = userId;
+	    }
+        public string Token { get; private set; }
+        public string UserId { get; private set; }
     }
 }

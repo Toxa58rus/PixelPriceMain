@@ -8,7 +8,13 @@ namespace Common.Models.Pixels
 {
     public class ChangePixelColorResponseModel
     {
-        public List<Pixels> Pixels;
-        public string Color { get; set; }
+	    public ChangePixelColorResponseModel(List<Pixel> pixels,int color)
+	    {
+		    Pixels = pixels;
+		    Color = color;
+	    }
+
+        public List<Pixel> Pixels { get; private set; }
+        public int Color { get; private set; }
     }
 }
