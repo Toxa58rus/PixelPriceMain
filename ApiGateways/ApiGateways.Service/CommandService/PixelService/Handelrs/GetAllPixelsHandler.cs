@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ApiGateways.Dommain.Command.Pixels;
-using ApiGateways.Dommain.Handler;
-using Common.Rcp;
-using MediatR;
+using ApiGateways.Domain;
+using ApiGateways.Domain.Command.PixelsAndGroup;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using PixelsData = Common.Models.Pixels.Pixel;
+using PixelsData = ApiGateways.Domain.Models.PixelsAndGroup.Pixel;
 
 namespace ApiGateways.Service.CommandService.PixelService.Handelrs
 {

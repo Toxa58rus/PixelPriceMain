@@ -1,12 +1,7 @@
-﻿using Common.Models.Chat;
+﻿using ApiGateways.Domain.Models.Chat;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ApiGateways.Dommain.Command.Chat
+namespace ApiGateways.Domain.Command.Chat
 {
     public class SendMessageCommand : IRequest<ChatMessages>
     {

@@ -1,8 +1,8 @@
-﻿using ApiGateways.Dommain.Command.ImageParser;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Common.Models.ImageParser;
+using ApiGateways.Domain.Command.ImageParser;
+using ApiGateways.Domain.Models.ImageParser;
 
 namespace ApiGateways.Controllers
 {

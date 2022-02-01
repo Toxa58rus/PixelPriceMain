@@ -1,25 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ApiGateways.Dommain.Command.Pixels;
-using ApiGateways.Dommain.Handler;
-using ApiGateways.Dommain.Handler.Pixels;
-using PixelData = Common.Models.Pixels.Pixel;
+using ApiGateways.Domain;
+using ApiGateways.Domain.Command.PixelsAndGroup;
+using ApiGateways.Domain.Services.Pixels;
+using PixelData = ApiGateways.Domain.Models.PixelsAndGroup.Pixel;
 
 namespace ApiGateways.Service.CommandService.PixelService.Handelrs
 {
     public class ChangerPixelsOwnerHandler : HandlerBase<ChangerPixelsOwnerCommand, List<PixelData>>
     {
-        private readonly IPixelServiceCommand _pixelServiceCommand;
+        private readonly IPixelAndGroupService _pixelService;
 
-        public ChangerPixelsOwnerHandler(IPixelServiceCommand pixelServiceCommand)
+        public ChangerPixelsOwnerHandler(IPixelAndGroupService pixelService)
         {
-            _pixelServiceCommand = pixelServiceCommand;
+            _pixelService = pixelService;
         }
 
         protected override async Task<List<PixelData>> Execute(ChangerPixelsOwnerCommand request, CancellationToken cancellationToken)
         {
-	        return await _pixelServiceCommand.ChangerPixelsOwner(request.Pixels, request.UserId);
+	        return await _pixelService.ChangerPixelsOwner(request.Pixels, request.UserId);
         }
     }
 }

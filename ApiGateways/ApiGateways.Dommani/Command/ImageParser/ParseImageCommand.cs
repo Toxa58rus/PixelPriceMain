@@ -1,7 +1,7 @@
-﻿using Common.Models.ImageParser;
+﻿using ApiGateways.Domain.Models.ImageParser;
 using MediatR;
 
-namespace ApiGateways.Dommain.Command.ImageParser
+namespace ApiGateways.Domain.Command.ImageParser
 {
     public class ParseImageCommand : IRequest<ImageData>
     {

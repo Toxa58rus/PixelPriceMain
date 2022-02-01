@@ -1,16 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using ApiGateways.Dommain.Command.Chat;
-using ApiGateways.Dommain.Handler;
-using ApiGateways.Dommain.Handler.Chat;
+using ApiGateways.Domain;
+using ApiGateways.Domain.Command.Chat;
+using ApiGateways.Domain.Services.Chat;
 
 namespace ApiGateways.Service.CommandService.Chat.Handlers
 {
     public class DeleteMessageHandler : HandlerBase<DeleteMessageCommand, bool>
     {
-        private readonly IChatServiceCommand _chatServiceCommand;
+        private readonly IChatService _chatServiceCommand;
 
-        public DeleteMessageHandler(IChatServiceCommand chatServiceCommand)
+        public DeleteMessageHandler(IChatService chatServiceCommand)
         {
             _chatServiceCommand = chatServiceCommand;
         }

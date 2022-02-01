@@ -1,24 +1,24 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using ApiGateways.Dommain.Command.Pixels;
-using ApiGateways.Dommain.Handler;
-using ApiGateways.Dommain.Handler.Pixels;
-using Common.Models.Pixels;
+using ApiGateways.Domain;
+using ApiGateways.Domain.Command.PixelsAndGroup;
+using ApiGateways.Domain.Models.PixelsAndGroup;
+using ApiGateways.Domain.Services.Pixels;
 
 namespace ApiGateways.Service.CommandService.PixelService.Handelrs
 {
     public class CreatePixelGroupHandler : HandlerBase<CreatePixelGroupCommand, PixelGroup>
     {
-        private readonly IPixelServiceCommand _pixelCommandService;
+        private readonly IPixelAndGroupService _pixelService;
 
-        public CreatePixelGroupHandler(IPixelServiceCommand pixelCommandService)
+        public CreatePixelGroupHandler(IPixelAndGroupService pixelService)
         {
-            _pixelCommandService = pixelCommandService;
+	        _pixelService = pixelService;
         }
 
         protected override async Task<PixelGroup> Execute(CreatePixelGroupCommand request, CancellationToken cancellationToken)
         {
-	        return await _pixelCommandService.CreateUserPixelGroup(request.UserId, request.Name);
+	        return await _pixelService.CreateUserPixelGroup(request.UserId, request.Name);
         }
     }
 }

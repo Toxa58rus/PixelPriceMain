@@ -3,12 +3,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ApiGateways.Context;
-using ApiGateways.Dommain;
-using ApiGateways.Dommain.Command.User;
-using ApiGateways.Dommain.Handler;
-using ApiGateways.Dommain.Handler.Pixels;
-using ApiGateways.Service.Security;
-using Common.Models.User;
+using ApiGateways.Domain;
+using ApiGateways.Domain.Command.User;
+using ApiGateways.Domain.Services.Pixels;
 using Contracts.UserContract.UserEvent;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
@@ -22,12 +19,12 @@ namespace ApiGateways.Service.CommandService.User
         private readonly IMd5Hash _md5Hash;
         private readonly ILogger<SingUpHandler> _logger;
         private readonly IPublishEndpoint _publish;
-        private readonly IPixelServiceCommand _pixelCommandService;
+        private readonly IPixelAndGroupService _pixelCommandService;
 
         public SingUpHandler(
             ApiGatewaysDbContext context,
             IMd5Hash md5Hash,
-            IPixelServiceCommand pixelCommandService,
+            IPixelAndGroupService pixelCommandService,
             ILogger<SingUpHandler> logger,
             IPublishEndpoint publish)
         {
@@ -41,18 +38,21 @@ namespace ApiGateways.Service.CommandService.User
 
         protected override async Task<string> Execute(SingUpCommand request, CancellationToken cancellationToken)
         {
-			if (request.Password != request.ConfirmPassword) return null;
-			if (_context.Users.AsNoTracking().Any(s => s.Email.Equals(request.Email))) return null;
+			if (request.Password != request.ConfirmPassword) 
+				return null;
+			
+			if (_context.Users.AsNoTracking().Any(s => s.Email.Equals(request.Email))) 
+				return null;
 
-			using (var tr = await _context.Database.BeginTransactionAsync(cancellationToken))
+			//using (var tr = await _context.Database.BeginTransactionAsync(cancellationToken))
 			{
 				var userData = CreateUserData(request);
 				await _context.Users.AddAsync(userData, cancellationToken);
 				await _context.SaveChangesAsync(cancellationToken);
 
-				await tr.CommitAsync(cancellationToken);
+				//await tr.CommitAsync(cancellationToken);
 
-				await _publish.Publish(new CreateUserEvent { Userid = Guid.Parse(userData.Id), MailAddress = userData.Email });
+				//await _publish.Publish(new CreateUserEvent { Userid = Guid.Parse(userData.Id), MailAddress = userData.Email }, cancellationToken);
 
 				_logger.LogInformation($"user: {userData.Id}, {userData.Email} has registered");
 
@@ -60,8 +60,8 @@ namespace ApiGateways.Service.CommandService.User
 			}
 		}
 
-        private Users CreateUserData(SingUpCommand userData) =>
-            new Users()
+        private Context.Models.User CreateUserData(SingUpCommand userData) =>
+            new Context.Models.User()
             {
                 Id = NewId.NextGuid().ToString(),
                 Email = userData.Email.Contains("@") ? userData.Email : string.Empty,

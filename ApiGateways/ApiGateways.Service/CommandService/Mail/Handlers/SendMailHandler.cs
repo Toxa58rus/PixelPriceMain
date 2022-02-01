@@ -1,17 +1,17 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using ApiGateways.Dommain.Command.Mail;
-using ApiGateways.Dommain.Handler;
-using ApiGateways.Dommain.Handler.Mail;
+using ApiGateways.Domain;
+using ApiGateways.Domain.Command.Mail;
+using ApiGateways.Domain.Services.Mail;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiGateways.Service.CommandService.Mail.Handlers
 {
     public class SendMailHandler : HandlerBase<SendMailCommand, IActionResult>
     {
-        private readonly IMailServiceCommand _mailServiceCommand;
+        private readonly IMailService _mailServiceCommand;
 
-        public SendMailHandler(IMailServiceCommand mailServiceCommand)
+        public SendMailHandler(IMailService mailServiceCommand)
         {
             this._mailServiceCommand = mailServiceCommand;
         }

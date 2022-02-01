@@ -1,7 +1,4 @@
-using ApiGateways.Context;
-using ChatService.Command;
-using Common.Rcp;
-using Common.Rcp.Server;
+using ChatService.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,26 +21,19 @@ namespace ChatService
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("Default");
-            var queryName = Configuration["RpcServer:QueryName"];
 
             services.AddControllers();
-            services.AddEntityFrameworkNpgsql()
-                .AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
-
-            var rpcOptions = new RpcOptions(queryName);
-            services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new ChatCommandGroup()));
+            services.AddDbContext<ChatDbContext>(options => options.UseNpgsql(connectionString));
             services.AddLogging();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IRpcServer rpcServer)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            rpcServer.Start();
 
             app.UseHttpsRedirection();
             app.UseRouting();

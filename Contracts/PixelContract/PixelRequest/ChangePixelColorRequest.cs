@@ -1,5 +1,4 @@
-﻿using Common.Models.Pixels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +8,7 @@ namespace Contracts.PixelContract.PixelRequest
 {
     public class ChangePixelColorRequest
     {
-        public List<Pixel> Pixels;
+        public List<Guid> PixelIds;
         public int Color { get; set; }
     }
 }

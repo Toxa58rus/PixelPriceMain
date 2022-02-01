@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateways", "ApiGateways\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateways", "ApiGateways", "{289566D9-DDBA-467E-8776-C037B4228B59}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateways.Dommain", "ApiGateways\ApiGateways.Dommani\ApiGateways.Dommain.csproj", "{D8480BB9-EC21-41AE-BAD9-272F732B0778}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateways.Domain", "ApiGateways\ApiGateways.Dommani\ApiGateways.Domain.csproj", "{D8480BB9-EC21-41AE-BAD9-272F732B0778}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateways.Context", "ApiGateways\ApiGateways.Context\ApiGateways.Context.csproj", "{49369495-A8C8-4E43-940A-70E5EFDD4543}"
 EndProject

@@ -1,7 +1,7 @@
-﻿using ApiGateways.Dommain.Command.User;
-using Common.Models.User;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using ApiGateways.Domain.Command.User;
+using ApiGateways.Domain.Models.User;
 
 namespace ApiGateways.Controllers
 {

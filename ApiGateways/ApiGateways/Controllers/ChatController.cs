@@ -1,9 +1,10 @@
-﻿using ApiGateways.Dommain.Command.Chat;
-using Common.Models.Chat;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ApiGateways.Domain.Command.Chat;
+using ApiGateways.Domain.Models.Chat;
+using ChatService.Context.Models;
 
 namespace ApiGateways.Controllers
 {

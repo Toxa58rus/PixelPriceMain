@@ -1,12 +1,8 @@
-﻿using Common.Models.Chat;
+﻿using System.Collections.Generic;
+using ApiGateways.Domain.Models.Chat;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ApiGateways.Dommain.Command.Chat
+namespace ApiGateways.Domain.Command.Chat
 {
     public class GetMessagesCommand : IRequest<List<ChatMessages>>
     {

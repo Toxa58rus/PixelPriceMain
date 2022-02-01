@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ApiGateways.Dommain.Handler.Chat;
-using Common.Models.Chat;
+using ApiGateways.Domain.Models.Chat;
+using ApiGateways.Domain.Services.Chat;
 
 namespace ApiGateways.Service.CommandService.Chat
 {
-	public class ChatService : IChatServiceCommand
+	public class ChatService : IChatService
 	{
 		public Task<ChatRooms> CreateChatCommand(string createUserId, string joinUserId)
 		{

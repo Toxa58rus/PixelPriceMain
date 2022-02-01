@@ -1,7 +1,6 @@
-﻿using Common.Models.User;
-using MediatR;
+﻿using MediatR;
 
-namespace ApiGateways.Dommain.Command.User
+namespace ApiGateways.Domain.Command.User
 {
     public class SingUpCommand : IRequest<string>
     {

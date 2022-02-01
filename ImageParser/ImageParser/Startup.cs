@@ -1,6 +1,4 @@
-using Common.Rcp;
-using Common.Rcp.Server;
-using ImageParserService.Command;
+using System.Reflection;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,35 +15,31 @@ namespace ImageParserService
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var queryName = Configuration["RpcServer:QueryName"];
+	        services.AddControllers();
+	        
+	        services.AddLogging();
+	        
+	        services.AddMassTransit(x =>
+	        {
+		        x.UsingRabbitMq(
+			        (context, cfg) =>
+			        {
+				        cfg.Host(Configuration["RabbitMQ:Host"], conf =>
+				        {
+					        conf.Password(Configuration["RabbitMQ:Password"]);
+					        conf.Username(Configuration["RabbitMQ:UserName"]);
+				        });
+			        });
 
-            services.AddControllers();
-            var rpcOptions = new RpcOptions(queryName);
-            // services.AddSingleton<IRpcServer, RpcServer>(s => new RpcServer(rpcOptions, new ImageParserCommandGroup()));
-            services.AddLogging();
-
-            services.AddMassTransit(x =>
-            {
-                x.AddConsumer<SendMailCommand>();
-                x.UsingRabbitMq(
-                 (context, cfg) =>
-                 {
-                     cfg.Host(Configuration["RabbitMQ:Host"], conf =>
-                     {
-                         conf.Password(Configuration["RabbitMQ:Password"]);
-                         conf.Username(Configuration["RabbitMQ:UserName"]);
-                     });
-                     cfg.ReceiveEndpoint("Event",
-                         e => { e.ConfigureConsumer<SendMailCommand>(context); });
-                 });
-
+	            x.AddConsumers(Assembly.Load("ImageParserService.Command"));
 
             });
+	        
 
             services.AddMassTransitHostedService();
         }
@@ -57,8 +51,6 @@ namespace ImageParserService
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            //rpcServer.Start();
 
             app.UseHttpsRedirection();
             app.UseRouting();

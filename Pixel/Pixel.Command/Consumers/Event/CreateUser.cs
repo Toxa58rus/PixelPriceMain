@@ -4,6 +4,7 @@ using MassTransit.ConsumeConfigurators;
 using MassTransit.Definition;
 using PixelService.Context.Models;
 using System.Threading.Tasks;
+using PixelService.Context;
 
 namespace PixelService.Command.Consumers.Event
 {
@@ -21,17 +22,16 @@ namespace PixelService.Command.Consumers.Event
         public async Task Consume(ConsumeContext<CreateUserEvent> context)
         {
 
-            //await _dbContext.PixelGroups.AddAsync(
-            //    new PixelGroup()
-            //    {
-            //        Id = NewId.NextGuid(),
-            //        Name = "Default user group",
-            //        IsDefault = true,
-            //        UserId = context.Message.Userid
-            //    });
+            await _dbContext.PixelGroups.AddAsync(
+                new PixelGroup()
+                {
+                    Id = NewId.NextGuid(),
+                    Name = "Default user group",
+                    IsDefault = true,
+                    UserId = context.Message.Userid
+                });
 
-            //await _dbContext.SaveChangesAsync();
-            return;
+            await _dbContext.SaveChangesAsync();
         }
     }
 
@@ -39,7 +39,7 @@ namespace PixelService.Command.Consumers.Event
     {
         public CreateUserDefinition()
         {
-            EndpointName = "CreateUserEventPixel";
+            EndpointName = "CreateUserEvent";
         }
 
         protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator,

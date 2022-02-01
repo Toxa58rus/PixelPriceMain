@@ -1,5 +1,6 @@
-﻿using Common;
-using Common.Models.Chat;
+﻿using System.Reflection;
+using ChatService.Context.Models;
+using Common;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 
@@ -42,7 +43,13 @@ namespace ChatService.Context
                 }
             }
         }
-        public DbSet<ChatRooms> ChatRooms { get; set; }
-        public DbSet<ChatMessages> ChatMessages { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+	        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly());
+        }
+
+        public DbSet<ChatRoom> ChatRooms { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
     }
 }

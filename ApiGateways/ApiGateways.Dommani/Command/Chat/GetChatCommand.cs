@@ -1,7 +1,7 @@
-﻿using Common.Models.Chat;
+﻿using ApiGateways.Domain.Models.Chat;
 using MediatR;
 
-namespace ApiGateways.Dommain.Command.Chat
+namespace ApiGateways.Domain.Command.Chat
 {
     public class GetChatCommand : IRequest<ChatRooms>
     {

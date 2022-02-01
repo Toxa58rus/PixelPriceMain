@@ -1,5 +1,4 @@
 using ApiGateways.Context;
-using ApiGateways.Dommain.Command.User;
 using ApiGateways.Service.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,16 +12,17 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
-using ApiGateways.Dommain;
-using ApiGateways.Dommain.Handler.Chat;
-using ApiGateways.Dommain.Handler.ImageParser;
-using ApiGateways.Dommain.Handler.Mail;
-using ApiGateways.Dommain.Handler.Pixels;
+using ApiGateways.Domain;
+using ApiGateways.Domain.Services.Chat;
+using ApiGateways.Domain.Services.ImageParser;
+using ApiGateways.Domain.Services.Mail;
+using ApiGateways.Domain.Services.Pixels;
 using MassTransit;
 using ApiGateways.Service.CommandService.PixelService;
 using ApiGateways.Service.CommandService.ImageParserService;
 using ApiGateways.Service.CommandService.Mail;
 using Contracts.MailContract.MailRequest;
+using System.Threading.Tasks;
 
 namespace ApiGateways
 {
@@ -53,7 +53,34 @@ namespace ApiGateways
                             ValidateLifetime = true,
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["AuthenticationOptions:Key"])),
                             ValidateIssuerSigningKey = true
+                            
                         };
+                    /*options.Events = new JwtBearerEvents()
+                    {
+                        OnAuthenticationFailed = (con) =>
+                        {
+                            return System.Threading.Tasks.Task.CompletedTask;
+
+                        },
+                        OnForbidden = (con) =>
+                        {
+                            return System.Threading.Tasks.Task.CompletedTask;
+                        },
+                        OnMessageReceived = (con) =>
+                        {
+                            return System.Threading.Tasks.Task.CompletedTask;
+                        },
+						OnChallenge = (c) =>
+                        {
+                            return Task.CompletedTask;
+                        },
+                        OnTokenValidated= (con) => { 
+                        return Task.CompletedTask;
+                        }
+
+                    };*/
+                    
+                    
                 });
 
             services.AddMassTransit(x =>
@@ -62,10 +89,10 @@ namespace ApiGateways
                 x.UsingRabbitMq(
                 (context, cfg) =>
                 {
-                    cfg.Host(Configuration["RabbitMQ:Host"], conf =>
-                    {
-                        conf.Password(Configuration["RabbitMQ:Password"]);
-                        conf.Username(Configuration["RabbitMQ:UserName"]);
+	                cfg.Host(Configuration["RabbitMQ:Host"], 5672, "/", conf =>
+	                {
+		                conf.Password(Configuration["RabbitMQ:Password"]);
+		                conf.Username(Configuration["RabbitMQ:UserName"]);
                     });
                 });
                 x.AddRequestClient<SendMailRequest>();
@@ -79,15 +106,16 @@ namespace ApiGateways
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiGateways", Version = "v1" });
             });
 
-            services.AddMediatR(typeof(SingUpCommand).GetTypeInfo().Assembly);
-            services.AddEntityFrameworkNpgsql()
-                .AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
+            services.AddMediatR(Assembly.Load("ApiGateways.Service"));
+           
+            services.AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
 
-            services.AddTransient<IMd5Hash, Md5Hash>();
-            services.AddTransient<IPixelServiceCommand, PixelService>();
-            services.AddTransient<IChatServiceCommand, Service.CommandService.Chat.ChatService>();
-            services.AddTransient<IImageParserServiceCommand, ImageParserService>();
-            services.AddTransient<IMailServiceCommand, MailService>();
+            services.AddScoped<IMd5Hash, Md5Hash>();
+            services.AddScoped<IPixelAndGroupService, PixelService>();
+            services.AddScoped<IChatService, Service.CommandService.Chat.ChatService>();
+            services.AddScoped<IImageParserService, ImageParserService>();
+            services.AddScoped<IMailService, MailService>();
+            //services.AddScoped<ApiGatewaysDbContext>();
             services.AddLogging();
         }
 

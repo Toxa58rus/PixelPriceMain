@@ -1,7 +1,7 @@
-﻿using Common.Models.User;
+﻿using ApiGateways.Domain.Models.User;
 using MediatR;
 
-namespace ApiGateways.Dommain.Command.User
+namespace ApiGateways.Domain.Command.User
 {
     public class SingInCommand : IRequest<UserToken>
     {

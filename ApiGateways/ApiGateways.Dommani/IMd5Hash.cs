@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace ApiGateways.Dommain
+namespace ApiGateways.Domain
 {
     public interface IMd5Hash
     {

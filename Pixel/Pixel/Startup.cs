@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PixelService.Context.Models;
 using System.Reflection;
+using PixelService.Context;
 
 namespace PixelService
 {
@@ -23,11 +24,9 @@ namespace PixelService
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("Default");
-            var queryName = Configuration["RpcServer:QueryName"];
 
             services.AddControllers();
-            services.AddEntityFrameworkNpgsql()
-                .AddDbContext<PixelContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContext<PixelContext>(options => options.UseNpgsql(connectionString));
 
             services.AddMassTransit(x =>
             {
@@ -36,9 +35,9 @@ namespace PixelService
                 x.UsingRabbitMq(
                  (context, cfg) =>
                  {
-
+                     
                      cfg.Host(Configuration["RabbitMQ:Host"], conf =>
-                     {
+                     {   
                          conf.Password(Configuration["RabbitMQ:Password"]);
                          conf.Username(Configuration["RabbitMQ:UserName"]);
                      });

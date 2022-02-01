@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
-using ApiGateways.Dommain;
+using ApiGateways.Domain;
 
 namespace ApiGateways.Service.Security
 {

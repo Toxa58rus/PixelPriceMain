@@ -1,25 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ApiGateways.Dommain.Command.Pixels;
-using ApiGateways.Dommain.Handler;
-using ApiGateways.Dommain.Handler.Pixels;
-using Common.Models.Pixels;
+using ApiGateways.Domain;
+using ApiGateways.Domain.Command.PixelsAndGroup;
+using ApiGateways.Domain.Models.PixelsAndGroup.Response;
+using ApiGateways.Domain.Services.Pixels;
 
 namespace ApiGateways.Service.CommandService.PixelService.Handelrs
 {
-    public class ChangerPixelColorHandler : HandlerBase<ChangerPixelColorCommand, List<PixelColorReslutModel>>
+    public class ChangerPixelColorHandler : HandlerBase<ChangerPixelColorCommand, List<ChangePixelColorResponseModel>>
     {
-        private readonly IPixelServiceCommand _pixelServiceCommand;
+        private readonly IPixelAndGroupService _pixelService;
 
-        public ChangerPixelColorHandler(IPixelServiceCommand pixelServiceCommand)
+        public ChangerPixelColorHandler(IPixelAndGroupService pixelService)
         {
-            _pixelServiceCommand = pixelServiceCommand;
+	        _pixelService = pixelService;
         }
 
-        protected override async Task<List<PixelColorReslutModel>> Execute(ChangerPixelColorCommand request, CancellationToken cancellationToken)
+        protected override async Task<List<ChangePixelColorResponseModel>> Execute(ChangerPixelColorCommand request, CancellationToken cancellationToken)
         {
-	       return await _pixelServiceCommand.ChangerPixelColor(request.Pixels, request.Color);
+	       return await _pixelService.ChangerPixelColor(request.PixelsId, request.Color);
         }
     }
 }

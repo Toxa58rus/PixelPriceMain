@@ -6,11 +6,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ApiGateways.Context;
-using ApiGateways.Dommain;
-using ApiGateways.Dommain.Command.User;
-using ApiGateways.Dommain.Handler;
+using ApiGateways.Domain;
+using ApiGateways.Domain.Command.User;
+using ApiGateways.Domain.Models.User;
 using ApiGateways.Service.Security;
-using Common.Models.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -83,14 +82,14 @@ namespace ApiGateways.Service.CommandService.User
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email)
             };
 
-            var claimsIdentite =
+            var claimsIdentity =
                 new ClaimsIdentity(
                     claims,
                     "Token",
                     ClaimsIdentity.DefaultNameClaimType,
                     ClaimsIdentity.DefaultRoleClaimType);
 
-            return claimsIdentite;
+            return claimsIdentity;
         }
     }
 }

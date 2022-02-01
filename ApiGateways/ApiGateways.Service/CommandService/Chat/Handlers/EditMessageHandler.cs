@@ -1,17 +1,17 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using ApiGateways.Dommain.Command.Chat;
-using ApiGateways.Dommain.Handler;
-using ApiGateways.Dommain.Handler.Chat;
-using Common.Models.Chat;
+using ApiGateways.Domain;
+using ApiGateways.Domain.Command.Chat;
+using ApiGateways.Domain.Models.Chat;
+using ApiGateways.Domain.Services.Chat;
 
 namespace ApiGateways.Service.CommandService.Chat.Handlers
 {
     public class EditMessageHandler : HandlerBase<EditMessageCommand, ChatMessages>
     {
-        private readonly IChatServiceCommand _chatServiceCommand;
+        private readonly IChatService _chatServiceCommand;
 
-        public EditMessageHandler(IChatServiceCommand chatServiceCommand)
+        public EditMessageHandler(IChatService chatServiceCommand)
         {
             _chatServiceCommand = chatServiceCommand;
         }

@@ -1,0 +1,47 @@
+﻿using System;
+using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using PixelService.Context.Models;
+
+namespace PixelService.Context
+{
+    public class PixelContext : DbContext
+    {
+        private readonly IConfiguration _configuration;
+
+        public PixelContext()
+        {
+
+        }
+
+        public PixelContext(DbContextOptions<PixelContext> options, IConfiguration configuration)
+            : base(options)
+        {
+            _configuration = configuration;
+        }
+
+        public virtual DbSet<Pixel> Pixels { get; set; }
+        public virtual DbSet<PixelColor> PixelColors { get; set; }
+        public virtual DbSet<PixelGroup> PixelGroups { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                //TODO: Перед запуском в прод изменить получение строки 
+                optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Default"));
+            }
+
+            optionsBuilder.LogTo(Console.WriteLine);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasAnnotation("Relational:Collation", "en_US.UTF-8");
+
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly());
+
+        }
+    }
+}

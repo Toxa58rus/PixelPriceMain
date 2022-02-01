@@ -1,33 +1,28 @@
-﻿using Common.Extensions;
-using Common.Models;
-using Common.Models.ImageParser;
-using Common.Rcp;
-using Common.Rcp.Client;
+﻿using System;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
-using ApiGateways.Dommain.Handler.ImageParser;
+using ApiGateways.Domain.Models.ImageParser;
+using ApiGateways.Domain.Services.ImageParser;
+using Contracts.MailContract.MailRequest;
+using MassTransit;
 
 namespace ApiGateways.Service.CommandService.ImageParserService
 {
-    public class ImageParserService : IImageParserServiceCommand
+    public class ImageParserService : IImageParserService
     {
-        private readonly RpcClient _rpcClient;
+       // private readonly RpcClient _rpcClient;
 
-        public ImageParserService(IConfiguration configuration)
+        public ImageParserService(IConfiguration configuration, IRequestClient<SendMailRequest> requestClien)
         {
             var query = configuration["RpcServer:Querys:ImageParser"];
-            _rpcClient = new RpcClient(new RpcOptions(query));
+            //_rpcClient = new RpcClient(new RpcOptions(query));
         }
 
         public async Task<ImageData> ParseImage(ImageData data)
         {
-            var command = new CommandResponse
-            {
-                CommandName = "ParseImage",
-                Value = data
-            };
-            return await _rpcClient.SendCommandToServer<ImageData>(command);
+	        throw new NotImplementedException();
+            //  return await _rpcClient.SendCommandToServer<ImageData>(command);
         }
 
     }
