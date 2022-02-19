@@ -10,20 +10,20 @@ namespace ApiGateways.Service.CommandService.Mail
 {
     public class MailService : IMailService
     {
-        private readonly IRequestClient<SendMailRequest> _requestClient;
+        private readonly IRequestClient<SendMailRequestDto> _requestClient;
 
-        public MailService(IConfiguration configuration, IRequestClient<SendMailRequest> requestClient)
+        public MailService(IConfiguration configuration, IRequestClient<SendMailRequestDto> requestClient)
         {
             _requestClient = requestClient;
         }
-        public async Task<SendMailRespounse> SendMessage(string UserId)
+        public async Task<SendMailRespounseDto> SendMessage(string userId)
         {
-            var Value = new SendMailRequest()
+            var value = new SendMailRequestDto()
             {
-                UserId = Guid.Parse(UserId)
+                UserId = Guid.Parse(userId)
             };
 
-            var result = await _requestClient.GetResponse<SendMailRespounse>(Value);
+            var result = await _requestClient.GetResponse<SendMailRespounseDto>(value);
 
             return result.Message;
         }

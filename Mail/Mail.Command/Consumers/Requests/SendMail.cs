@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace MailService.Command.Consumers.Requests
 {
 
-    public class SendMail : IConsumer<SendMailRequest>
+    public class SendMail : IConsumer<SendMailRequestDto>
     {
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly MailDbContext _dbContext;
@@ -23,16 +23,16 @@ namespace MailService.Command.Consumers.Requests
         }
 
 
-        public async Task Consume(ConsumeContext<SendMailRequest> context)
+        public async Task Consume(ConsumeContext<SendMailRequestDto> context)
         {
             var temp = await _dbContext.Mail.FirstOrDefaultAsync(x => x.UserId == context.Message.UserId);
 
-            await _publishEndpoint.Publish(new SendMailEvent()
+            await _publishEndpoint.Publish(new SendMailEventDto()
             {
 	            UserId = context.Message.UserId
             });
 
-            await context.RespondAsync(new SendMailRespounse()
+            await context.RespondAsync(new SendMailRespounseDto()
             {
 	            RespounseJson = "asda"
             });

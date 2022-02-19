@@ -8,7 +8,7 @@ using PixelService.Context;
 
 namespace PixelService.Command.Consumers.Event
 {
-    public class CreateUser : IConsumer<CreateUserEvent>
+    public class CreateUser : IConsumer<CreateUserEventDto>
     {
         private readonly PixelContext _dbContext;
         private readonly IPublishEndpoint publish;
@@ -19,7 +19,7 @@ namespace PixelService.Command.Consumers.Event
             this.publish = publish;
         }
 
-        public async Task Consume(ConsumeContext<CreateUserEvent> context)
+        public async Task Consume(ConsumeContext<CreateUserEventDto> context)
         {
 
             await _dbContext.PixelGroups.AddAsync(

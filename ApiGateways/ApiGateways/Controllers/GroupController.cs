@@ -16,15 +16,11 @@ namespace ApiGateways.Controllers
     public class GroupController : BaseController
     {
 	    [HttpPost]
-		public async Task<PixelGroup> CreatePixelGroup([FromBody] CreatePixelGroupCommand command) =>
-			await Mediator.Send(command);
+		public async Task<IActionResult> CreatePixelGroup([FromBody] CreatePixelGroupCommand command) =>
+			await CreateResponse(async () => await Mediator.Send(command));
 
 		[HttpPost]
 		public async Task<List<Pixel>> ChangerPixelGroup([FromBody] ChangerPixelGroupCommand command) =>
-			await Mediator.Send(command);
-
-		[HttpPost]
-		public async Task<List<PixelGroup>> ChangerPixelGroupOwner([FromBody] ChangerPixelGroupOwnerCommand command) =>
 			await Mediator.Send(command);
 
 		[HttpDelete]

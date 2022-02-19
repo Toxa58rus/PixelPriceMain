@@ -7,7 +7,7 @@ namespace PixelService.Context.Models
 {
     public partial class Pixel
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public int? X { get; set; }
         public int? Y { get; set; }
         public Guid GroupId { get; set; }

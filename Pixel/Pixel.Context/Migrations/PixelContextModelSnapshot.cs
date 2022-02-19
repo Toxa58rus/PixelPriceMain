@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using PixelService.Context.Models;
+using PixelService.Context;
+
+#nullable disable
 
 namespace PixelService.Context.Migrations
 {
@@ -15,15 +17,17 @@ namespace PixelService.Context.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:Collation", "en_US.UTF-8")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.7")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                .UseCollation("en_US.UTF-8")
+                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("PixelService.Context.Models.Pixel", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("GroupId")
                         .HasColumnType("uuid");
@@ -50,9 +54,6 @@ namespace PixelService.Context.Migrations
 
                     b.Property<int>("Color")
                         .HasColumnType("integer");
-
-                    b.Property<Guid>("PixelId")
-                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 

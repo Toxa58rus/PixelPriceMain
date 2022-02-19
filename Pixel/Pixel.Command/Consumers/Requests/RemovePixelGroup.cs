@@ -7,7 +7,7 @@ using PixelService.Context;
 
 namespace PixelService.Command.Consumers.Requests
 {
-    public class RemovePixelGroup : IConsumer<RemovePixelGroupRequest>
+    public class RemovePixelGroup : IConsumer<RemovePixelGroupRequestDto>
     {
         private readonly PixelContext _dbContext;
 
@@ -15,7 +15,7 @@ namespace PixelService.Command.Consumers.Requests
         {
             _dbContext = dbContext;
         }
-        public async Task Consume(ConsumeContext<RemovePixelGroupRequest> context)
+        public async Task Consume(ConsumeContext<RemovePixelGroupRequestDto> context)
         {
             //var value = context.ToString().DeserializeToObject<RemovePixelGroupResponseModel>();
             //var group = await _dbContext.PixelGroups.FirstOrDefaultAsync(s => s.Id == value.GroupId);

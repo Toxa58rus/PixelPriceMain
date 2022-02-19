@@ -10,7 +10,7 @@ using PixelService.Context;
 
 namespace PixelService.Command.Consumers.Requests
 {
-    public class ChangePixelGroup : IConsumer<ChangePixelGroupRequest>
+    public class ChangePixelGroup : IConsumer<ChangePixelGroupRequestDto>
     {
         private readonly PixelContext _dbContext;
 
@@ -18,7 +18,7 @@ namespace PixelService.Command.Consumers.Requests
         {
             _dbContext = dbContext;
         }
-        public async Task Consume(ConsumeContext<ChangePixelGroupRequest> context)
+        public async Task Consume(ConsumeContext<ChangePixelGroupRequestDto> context)
         {
 	        var value = context.Message; 
 	        var hasGroup = await _dbContext.PixelGroups.AsNoTracking().AnyAsync(s => s.Id == value.GroupId);
@@ -27,14 +27,14 @@ namespace PixelService.Command.Consumers.Requests
             {
                 foreach (var item in value.PixelIds)
                 {
-                    var pixel = await _dbContext.Pixels.FirstOrDefaultAsync(s => Guid.Parse(s.Id) == item);
+                    var pixel = await _dbContext.Pixels.FirstOrDefaultAsync(s => s.Id == item);
                     if (pixel != null) pixel.GroupId = value.GroupId;
 
                     await _dbContext.SaveChangesAsync();
                 }
             }
 
-            await context.RespondAsync(new CreatePixelGroupResponse() { Name = "Test" });
+            await context.RespondAsync(new CreatePixelGroupResponseDto() { GroupId = Guid.Empty});
         }
     }
 

@@ -13,7 +13,7 @@ namespace ApiGateways.Service.CommandService.ImageParserService
     {
        // private readonly RpcClient _rpcClient;
 
-        public ImageParserService(IConfiguration configuration, IRequestClient<SendMailRequest> requestClien)
+        public ImageParserService(IConfiguration configuration, IRequestClient<SendMailRequestDto> requestClien)
         {
             var query = configuration["RpcServer:Querys:ImageParser"];
             //_rpcClient = new RpcClient(new RpcOptions(query));

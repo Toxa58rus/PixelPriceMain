@@ -5,6 +5,6 @@ namespace ApiGateways.Domain.Services.Mail
 {
     public interface IMailService
     {
-        Task<SendMailRespounse> SendMessage(string UserId);
+        Task<SendMailRespounseDto> SendMessage(string UserId);
     }
 }

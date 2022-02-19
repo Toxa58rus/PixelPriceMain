@@ -30,7 +30,10 @@ namespace PixelService.Context
             if (!optionsBuilder.IsConfigured)
             {
                 //TODO: Перед запуском в прод изменить получение строки 
-                optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Default"));
+                //optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Default"));
+                optionsBuilder.UseNpgsql(
+	                "Host = localhost; Port = 5432; Username = postgres; Password = DarkSpore1; Database = Pixels");
+
             }
 
             optionsBuilder.LogTo(Console.WriteLine);

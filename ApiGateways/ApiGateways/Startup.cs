@@ -39,6 +39,7 @@ namespace ApiGateways
         {
             var connectionString = Configuration.GetConnectionString("Default");
 
+            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -94,8 +95,10 @@ namespace ApiGateways
 		                conf.Password(Configuration["RabbitMQ:Password"]);
 		                conf.Username(Configuration["RabbitMQ:UserName"]);
                     });
+
+	                cfg.Message<SendMailRequestDto>(x => x.SetEntityName("test"));
                 });
-                x.AddRequestClient<SendMailRequest>();
+                x.AddRequestClient<SendMailRequestDto>();
                
             });
 
@@ -123,6 +126,8 @@ namespace ApiGateways
         {
             app.UseHttpsRedirection();
             app.UseRouting();
+            
+           // app.UseMiddleware<ResultWithErrorMiddleware>();
 
             if (env.IsDevelopment())
             {

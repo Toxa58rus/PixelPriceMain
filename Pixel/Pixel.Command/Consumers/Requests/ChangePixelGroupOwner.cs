@@ -12,7 +12,7 @@ using PixelService.Context.Models;
 
 namespace PixelService.Command.Consumers.Requests
 {
-    public class ChangePixelGroupOwner : IConsumer<ChangePixelGroupOwnerRequest>
+    public class ChangePixelGroupOwner : IConsumer<ChangePixelGroupOwnerRequestDto>
     {
         private readonly PixelContext _dbContext;
 
@@ -20,7 +20,7 @@ namespace PixelService.Command.Consumers.Requests
         {
             _dbContext = dbContext;
         }
-        public async Task Consume(ConsumeContext<ChangePixelGroupOwnerRequest> context)
+        public async Task Consume(ConsumeContext<ChangePixelGroupOwnerRequestDto> context)
         {
 
             var value = context.Message;//<ChangePixelGroupOwnerRequest>();

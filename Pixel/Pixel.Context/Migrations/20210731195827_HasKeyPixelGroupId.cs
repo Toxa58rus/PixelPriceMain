@@ -15,13 +15,6 @@ namespace PixelService.Context.Migrations
                 name: "PixelColor",
                 newName: "PixelColors");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "Id",
-                table: "Pixels",
-                type: "text",
-                nullable: false,
-                oldClrType: typeof(Guid),
-                oldType: "uuid");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_PixelGroups",
@@ -52,13 +45,7 @@ namespace PixelService.Context.Migrations
                 name: "PixelColors",
                 newName: "PixelColor");
 
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Id",
-                table: "Pixels",
-                type: "uuid",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "text");
+
         }
     }
 }

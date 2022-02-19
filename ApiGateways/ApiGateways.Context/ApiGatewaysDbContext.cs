@@ -22,7 +22,7 @@ namespace ApiGateways.Context
 
         public ApiGatewaysDbContext()
         {
-
+	     
         }
         public ApiGatewaysDbContext(string connectionString)
         {

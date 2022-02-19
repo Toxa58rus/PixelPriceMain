@@ -31,6 +31,8 @@ namespace PixelService
             services.AddMassTransit(x =>
             {
                 x.AddConsumers(Assembly.Load("PixelService.Command"));
+                x.AddActivities(Assembly.Load("PixelService.Command"));
+                x.AddSagaStateMachines(Assembly.Load("PixelService.Command"));
 
                 x.UsingRabbitMq(
                  (context, cfg) =>

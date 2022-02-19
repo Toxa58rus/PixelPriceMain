@@ -8,7 +8,7 @@ using MassTransit.Definition;
 
 namespace MailService.Command.Consumers.Events
 {
-    public class CreateUser : IConsumer<CreateUserEvent>
+    public class CreateUser : IConsumer<CreateUserEventDto>
     {
         private readonly MailDbContext _dbContext;
 
@@ -17,7 +17,7 @@ namespace MailService.Command.Consumers.Events
             _dbContext = dbContext;
         }
 
-        public async Task Consume(ConsumeContext<CreateUserEvent> context)
+        public async Task Consume(ConsumeContext<CreateUserEventDto> context)
         {
             _dbContext.Mail.Add(new Mail()
             {
