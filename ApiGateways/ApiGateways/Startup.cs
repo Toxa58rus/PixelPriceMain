@@ -114,7 +114,7 @@ namespace ApiGateways
             services.AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
 
             services.AddScoped<IMd5Hash, Md5Hash>();
-            services.AddScoped<IPixelAndGroupService, PixelService>();
+            services.AddScoped<IPixelAndGroupService, UserService>();
             services.AddScoped<IChatService, Service.CommandService.Chat.ChatService>();
             services.AddScoped<IImageParserService, ImageParserService>();
             services.AddScoped<IMailService, MailService>();

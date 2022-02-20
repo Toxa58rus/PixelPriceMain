@@ -1,16 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
-using System;
+﻿using System;
 using System.Reflection;
-using ApiGateways.Context.Models;
+using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
+using UserService.Context.Models;
 
-namespace ApiGateways.Context
+namespace UserService.Context
 {
-    public class ApiGatewaysDbContext : DbContext
+    public class UserDbContext : DbContext
     {
         private readonly string _connectionString;
 
-        public ApiGatewaysDbContext(DbContextOptions<ApiGatewaysDbContext> options) : base(options)
+        public UserDbContext(DbContextOptions<UserDbContext> options) : base(options)
         {
             var npgsqlOptions = options.FindExtension<NpgsqlOptionsExtension>();
 
@@ -20,11 +20,11 @@ namespace ApiGateways.Context
             }
         }
 
-        public ApiGatewaysDbContext()
+        public UserDbContext()
         {
 	     
         }
-        public ApiGatewaysDbContext(string connectionString)
+        public UserDbContext(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -41,11 +41,10 @@ namespace ApiGateways.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
-	        modelBuilder.Entity<Logs>().HasNoKey();
+	        
 	        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly());
         }
 
-        public DbSet<Logs> Logs { set; get; }
+        public DbSet<User> Users { get; set; }
     }
 }

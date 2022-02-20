@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using ApiGateways.Domain.Command.User;
-using ApiGateways.Domain.Models.User;
 
 namespace ApiGateways.Controllers
 {
@@ -10,9 +9,11 @@ namespace ApiGateways.Controllers
     public class AuthorizationController : BaseController
     {
         [HttpPost]
-        public async Task<string> SingUp([FromBody] SingUpCommand command) => await Mediator.Send(command);
+        public async Task<IActionResult> SingUp([FromBody] SingUpCommand command) => 
+	        await CreateResponse(async () => await Mediator.Send(command));
 
         [HttpPost]
-        public async Task<UserToken> SingIn([FromBody] SingInCommand command) => await Mediator.Send(command);
+        public async Task<IActionResult> SingIn([FromBody] SingInCommand command) => 
+	        await CreateResponse(async () => await Mediator.Send(command));
     }
 }

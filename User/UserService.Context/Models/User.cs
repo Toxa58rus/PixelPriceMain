@@ -1,4 +1,4 @@
-﻿namespace ApiGateways.Context.Models
+﻿namespace UserService.Context.Models
 {
     public class User
     {

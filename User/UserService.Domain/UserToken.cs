@@ -1,4 +1,4 @@
-﻿namespace ApiGateways.Domain.Models.User
+﻿namespace UserService.Domain
 {
     public class UserToken
     {

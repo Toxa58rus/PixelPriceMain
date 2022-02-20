@@ -1,8 +1,8 @@
-﻿using ApiGateways.Context.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using UserService.Context.Models;
 
-namespace ApiGateways.Context.ConfigEntity
+namespace UserService.Context.ConfigEntity
 {
     public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
     {

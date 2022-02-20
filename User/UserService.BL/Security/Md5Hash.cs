@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
-using ApiGateways.Domain;
+using UserService.Domain;
 
-namespace ApiGateways.Service.Security
+namespace UserService.BL.Security
 {
     public class Md5Hash : IMd5Hash
     {
