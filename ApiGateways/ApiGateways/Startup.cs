@@ -1,5 +1,4 @@
 using ApiGateways.Context;
-using ApiGateways.Service.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -23,6 +22,8 @@ using ApiGateways.Service.CommandService.ImageParserService;
 using ApiGateways.Service.CommandService.Mail;
 using Contracts.MailContract.MailRequest;
 using System.Threading.Tasks;
+using ApiGateways.Domain.Services.User;
+using ApiGateways.Service.CommandService.User;
 
 namespace ApiGateways
 {
@@ -38,51 +39,6 @@ namespace ApiGateways
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("Default");
-
-            
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.RequireHttpsMetadata = false; // ssl
-                    options.TokenValidationParameters =
-                        new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidIssuer = Configuration["AuthenticationOptions:Issuer"],
-                            ValidateAudience = true,
-                            ValidAudience = Configuration["AuthenticationOptions:Audience"],
-                            ValidateLifetime = true,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration["AuthenticationOptions:Key"])),
-                            ValidateIssuerSigningKey = true
-                            
-                        };
-                    /*options.Events = new JwtBearerEvents()
-                    {
-                        OnAuthenticationFailed = (con) =>
-                        {
-                            return System.Threading.Tasks.Task.CompletedTask;
-
-                        },
-                        OnForbidden = (con) =>
-                        {
-                            return System.Threading.Tasks.Task.CompletedTask;
-                        },
-                        OnMessageReceived = (con) =>
-                        {
-                            return System.Threading.Tasks.Task.CompletedTask;
-                        },
-						OnChallenge = (c) =>
-                        {
-                            return Task.CompletedTask;
-                        },
-                        OnTokenValidated= (con) => { 
-                        return Task.CompletedTask;
-                        }
-
-                    };*/
-                    
-                    
-                });
 
             services.AddMassTransit(x =>
             {
@@ -113,11 +69,12 @@ namespace ApiGateways
            
             services.AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
 
-            services.AddScoped<IMd5Hash, Md5Hash>();
-            services.AddScoped<IPixelAndGroupService, UserService>();
+           // services.AddScoped<IMd5Hash, Md5Hash>();
+            services.AddScoped<IPixelAndGroupService, PixelService>();
             services.AddScoped<IChatService, Service.CommandService.Chat.ChatService>();
             services.AddScoped<IImageParserService, ImageParserService>();
             services.AddScoped<IMailService, MailService>();
+            services.AddScoped<IUserService, UserService>();
             //services.AddScoped<ApiGatewaysDbContext>();
             services.AddLogging();
         }
@@ -136,7 +93,7 @@ namespace ApiGateways
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiGateways v1"));
             }
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -16,13 +16,13 @@ using MassTransit.Courier.Contracts;
 
 namespace ApiGateways.Service.CommandService.PixelService
 {
-    public class UserService : IPixelAndGroupService
+    public class PixelService : IPixelAndGroupService
     {
 	    private readonly IClientFactory _clientFactory;
 	    private readonly IBusControl _busControl;
 	    private readonly IPublishEndpoint _publish;
 
-	    public UserService(
+	    public PixelService(
 		    IConfiguration configuration, 
 		    IClientFactory clientFactory, 
 		    IBusControl busControl

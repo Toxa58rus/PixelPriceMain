@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PixelService.Context;
+using UserService.BL.Security;
+using UserService.Context;
+using UserService.Domain;
 
 namespace UserService
 {
@@ -25,13 +27,13 @@ namespace UserService
             var connectionString = Configuration.GetConnectionString("Default");
 
             services.AddControllers();
-            services.AddDbContext<PixelContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContext<UserDbContext>(options => options.UseNpgsql(connectionString));
 
             services.AddMassTransit(x =>
             {
-                x.AddConsumers(Assembly.Load("PixelService.Command"));
-                x.AddActivities(Assembly.Load("PixelService.Command"));
-                x.AddSagaStateMachines(Assembly.Load("PixelService.Command"));
+                x.AddConsumers(Assembly.Load("UserService.BL"));
+               // x.AddActivities(Assembly.Load("PixelService.Command"));
+               // x.AddSagaStateMachines(Assembly.Load("PixelService.Command"));
 
                 x.UsingRabbitMq(
                  (context, cfg) =>
@@ -50,6 +52,8 @@ namespace UserService
             });
             services.AddMassTransitHostedService();
             services.AddLogging();
+
+            services.AddScoped<IMd5Hash, Md5Hash>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

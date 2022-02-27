@@ -16,20 +16,20 @@ using UserService.Context;
 using UserService.Context.Models;
 using UserService.Domain;
 
-namespace UserService.BL
+namespace UserService.BL.Consumers.Requests
 {
-    public class SignInHandler : IConsumer<SignInUserDataRequestDto>
+    public class SignIn : IConsumer<SignInUserDataRequestDto>
     {
         private readonly UserDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly IMd5Hash _md5Hash;
-        private readonly ILogger<SignInHandler> _logger;
+        private readonly ILogger<SignIn> _logger;
 
-        public SignInHandler(
+        public SignIn(
 	        UserDbContext context, 
             IMd5Hash md5Hash, 
             IConfiguration configuration, 
-            ILogger<SignInHandler> logger)
+            ILogger<SignIn> logger)
         {
             _context = context;
             _md5Hash = md5Hash;

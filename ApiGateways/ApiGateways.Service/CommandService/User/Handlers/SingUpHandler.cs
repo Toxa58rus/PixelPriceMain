@@ -28,7 +28,7 @@ namespace ApiGateways.Service.CommandService.User.Handlers
 
 		protected override async Task<ResultWithError<SignUpDataResponse>> Execute(SingUpCommand request, CancellationToken cancellationToken)
 		{
-			return await _userService.SignUp(request.Email, request.Password);
+			return await _userService.SignUp(request);
 		}
 	}
 }

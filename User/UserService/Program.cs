@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Web;
-using PixelService.Context;
+using UserService.Context;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace UserService
@@ -19,7 +19,7 @@ namespace UserService
 			
 	        using (var scope = host.Services.CreateScope())
 			{
-				var db = scope.ServiceProvider.GetRequiredService<PixelContext>();
+				var db = scope.ServiceProvider.GetRequiredService<UserDbContext>();
 				db.Database.Migrate();
 			}
 			

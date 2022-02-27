@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Contracts.UserContract.UserRequest;
 using MassTransit;
@@ -10,20 +9,20 @@ using UserService.Context;
 using UserService.Context.Models;
 using UserService.Domain;
 
-namespace UserService.BL
+namespace UserService.BL.Consumers.Requests
 {
-    public class SignUpHandler : IConsumer<SignUpUserDataRequestDto>
+    public class SignUp : IConsumer<SignUpUserDataRequestDto>
     {
 		private readonly UserDbContext _context;
 		private readonly IConfiguration _configuration;
 		private readonly IMd5Hash _md5Hash;
-		private readonly ILogger<SignUpHandler> _logger;
+		private readonly ILogger<SignUp> _logger;
 
-		public SignUpHandler(
+		public SignUp(
 	        UserDbContext context,
 	        IMd5Hash md5Hash,
 	        IConfiguration configuration,
-	        ILogger<SignUpHandler> logger)
+	        ILogger<SignUp> logger)
         {
 	        _context = context;
 	        _md5Hash = md5Hash;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ApiGateways.Domain.Command.User;
 using ApiGateways.Domain.Models.User.Response;
 using ApiGateways.Domain.Services.User;
 using Common.Errors;
@@ -13,21 +14,17 @@ namespace ApiGateways.Service.CommandService.User
     public class UserService : IUserService
 	{
 	    private readonly IClientFactory _clientFactory;
-	    private readonly IBusControl _busControl;
-	    private readonly IPublishEndpoint _publish;
 
 	    public UserService(
 		    IConfiguration configuration, 
-		    IClientFactory clientFactory, 
-		    IBusControl busControl
-			)
+		    IClientFactory clientFactory
+	    )
 	    {
 		    _clientFactory = clientFactory;
-		    _busControl = busControl;
 	    }
 
 
-	    public async Task<ResultWithError<SignInDataResponse>> SignIn(string login, string password)
+	    public async Task<ResultWithError<SignInDataResponse>> SignIn(SingInCommand request)
 	    {
 			var requestClient = _clientFactory.CreateRequestClient<SignInUserDataRequestDto>();
 
@@ -35,8 +32,8 @@ namespace ApiGateways.Service.CommandService.User
 			var result = await requestClient.GetResponse<ResultWithError<SignInUserDataResponseDto>>(
 				new SignInUserDataRequestDto()
 				{
-					Login = login,
-					Password = password
+					Login = request.Email,
+					Password = request.Password
 				});
 
 
@@ -50,15 +47,17 @@ namespace ApiGateways.Service.CommandService.User
 				});
 	    }
 
-	    public async Task<ResultWithError<SignUpDataResponse>> SignUp(string login, string password)
+	    public async Task<ResultWithError<SignUpDataResponse>> SignUp(SingUpCommand request)
 	    {
 		    var requestClient = _clientFactory.CreateRequestClient<SignUpUserDataRequestDto>();
 
 			var result = await requestClient.GetResponse<ResultWithError<SignUpUserDataResponseDto>>(
 				new SignUpUserDataRequestDto()
 				{
-					Login = login,
-					Password = password
+					Login = request.Email,
+					Password = request.Password,
+					ConfirmPassword = request.ConfirmPassword,
+					UserName = request.UserName
 				});
 
 

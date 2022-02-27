@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ApiGateways.Domain.Command.User;
 using ApiGateways.Domain.Models.PixelsAndGroup;
 using ApiGateways.Domain.Models.PixelsAndGroup.Response;
 using ApiGateways.Domain.Models.User.Response;
@@ -11,8 +12,8 @@ namespace ApiGateways.Domain.Services.User
 {
     public interface IUserService
     {
-        Task<ResultWithError<SignInDataResponse>> SignIn(string login, string password);
-        Task<ResultWithError<SignUpDataResponse>> SignUp(string login, string password);
+        Task<ResultWithError<SignInDataResponse>> SignIn(SingInCommand request);
+        Task<ResultWithError<SignUpDataResponse>> SignUp(SingUpCommand request);
 
     }
 }

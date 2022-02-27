@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pixel.Command\PixelService.Command.csproj" />
+    <ProjectReference Include="..\Pixel.Context\PixelService.Context.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

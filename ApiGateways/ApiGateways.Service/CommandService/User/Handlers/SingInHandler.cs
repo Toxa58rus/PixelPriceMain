@@ -24,7 +24,7 @@ namespace ApiGateways.Service.CommandService.User.Handlers
 
         protected override async Task<ResultWithError<SignInDataResponse>> Execute(SingInCommand request, CancellationToken cancellationToken)
         {
-	        return await _userService.SignIn(request.Email,request.Password);
+	        return await _userService.SignIn(request);
         }
     }
 }
