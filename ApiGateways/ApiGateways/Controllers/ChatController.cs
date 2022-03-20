@@ -9,7 +9,6 @@ using ChatService.Context.Models;
 namespace ApiGateways.Controllers
 {
     [ApiController]
-    [Authorize]
     [Route("[controller]/[action]")]
     public class ChatController : BaseController
     {

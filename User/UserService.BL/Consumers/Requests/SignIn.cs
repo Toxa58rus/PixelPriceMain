@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ using Common.Errors;
 using Contracts.UserContract.UserRequest;
 using Contracts.UserContract.UserResponse;
 using MassTransit;
+using MassTransit.ConsumeConfigurators;
+using MassTransit.Definition;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -41,7 +44,17 @@ namespace UserService.BL.Consumers.Requests
 	        var identity = await GetIdentity(context.Message.Login, context.Message.Password);
 
 	        //TODO: Обработку сделать 
-	        if (identity is null) throw new NotImplementedException();
+	        if (identity == null)
+	        {
+		        await context.RespondAsync(new ResultWithError<SignInUserDataResponseDto>((int)HttpStatusCode.Unauthorized, null,
+			        new SignInUserDataResponseDto()
+			        {
+				        Token = null,
+				        UserId = Guid.NewGuid()
+			        }));
+		        
+		        return;
+	        }
 
 	        var now = DateTime.UtcNow;
 
@@ -50,7 +63,7 @@ namespace UserService.BL.Consumers.Requests
 		        _configuration["AuthenticationOptions:Audience"],
 		        notBefore: now,
 		        claims: identity.Claims,
-		        expires: now.Add(TimeSpan.FromMinutes(int.Parse(_configuration["AuthenticationOptions:LifeTime"]))),
+		        expires: now.Add(TimeSpan.FromMinutes(double.Parse(_configuration["AuthenticationOptions:LifeTime"]))),
 		        signingCredentials: new SigningCredentials(
 			        new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["AuthenticationOptions:Key"])),
 			        SecurityAlgorithms.HmacSha256));
@@ -59,7 +72,7 @@ namespace UserService.BL.Consumers.Requests
 
 	        _logger?.LogWarning($"user: {context.Message.Login} login");
 
-	        await context.RespondAsync(new ResultWithError<SignInUserDataResponseDto>(200, "sds",
+	        await context.RespondAsync(new ResultWithError<SignInUserDataResponseDto>((int)HttpStatusCode.OK, null,
 		        new SignInUserDataResponseDto()
 		        {
 			        Token = encodedJwt,
@@ -99,5 +112,19 @@ namespace UserService.BL.Consumers.Requests
         }
 
 
+    }
+
+    public class SignInDefinition : ConsumerDefinition<SignIn>
+    {
+	    public SignInDefinition()
+	    {
+		    EndpointName = "SignInRequest";
+	    }
+
+	    protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator,
+		    IConsumerConfigurator<SignIn> consumerConfigurator)
+	    {
+
+	    }
     }
 }

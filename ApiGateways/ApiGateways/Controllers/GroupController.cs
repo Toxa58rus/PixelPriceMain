@@ -10,10 +10,8 @@ using ApiGateways.Domain.Models.PixelsAndGroup.Response;
 namespace ApiGateways.Controllers
 {
 	[ApiController]
-    //[Authorize]
-    [Route("[controller]/[action]")]
-    [AllowAnonymous]
-    public class GroupController : BaseController
+	[Route("[controller]/[action]")]
+	public class GroupController : BaseController
     {
 	    [HttpPost]
 		public async Task<IActionResult> CreatePixelGroup([FromBody] CreatePixelGroupCommand command) =>
