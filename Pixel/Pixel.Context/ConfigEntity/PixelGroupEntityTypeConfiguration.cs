@@ -18,6 +18,8 @@ namespace PixelService.Context.ConfigEntity
 
             builder.ToTable("PixelGroup");
 
+            builder.HasIndex(e => e.Id, "PixelIndexGroupId")
+	            .IsUnique();
         }
     }
 }

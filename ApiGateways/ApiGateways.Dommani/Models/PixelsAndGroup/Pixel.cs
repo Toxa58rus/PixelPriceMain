@@ -5,6 +5,7 @@ namespace ApiGateways.Domain.Models.PixelsAndGroup
     public class Pixel
     {
         public Guid Id { get; set; }
+        public int Color { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public Guid GroupId { get; set; }

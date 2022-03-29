@@ -38,9 +38,9 @@ namespace PixelService.Command.Consumers.Requests
         }
 
     }
-    public class RemovePixelGroupCommandDefinition : ConsumerDefinition<RemovePixelGroup>
+    public class RemovePixelGroupDefinition : ConsumerDefinition<RemovePixelGroup>
     {
-        public RemovePixelGroupCommandDefinition()
+        public RemovePixelGroupDefinition()
         {
             EndpointName = "RemovePixelGroupRequest";
         }

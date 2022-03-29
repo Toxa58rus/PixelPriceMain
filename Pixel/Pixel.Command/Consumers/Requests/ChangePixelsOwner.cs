@@ -36,9 +36,9 @@ namespace PixelService.Command.Consumers.Requests
 
 
     }
-    public class ChangePixelsOwnerCommandDefinition : ConsumerDefinition<ChangePixelsOwner>
+    public class ChangePixelsOwnerDefinition : ConsumerDefinition<ChangePixelsOwner>
     {
-        public ChangePixelsOwnerCommandDefinition()
+        public ChangePixelsOwnerDefinition()
         {
             EndpointName = "ChangePixelGroupOwnerRequest";
         }

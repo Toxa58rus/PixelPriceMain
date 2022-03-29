@@ -17,5 +17,10 @@ namespace ApiGateways.Controllers
         public async Task<IActionResult> ChangerPixelColor([FromBody] ChangerPixelColorCommand command) =>
 	        await CreateResponse(async () => await Mediator.Send(command));
 
+        //[UserAuthorize]
+        [HttpGet]
+        public async Task<IActionResult> GetPixelPart([FromQuery] GetPixelPartCommand command) =>
+	        await CreateResponse(async () => await Mediator.Send(command));
+
     }
 }

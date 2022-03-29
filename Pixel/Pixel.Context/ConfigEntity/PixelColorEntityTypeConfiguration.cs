@@ -18,6 +18,9 @@ namespace PixelService.Context.ConfigEntity
 
             builder.Property(x => x.Id).IsRequired();
 
+            builder.HasIndex(e => e.Id, "PixelIndexColorId")
+	            .IsUnique();
+
             builder.ToTable("PixelColor");
            
         }

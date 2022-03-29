@@ -10,6 +10,7 @@ namespace ApiGateways.Domain.Services.Pixels
 {
     public interface IPixelAndGroupService
     {
+	    Task<ResultWithError<GetPixelPartResponse>> GetPixelPart(int startPositionX, int startPositionY, int endPositionX, int endPositionY);
         Task<ResultWithError<Guid>> CreateUserPixelGroup(Guid userId, string name, bool isDefault = false);
         Task<bool> RemovePixelGroup(Guid id, Guid groupId);
         Task<List<Pixel>> ChangerPixelGroup(List<Guid> pixels, Guid groupId);

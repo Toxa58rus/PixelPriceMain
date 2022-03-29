@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace PixelService.Context.Models
 {
-    public partial class PixelGroup
+    public class PixelGroup
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

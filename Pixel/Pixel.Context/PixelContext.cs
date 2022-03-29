@@ -8,11 +8,17 @@ namespace PixelService.Context
 {
     public class PixelContext : DbContext
     {
-        private readonly IConfiguration _configuration;
+	    private readonly string _connectionString;
+	    private readonly IConfiguration _configuration;
 
         public PixelContext()
         {
 
+        }
+
+        public PixelContext(string connectionString)
+        {
+	        _connectionString = connectionString;
         }
 
         public PixelContext(DbContextOptions<PixelContext> options, IConfiguration configuration)
@@ -22,7 +28,7 @@ namespace PixelService.Context
         }
 
         public virtual DbSet<Pixel> Pixels { get; set; }
-        public virtual DbSet<PixelColor> PixelColors { get; set; }
+       // public virtual DbSet<PixelColor> PixelColors { get; set; }
         public virtual DbSet<PixelGroup> PixelGroups { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -41,7 +47,7 @@ namespace PixelService.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "en_US.UTF-8");
+            //modelBuilder.HasAnnotation("Relational:Collation", "en_US.UTF-8");
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly());
 

@@ -42,8 +42,9 @@ namespace ApiGateways.Service.CommandService.User
 				result.Message.Message,
 				new SignInDataResponse()
 				{
-					Token= result.Message.Result.Token,
-					UserId = result.Message.Result.UserId
+					AccessToken = result.Message.Result.AccessToken,
+					UserId = result.Message.Result.UserId,
+					RefreshToken = result.Message.Result.RefreshToken
 				});
 	    }
 
@@ -66,8 +67,9 @@ namespace ApiGateways.Service.CommandService.User
 				result.Message.Message,
 				new SignUpDataResponse()
 				{
-					Token = result.Message.Result.Token,
-					UserId = result.Message.Result.UserId
+					AccessToken = result.Message.Result.AccessToken,
+					UserId = result.Message.Result.UserId,
+					RefreshToken = result.Message.Result.RefreshToken
 				});
 		}
 	}

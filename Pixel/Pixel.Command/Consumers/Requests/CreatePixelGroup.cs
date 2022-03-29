@@ -58,9 +58,9 @@ namespace PixelService.Command.Consumers.Requests
             );
         }
     }
-    public class CreatePixelGroupCommandDefinition : ConsumerDefinition<CreatePixelGroup>
+    public class CreatePixelGroupDefinition : ConsumerDefinition<CreatePixelGroup>
     {
-        public CreatePixelGroupCommandDefinition()
+        public CreatePixelGroupDefinition()
         {
             EndpointName = "CreatePixelGroupRequest";
         }

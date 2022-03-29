@@ -51,15 +51,16 @@ namespace PixelService.Command.Consumers.Requests
 
 
 	            var listChangeData = request.PixelIds.Select(x =>
-		            new PixelColor()
+		            new Pixel()
 		            {
 			            Id = x,
 			            Color = request.Color
 		            }).ToList();
 
-	            _dbContext.PixelColors.AttachRange(listChangeData);
 
-	            foreach (var color in listChangeData)
+				_dbContext.Pixels.AttachRange(listChangeData);
+
+				foreach (var color in listChangeData)
 	            {
 		            _dbContext.Entry(color).Property(nameof(color.Color)).IsModified = true;
 	            }
@@ -83,9 +84,9 @@ namespace PixelService.Command.Consumers.Requests
         }
     }
 
-    public class ChangePixelColorCommandDefinition : ConsumerDefinition<ChangePixelColor>
+    public class ChangePixelColorDefinition : ConsumerDefinition<ChangePixelColor>
     {
-        public ChangePixelColorCommandDefinition()
+        public ChangePixelColorDefinition()
         {
             EndpointName = "ChangePixelColorRequest";
         }

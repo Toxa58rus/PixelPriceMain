@@ -32,7 +32,39 @@ namespace ApiGateways.Service.CommandService.PixelService
 		    _busControl = busControl;
 	    }
 
-        public async Task<ResultWithError<Guid>> CreateUserPixelGroup(Guid userId, string name, bool isDefault = false)
+	    public async Task<ResultWithError<GetPixelPartResponse>> GetPixelPart(int startPositionX, int startPositionY, int endPositionX, int endPositionY)
+	    {
+			var requestClient = _clientFactory.CreateRequestClient<GetPixelPartRequestDto>();
+
+			var response = await requestClient.GetResponse<ResultWithError<GetPixelPartResponseDto>>(
+				new GetPixelPartRequestDto()
+				{
+					StartPositionX = startPositionX,
+					StartPositionY = startPositionY,
+					EndPositionX = endPositionX,
+					EndPositionY = endPositionY
+				});
+
+			var listPixel = response.Message.Result.Pixels.Select(x => new Pixel()
+			{
+				Color = x.Color,
+				GroupId = x.GroupId,
+				Id = x.Id,
+				UserId = x.UserId,
+				X = x.X,
+				Y = x.Y
+			});
+
+			return new ResultWithError<GetPixelPartResponse>(
+				response.Message.ErrorCode,
+				response.Message.Message,
+				new GetPixelPartResponse()
+				{
+					Pixels = listPixel.ToList()
+				});
+	    }
+
+	    public async Task<ResultWithError<Guid>> CreateUserPixelGroup(Guid userId, string name, bool isDefault = false)
         {
 	        var requestClient = _clientFactory.CreateRequestClient<CreatePixelGroupRequestDto>();
 
@@ -85,7 +117,7 @@ namespace ApiGateways.Service.CommandService.PixelService
 				result.Message.Message,
 				new List<ChangePixelColorResponse>()
 				{
-					result.Message.Result.ToModel()
+					result.Message.Result?.ToModel()
 				});
 			var builder = new RoutingSlipBuilder(NewId.NextGuid());
 

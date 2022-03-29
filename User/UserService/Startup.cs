@@ -54,6 +54,7 @@ namespace UserService
             services.AddLogging();
 
             services.AddScoped<IMd5Hash, Md5Hash>();
+            services.AddScoped<IJwtHelper, JwtHelper>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

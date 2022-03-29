@@ -38,9 +38,9 @@ namespace PixelService.Command.Consumers.Requests
         }
     }
 
-    public class ChangePixelGroupCommandDefinition : ConsumerDefinition<ChangePixelGroup>
+    public class ChangePixelGroupDefinition : ConsumerDefinition<ChangePixelGroup>
     {
-        public ChangePixelGroupCommandDefinition()
+        public ChangePixelGroupDefinition()
         {
             EndpointName = "ChangePixelGroupRequest";
         }

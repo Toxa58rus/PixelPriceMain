@@ -12,9 +12,9 @@ namespace ApiGateways.Service.CommandService.Mail
     {
         private readonly IRequestClient<SendMailRequestDto> _requestClient;
 
-        public MailService(IConfiguration configuration, IRequestClient<SendMailRequestDto> requestClient)
+        public MailService(IConfiguration configuration)
         {
-            _requestClient = requestClient;
+          //  _requestClient = requestClient;
         }
         public async Task<SendMailRespounseDto> SendMessage(string userId)
         {

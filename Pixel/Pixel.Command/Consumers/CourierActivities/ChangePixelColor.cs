@@ -71,7 +71,7 @@ namespace PixelService.Command.Consumers.CourierActivities
 			            Color = request.Color
 		            }).ToList();
 
-	            _dbContext.PixelColors.AttachRange(listChangeData);
+	           // _dbContext.PixelColors.AttachRange(listChangeData);
 
 	            foreach (var color in listChangeData)
 	            {

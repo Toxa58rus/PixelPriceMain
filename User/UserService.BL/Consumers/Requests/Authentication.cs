@@ -23,22 +23,17 @@ namespace UserService.BL.Consumers.Requests
 {
     public class Authentication : IConsumer<AuthenticationDataRequestDto>
     {
-        private readonly UserDbContext _context;
-        private readonly IConfiguration _configuration;
-        private readonly IMd5Hash _md5Hash;
-        private readonly ILogger<Authentication> _logger;
+	    private readonly ILogger<Authentication> _logger;
+        private readonly IJwtHelper _jwtHelper;
 
         public Authentication(
-	        UserDbContext context, 
-            IMd5Hash md5Hash, 
-            IConfiguration configuration, 
-            ILogger<Authentication> logger)
+	        ILogger<Authentication> logger,
+	        IJwtHelper jwtHelper)
         {
-            _context = context;
-            _md5Hash = md5Hash;
-            _configuration = configuration;
-            _logger = logger;
+	        _logger = logger;
+            _jwtHelper = jwtHelper;
         }
+
         public async Task Consume(ConsumeContext<AuthenticationDataRequestDto> context)
         {
 
@@ -51,32 +46,19 @@ namespace UserService.BL.Consumers.Requests
 		        return;
 	        }
 
-	        var now = DateTime.UtcNow;
+	        var result = _jwtHelper.ValidationSecurityToken(request.AccessToken);
 
-	        try
+	        if (result.IsValid)
 	        {
-		        var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
-
-		        var validationParameters = new TokenValidationParameters
-		        {
-			        ValidateIssuer = true,
-			        ValidIssuer = _configuration["AuthenticationOptions:Issuer"],
-			        ValidateAudience = true,
-			        ValidAudience = _configuration["AuthenticationOptions:Audience"],
-			        ValidateLifetime = true,
-			        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["AuthenticationOptions:Key"]))
-				};
-		        
-				jwtSecurityTokenHandler.ValidateToken(request.AccessToken, validationParameters, out var validateToken);
-
 		        await context.RespondAsync(new ResultWithError<bool>((int)HttpStatusCode.OK, null,
 			        true));
 	        }
-	        catch (Exception ex)
+	        else
 	        {
 		        await context.RespondAsync(new ResultWithError<bool>((int)HttpStatusCode.Unauthorized, null,
 			        false));
-			}
+	        }
+
         }
 
 

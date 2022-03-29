@@ -27,60 +27,55 @@ namespace UserService.BL.Consumers.Requests
         private readonly IConfiguration _configuration;
         private readonly IMd5Hash _md5Hash;
         private readonly ILogger<SignIn> _logger;
+        private readonly IJwtHelper _jwtHelper;
 
         public SignIn(
 	        UserDbContext context, 
             IMd5Hash md5Hash, 
             IConfiguration configuration, 
-            ILogger<SignIn> logger)
+            ILogger<SignIn> logger,
+	        IJwtHelper jwtHelper)
         {
             _context = context;
             _md5Hash = md5Hash;
             _configuration = configuration;
             _logger = logger;
+            _jwtHelper = jwtHelper;
         }
         public async Task Consume(ConsumeContext<SignInUserDataRequestDto> context)
         {
 	        var identity = await GetIdentity(context.Message.Login, context.Message.Password);
 
-	        //TODO: Обработку сделать 
 	        if (identity == null)
 	        {
 		        await context.RespondAsync(new ResultWithError<SignInUserDataResponseDto>((int)HttpStatusCode.Unauthorized, null,
 			        new SignInUserDataResponseDto()
 			        {
-				        Token = null,
+				        AccessToken = null,
 				        UserId = Guid.NewGuid()
 			        }));
 		        
 		        return;
 	        }
 
-	        var now = DateTime.UtcNow;
+	        var jwtAccess = _jwtHelper.CreateJwtToken(identity.Claims,
+		        double.Parse(_configuration["AuthenticationOptions:LifeTime"]));
 
-	        var jwt = new JwtSecurityToken(
-		        _configuration["AuthenticationOptions:Issuer"],
-		        _configuration["AuthenticationOptions:Audience"],
-		        notBefore: now,
-		        claims: identity.Claims,
-		        expires: now.Add(TimeSpan.FromMinutes(double.Parse(_configuration["AuthenticationOptions:LifeTime"]))),
-		        signingCredentials: new SigningCredentials(
-			        new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["AuthenticationOptions:Key"])),
-			        SecurityAlgorithms.HmacSha256));
-
-	        var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+	        var jwtRefresh = _jwtHelper.CreateJwtToken(identity.Claims,150);
 
 	        _logger?.LogWarning($"user: {context.Message.Login} login");
 
-	        await context.RespondAsync(new ResultWithError<SignInUserDataResponseDto>((int)HttpStatusCode.OK, null,
+			await context.RespondAsync(new ResultWithError<SignInUserDataResponseDto>((int)HttpStatusCode.OK, null,
 		        new SignInUserDataResponseDto()
 		        {
-			        Token = encodedJwt,
+			        AccessToken = jwtAccess,
+			        RefreshToken = jwtRefresh,
 			        UserId = Guid.NewGuid()
 		        }));
+
         }
 
-       
+     
 
         private async Task<ClaimsIdentity> GetIdentity(string email, string password)
         {
@@ -97,16 +92,11 @@ namespace UserService.BL.Consumers.Requests
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Id),
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email)
+                new Claim(ClaimTypes.Name, "TestName"),
+                //new Claim(ClaimTypes.DefaultNameClaimType, user.Email)
             };
 
-            var claimsIdentity =
-                new ClaimsIdentity(
-                    claims,
-                    "Token",
-                    ClaimsIdentity.DefaultNameClaimType,
-                    ClaimsIdentity.DefaultRoleClaimType);
+            var claimsIdentity = new ClaimsIdentity(claims);
 
             return claimsIdentity;
         }
