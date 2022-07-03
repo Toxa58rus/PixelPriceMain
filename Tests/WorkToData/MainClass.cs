@@ -51,7 +51,7 @@ class MainClass
 		}
 
 		var pixelContext = new PixelContext();
-		pixelContext.Database.EnsureDeleted();
+		//pixelContext.Database.EnsureDeleted();
 		pixelContext.Database.EnsureCreated();
 		//pixelContext.PixelColors.Add(color);
 		pixelContext.Pixels.AddRange(pixel);
@@ -62,12 +62,5 @@ class MainClass
 
 		
 	}
-
-	private static async Task MetodAsync()
-	{
-		await Task.Delay(500);
-		Console.WriteLine("2");
-	}
-
 }
 

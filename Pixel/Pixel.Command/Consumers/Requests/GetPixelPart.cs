@@ -12,6 +12,7 @@ using MassTransit.ConsumeConfigurators;
 using MassTransit.Courier;
 using MassTransit.Courier.Contracts;
 using MassTransit.Definition;
+using Microsoft.EntityFrameworkCore;
 using PixelService.Command.Consumers.Requests;
 using PixelService.Context;
 using PixelService.Context.Models;
@@ -33,7 +34,7 @@ namespace PixelService.Command.Consumers.Requests
 			var request = context.Message;
 			try
 			{
-				var resultQuery = _dbContext.Pixels.Select(x => new PixelDto()
+				var resultQuery = _dbContext.Pixels.AsNoTracking().Select(x => new PixelDto()
 				{
 					Color = x.Color,
 					GroupId = x.GroupId,

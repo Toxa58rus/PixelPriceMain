@@ -9,7 +9,7 @@ using Common.Errors;
 
 namespace ApiGateways.Service.CommandService.PixelService.Handlers
 {
-    public class GetPixelPartHandler : HandlerBase<GetPixelPartCommand, ResultWithError<GetPixelPartResponse>>
+    public class GetPixelPartHandler : HandlerBase<GetPixelPartCommand, IResultWithError<GetPixelPartResponse>>//ResultWithError<GetPixelPartResponse>>
     {
         private readonly IPixelAndGroupService _pixelService;
 
@@ -18,7 +18,7 @@ namespace ApiGateways.Service.CommandService.PixelService.Handlers
 	        _pixelService = pixelService;
         }
 
-        protected override async Task<ResultWithError<GetPixelPartResponse>> Execute(GetPixelPartCommand request, CancellationToken cancellationToken)
+        protected override async Task<IResultWithError<GetPixelPartResponse>> Execute(GetPixelPartCommand request, CancellationToken cancellationToken)
         {
 	       return await _pixelService.GetPixelPart(request.StartPositionX, request.StartPositionY, request.EndPositionX, request.EndPositionY);
         }

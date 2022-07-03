@@ -11,5 +11,6 @@ namespace PixelService.Context.Models
         public string Name { get; set; }
         public Guid UserId { get; set; }
         public bool IsDefault { get; set; }
+        public string Massage { get; set; }
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ApiGateways.Service.CommandService.User.Handlers
 {
-    public class SingInHandler : HandlerBase<SingInCommand, ResultWithError<SignInDataResponse>>
+    public class SingInHandler : HandlerBase<SingInCommand, IResultWithError<SignInDataResponse>>
     {
         private readonly IUserService _userService;
         private readonly ILogger<SingInHandler> _logger;
@@ -22,7 +22,7 @@ namespace ApiGateways.Service.CommandService.User.Handlers
             _logger = logger;
         }
 
-        protected override async Task<ResultWithError<SignInDataResponse>> Execute(SingInCommand request, CancellationToken cancellationToken)
+        protected override async Task<IResultWithError<SignInDataResponse>> Execute(SingInCommand request, CancellationToken cancellationToken)
         {
 	        return await _userService.SignIn(request);
         }

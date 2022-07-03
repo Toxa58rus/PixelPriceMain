@@ -12,8 +12,8 @@ namespace ApiGateways.Domain.Services.User
 {
     public interface IUserService
     {
-        Task<ResultWithError<SignInDataResponse>> SignIn(SingInCommand request);
-        Task<ResultWithError<SignUpDataResponse>> SignUp(SingUpCommand request);
+        Task<IResultWithError<SignInDataResponse>> /*ResultWithError<SignInDataResponse>> */SignIn(SingInCommand request);
+        Task<IResultWithError<SignUpDataResponse>> /*ResultWithError<SignUpDataResponse>> */SignUp(SingUpCommand request);
 
     }
 }

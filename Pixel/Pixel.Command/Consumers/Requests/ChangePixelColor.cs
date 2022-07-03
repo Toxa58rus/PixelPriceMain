@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -11,6 +10,7 @@ using MassTransit.ConsumeConfigurators;
 using MassTransit.Courier;
 using MassTransit.Courier.Contracts;
 using MassTransit.Definition;
+using Microsoft.EntityFrameworkCore;
 using PixelService.Context;
 using PixelService.Context.Models;
 
@@ -50,12 +50,12 @@ namespace PixelService.Command.Consumers.Requests
             {
 
 
-	            var listChangeData = request.PixelIds.Select(x =>
+	            var listChangeData = await request.PixelIds.AsQueryable().Select(x =>
 		            new Pixel()
 		            {
 			            Id = x,
 			            Color = request.Color
-		            }).ToList();
+		            }).AsNoTracking().ToListAsync();
 
 
 				_dbContext.Pixels.AttachRange(listChangeData);

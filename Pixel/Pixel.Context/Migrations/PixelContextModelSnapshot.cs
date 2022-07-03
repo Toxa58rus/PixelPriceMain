@@ -57,6 +57,9 @@ namespace PixelService.Context.Migrations
                     b.Property<bool>("IsDefault")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("Massage")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 

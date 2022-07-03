@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using ApiGateways.Domain.Command.ImageParser;
-using ApiGateways.Domain.Models.ImageParser;
 
 namespace ApiGateways.Controllers
 {
@@ -11,6 +10,7 @@ namespace ApiGateways.Controllers
     public class ImageParserController : BaseController
     {
         [HttpPost]
-        public async Task<ImageData> ParseImage([FromBody] ParseImageCommand command) => await Mediator.Send(command);
+        public async Task<IActionResult> ParseImage([FromBody] ParseImageCommand command) 
+	        => await CreateResponse(async() => await Mediator.Send(command));
     }
 }

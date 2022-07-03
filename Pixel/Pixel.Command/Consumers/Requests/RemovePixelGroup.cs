@@ -1,8 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Common.Errors;
 using Contracts.PixelContract.PixelRequest;
 using MassTransit;
 using MassTransit.ConsumeConfigurators;
 using MassTransit.Definition;
+using Microsoft.EntityFrameworkCore;
 using PixelService.Context;
 
 namespace PixelService.Command.Consumers.Requests
@@ -17,24 +21,31 @@ namespace PixelService.Command.Consumers.Requests
         }
         public async Task Consume(ConsumeContext<RemovePixelGroupRequestDto> context)
         {
-            //var value = context.ToString().DeserializeToObject<RemovePixelGroupResponseModel>();
-            //var group = await _dbContext.PixelGroups.FirstOrDefaultAsync(s => s.Id == value.GroupId);
-            
-            //if (!group.IsDefault)
-            //{
-            //    var defaultGroup =
-            //        await _dbContext.PixelGroups.FirstOrDefaultAsync(s => s.IsDefault && s.UserId == value.UserId);
-            //    
-            //    var pixels = _dbContext.Pixels.Where(s => s.GroupId == value.GroupId).ToList();
-            //
-            //    foreach (var item in pixels)
-            //    {
-            //        item.GroupId = defaultGroup.Id;
-            //    }
-            //
-            //    _dbContext.PixelGroups.Remove(group);
-            //    await _dbContext.SaveChangesAsync();
-            //}
+	        var request = context.Message;
+
+	        var defaultGroupIdUser =
+		        await _dbContext.PixelGroups.AsNoTracking().FirstAsync(x => x.UserId == request.UserId && x.IsDefault == true);
+
+	        var listPixelForRemoveGroup = await _dbContext.Pixels.AsNoTracking().Where(x => x.GroupId == request.GroupId).ToListAsync();
+
+	        _dbContext.Pixels.AttachRange(listPixelForRemoveGroup);
+
+            foreach (var item in listPixelForRemoveGroup)
+	        {
+		        item.GroupId = defaultGroupIdUser.Id;
+		        _dbContext.Entry(item).Property(nameof(item.GroupId)).IsModified = true;
+	        }
+
+            var removeGroup=
+	            await _dbContext.PixelGroups.AsNoTracking().FirstAsync(x => x.UserId == request.UserId && x.IsDefault == true);
+
+            _dbContext.PixelGroups.Remove(removeGroup);
+
+            await _dbContext.SaveChangesAsync();
+
+            await context.RespondAsync(new ResultWithError(
+	            (int)HttpStatusCode.BadRequest,
+	            "Ошибка изменения цвета пикселей"));
         }
 
     }

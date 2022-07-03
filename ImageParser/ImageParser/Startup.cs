@@ -23,25 +23,29 @@ namespace ImageParserService
 	        services.AddControllers();
 	        
 	        services.AddLogging();
-	        
 	        services.AddMassTransit(x =>
 	        {
+		        x.AddConsumers(Assembly.Load("ImageParserService.Command"));
+		        // x.AddActivities(Assembly.Load("PixelService.Command"));
+		        // x.AddSagaStateMachines(Assembly.Load("PixelService.Command"));
+
 		        x.UsingRabbitMq(
 			        (context, cfg) =>
 			        {
+
 				        cfg.Host(Configuration["RabbitMQ:Host"], conf =>
 				        {
 					        conf.Password(Configuration["RabbitMQ:Password"]);
 					        conf.Username(Configuration["RabbitMQ:UserName"]);
 				        });
+
+				        cfg.ConfigureEndpoints(context);
+
 			        });
 
-	            x.AddConsumers(Assembly.Load("ImageParserService.Command"));
+	        });
+	        services.AddMassTransitHostedService();
 
-            });
-	        
-
-            services.AddMassTransitHostedService();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

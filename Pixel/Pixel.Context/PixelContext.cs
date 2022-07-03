@@ -27,7 +27,7 @@ namespace PixelService.Context
             _configuration = configuration;
         }
 
-        public virtual DbSet<Pixel> Pixels { get; set; }
+        public DbSet<Pixel> Pixels { get; set; }
        // public virtual DbSet<PixelColor> PixelColors { get; set; }
         public virtual DbSet<PixelGroup> PixelGroups { get; set; }
 

@@ -12,14 +12,13 @@ using PixelService.Context;
 namespace PixelService.Context.Migrations
 {
     [DbContext(typeof(PixelContext))]
-    [Migration("20220320182457_add_Color_Id_in_Pixel")]
-    partial class add_Color_Id_in_Pixel
+    [Migration("20220702205829_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseCollation("en_US.UTF-8")
                 .HasAnnotation("ProductVersion", "6.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -31,8 +30,8 @@ namespace PixelService.Context.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ColorId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("Color")
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("GroupId")
                         .HasColumnType("uuid");
@@ -51,20 +50,6 @@ namespace PixelService.Context.Migrations
                     b.ToTable("Pixels");
                 });
 
-            modelBuilder.Entity("PixelService.Context.Models.PixelColor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Color")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PixelColors");
-                });
-
             modelBuilder.Entity("PixelService.Context.Models.PixelGroup", b =>
                 {
                     b.Property<Guid>("Id")
@@ -73,6 +58,9 @@ namespace PixelService.Context.Migrations
 
                     b.Property<bool>("IsDefault")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("Massage")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ApiGateways.Domain.Services.Mail;
+using Common.Errors;
 using Contracts.MailContract.MailRequest;
 using Contracts.MailContract.MailRespounse;
 using MassTransit;
@@ -16,14 +17,14 @@ namespace ApiGateways.Service.CommandService.Mail
         {
           //  _requestClient = requestClient;
         }
-        public async Task<SendMailRespounseDto> SendMessage(string userId)
+        public async Task<IResultWithError<SendMailRespounseDto>> SendMessage(string userId)
         {
             var value = new SendMailRequestDto()
             {
                 UserId = Guid.Parse(userId)
             };
 
-            var result = await _requestClient.GetResponse<SendMailRespounseDto>(value);
+            var result = await _requestClient.GetResponse< ResultWithError<SendMailRespounseDto >>(value);
 
             return result.Message;
         }

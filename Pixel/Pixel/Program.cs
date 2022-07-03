@@ -20,6 +20,7 @@ namespace PixelService
 	        using (var scope = host.Services.CreateScope())
 			{
 				var db = scope.ServiceProvider.GetRequiredService<PixelContext>();
+				db.Database.Migrate();
 			}
 			
 	        host.Run();

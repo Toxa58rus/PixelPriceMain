@@ -1,29 +1,63 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
-using ApiGateways.Domain.Models.ImageParser;
+using ApiGateways.Domain.Models.Image.Response;
+using ApiGateways.Domain.Models.PixelsAndGroup;
+using ApiGateways.Domain.Models.PixelsAndGroup.Response;
 using ApiGateways.Domain.Services.ImageParser;
-using Contracts.MailContract.MailRequest;
+using Common.Errors;
+using Contracts.ImageParserContract.ImageParserRequest;
+using Contracts.ImageParserContract.ImageParserResponse;
+using Contracts.PixelContract.PixelRequest;
+using Contracts.PixelContract.PixelResponse;
 using MassTransit;
 
 namespace ApiGateways.Service.CommandService.ImageParserService
 {
     public class ImageParserService : IImageParserService
     {
-       // private readonly RpcClient _rpcClient;
+	    private readonly IClientFactory _clientFactory;
 
-        public ImageParserService(IConfiguration configuration)
+	    private readonly IBusControl _busControl;
+
+
+        public ImageParserService(
+	        IClientFactory clientFactory,
+	        IBusControl busControl)
         {
-            var query = configuration["RpcServer:Querys:ImageParser"];
-            //_rpcClient = new RpcClient(new RpcOptions(query));
+	        _clientFactory = clientFactory;
+	        _busControl = busControl;
         }
 
-        public async Task<ImageData> ParseImage(ImageData data)
+        public async Task<IResultWithError<ImageDataResponse>> SetImageForGroup(string imageBaseString, Guid groupId)
         {
-	        throw new NotImplementedException();
-            //  return await _rpcClient.SendCommandToServer<ImageData>(command);
-        }
+			var requestClient = _clientFactory.CreateRequestClient<SetImageInGroupRequestDto>();
 
+			var response = await requestClient.GetResponse<ResultWithError<SetImageInGroupResponseDto>>(
+				new SetImageInGroupRequestDto()
+				{
+					ImageBaseString = imageBaseString,
+					GroupId = groupId
+				});
+
+			if (response.Message.IsError)
+			{
+				return new ResultWithError<ImageDataResponse>(
+					response.Message.ErrorCode,
+					response.Message.Message,
+					null);
+			}
+
+			return new ResultWithError<ImageDataResponse>(
+				response.Message.ErrorCode,
+				response.Message.Message,
+				new ImageDataResponse()
+				{
+					GroupId = response.Message.Result.GroupId,
+					ImageBaseString = response.Message.Result.ImageBaseString
+				});
+        }
     }
 }

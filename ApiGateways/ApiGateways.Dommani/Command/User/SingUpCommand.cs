@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ApiGateways.Domain.Command.User
 {
-    public class SingUpCommand : IRequest<ResultWithError<SignUpDataResponse>>
+    public class SingUpCommand : IRequest<IResultWithError>//IRequest<ResultWithError<SignUpDataResponse>>
     {
         public string UserName { get; set; }
         public string Email { get; set; }

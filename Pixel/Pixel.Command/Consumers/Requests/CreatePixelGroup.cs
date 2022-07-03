@@ -28,7 +28,7 @@ namespace PixelService.Command.Consumers.Requests
 		        Id = NewId.NextGuid(),
 		        IsDefault = false,
 		        Name = value.Name,
-
+				UserId = value.UserId
 	        };
 
 	        try
@@ -41,10 +41,7 @@ namespace PixelService.Command.Consumers.Requests
 				await context.RespondAsync(new ResultWithError<CreatePixelGroupResponseDto>(
 					(int)HttpStatusCode.BadRequest,
 					"Ошибка создания группы",
-					new CreatePixelGroupResponseDto()
-					{
-						GroupId = Guid.Empty
-					})
+					null)
 				);
 			}
 

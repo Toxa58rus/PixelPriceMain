@@ -20,10 +20,22 @@ namespace ApiGateways.Controllers
 			}
 		}
 
-		protected async Task<IActionResult> CreateResponse<T>(Func<Task<ResultWithError<T>>> mainLogic) 
+		protected async Task<IActionResult> CreateResponse(Func<Task<IResultWithError>> mainLogic) 
 		{
 			var result = await mainLogic();
 			
+			if (result.IsError)
+			{
+				return StatusCode(result.ErrorCode, result.Message);
+			}
+
+			return new OkResult();
+		}
+
+		protected async Task<IActionResult> CreateResponse<T>(Func<Task<IResultWithError<T>>> mainLogic)
+		{
+			var result = await mainLogic();
+
 			if (result.IsError)
 			{
 				return StatusCode(result.ErrorCode, result.Message);

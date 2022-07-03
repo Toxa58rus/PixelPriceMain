@@ -8,18 +8,22 @@ namespace ApiGateways.Controllers
     // TODO: Вынести работу с группами в другой контроллер 
     // Добавить погимнацию получения пикселей 
     [ApiController]
+    [UserAuthorize]
     [Route("[controller]/[action]")]
     public class PixelController : BaseController
     {
 
-        [UserAuthorize]
+        
         [HttpPost]
         public async Task<IActionResult> ChangerPixelColor([FromBody] ChangerPixelColorCommand command) =>
 	        await CreateResponse(async () => await Mediator.Send(command));
 
-        //[UserAuthorize]
         [HttpGet]
         public async Task<IActionResult> GetPixelPart([FromQuery] GetPixelPartCommand command) =>
+	        await CreateResponse(async () => await Mediator.Send(command));
+
+        [HttpGet]
+        public async Task<IActionResult> GetPixelByGroupId([FromQuery] GetPixelByGroupIdCommand command) =>
 	        await CreateResponse(async () => await Mediator.Send(command));
 
     }

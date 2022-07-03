@@ -41,8 +41,8 @@ namespace UserService.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-	        
-	        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly());
+
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetEntryAssembly());
         }
 
         public DbSet<User> Users { get; set; }

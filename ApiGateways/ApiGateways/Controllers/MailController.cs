@@ -14,6 +14,6 @@ namespace ApiGateways.Controllers
     {
         [HttpPost]
         public async Task<IActionResult> SendMail([FromBody] SendMailCommand command) =>
-           await Mediator.Send(command);
+	        await CreateResponse(async () => await Mediator.Send(command));
     }
 }

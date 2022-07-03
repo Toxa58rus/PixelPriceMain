@@ -1,9 +1,13 @@
 ﻿namespace Common.Errors;
 
-public interface IResultWithError<out T>
+public interface IResultWithError<out T> : IResultWithError
+{
+	T Result { get; }
+}
+
+public interface IResultWithError
 {
 	int ErrorCode { get; }
 	string Message { get; }
-	T Result { get; }
 	bool IsError { get; }
 }

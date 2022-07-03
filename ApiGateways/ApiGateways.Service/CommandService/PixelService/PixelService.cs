@@ -32,7 +32,36 @@ namespace ApiGateways.Service.CommandService.PixelService
 		    _busControl = busControl;
 	    }
 
-	    public async Task<ResultWithError<GetPixelPartResponse>> GetPixelPart(int startPositionX, int startPositionY, int endPositionX, int endPositionY)
+	    public async Task<IResultWithError<GetPixelByGroupIdResponse>> GetPixelByGroupId(Guid groupId)
+	    {
+			var requestClient = _clientFactory.CreateRequestClient<GetPixelByGroupIdRequestDto>();
+
+			var response = await requestClient.GetResponse<ResultWithError<GetPixelByGroupIdResponseDto>>(
+				new GetPixelByGroupIdRequestDto()
+				{
+					GroupId=groupId
+				});
+
+			var listPixel = response.Message.Result.Pixels.Select(x => new Pixel()
+			{
+				Color = x.Color,
+				GroupId = x.GroupId,
+				Id = x.Id,
+				UserId = x.UserId,
+				X = x.X,
+				Y = x.Y
+			});
+
+			return new ResultWithError<GetPixelByGroupIdResponse>(
+				response.Message.ErrorCode,
+				response.Message.Message,
+				new GetPixelByGroupIdResponse()
+				{
+					Pixels = listPixel.ToList()
+				});
+		}
+
+	    public async Task<IResultWithError<GetPixelPartResponse>> GetPixelPart(int startPositionX, int startPositionY, int endPositionX, int endPositionY)
 	    {
 			var requestClient = _clientFactory.CreateRequestClient<GetPixelPartRequestDto>();
 
@@ -64,7 +93,7 @@ namespace ApiGateways.Service.CommandService.PixelService
 				});
 	    }
 
-	    public async Task<ResultWithError<Guid>> CreateUserPixelGroup(Guid userId, string name, bool isDefault = false)
+	    public async Task<IResultWithError<Guid>> CreateUserPixelGroup(Guid userId, string name, bool isDefault = false)
         {
 	        var requestClient = _clientFactory.CreateRequestClient<CreatePixelGroupRequestDto>();
 
@@ -83,22 +112,114 @@ namespace ApiGateways.Service.CommandService.PixelService
 				response.Message.Result.GroupId);
         }
 
-        public async Task<bool> RemovePixelGroup(Guid userId, Guid groupId)
+        public async Task<IResultWithError> RemovePixelGroup(Guid userId, Guid groupId)
         {
 
-            
-            throw new NotImplementedException();
-           
-        }
+			var requestClient = _clientFactory.CreateRequestClient<RemovePixelGroupRequestDto>();
 
-        public async Task<List<Pixel>> ChangerPixelGroup(List<Guid> pixels, Guid groupId)
+
+			var result = await requestClient.GetResponse<ResultWithError>(
+				new RemovePixelGroupRequestDto()
+				{
+					GroupId = groupId,
+					UserId = userId
+				});
+
+			return new ResultWithError(
+				result.Message.ErrorCode,
+				result.Message.Message
+			);
+
+		}
+        public async Task<IResultWithError<GetGroupResponse>> GetGroupByUserId(Guid userId)
         {
 
-            throw new NotImplementedException();
+	        var requestClient = _clientFactory.CreateRequestClient<GetGroupByUserIdRequestDto>();
+
+	        var result = await requestClient.GetResponse<ResultWithError<GetGroupResponseDto>>(
+		        new GetGroupByUserIdRequestDto()
+		        {
+			        UserId = userId
+		        });
+
+	        return new ResultWithError<GetGroupResponse>(
+		        result.Message.ErrorCode,
+		        result.Message.Message,
+		        new GetGroupResponse()
+		        {
+			        Message = result.Message.Result.Massage,
+			        UserId = result.Message.Result.UserId,
+			        Name = result.Message.Result.Name,
+			        GroupId = result.Message.Result.GroupId
+		        });
+        }
+		public async Task<IResultWithError<GetGroupResponse>> GetGroupById(Guid groupId)
+        {
+
+	        var requestClient = _clientFactory.CreateRequestClient<GetGroupByIdRequestDto>();
+
+	        var result = await requestClient.GetResponse<ResultWithError<GetGroupResponseDto>>(
+		        new GetGroupByIdRequestDto()
+		        {
+			        GroupId = groupId
+		        });
+
+	        return new ResultWithError<GetGroupResponse>(
+		        result.Message.ErrorCode,
+		        result.Message.Message,
+		        new GetGroupResponse()
+		        {
+			        Message = result.Message.Result.Massage,
+			        UserId = result.Message.Result.UserId,
+			        Name = result.Message.Result.Name,
+			        GroupId = groupId
+		        });
+        }
+		public async Task<IResultWithError<ChangeGroupResponse>> ChangeGroup(string message, Guid userId,string name, Guid groupId)
+        {
+
+	        var requestClient = _clientFactory.CreateRequestClient<ChangeGroupRequestDto>();
+
+	        var result = await requestClient.GetResponse<ResultWithError<ChangeGroupResponseDto>>(
+		        new ChangeGroupRequestDto()
+		        {
+			        GroupId = groupId,
+			        Name = name,
+			        UserId = userId,
+			        Massage = message
+		        });
+
+	        return new ResultWithError<ChangeGroupResponse>(
+		        result.Message.ErrorCode,
+		        result.Message.Message,
+		        new ChangeGroupResponse()
+		        {
+			        Massage = result.Message.Result.Massage,
+			        UserId = result.Message.Result.UserId,
+			        Name = result.Message.Result.Name,
+			        GroupId = groupId
+		        });
+        }
+		public async Task<IResultWithError> ChangePixelGroup(List<Guid> pixels, Guid groupId)
+        {
+
+			var requestClient = _clientFactory.CreateRequestClient<ChangePixelGroupRequestDto>();
+
+
+			var result = await requestClient.GetResponse<ResultWithError>(
+				new ChangePixelGroupRequestDto()
+				{
+					GroupId = groupId,
+					PixelIds= pixels
+				});
+
+			return new ResultWithError(
+				result.Message.ErrorCode,
+				result.Message.Message
+			);
         }
 
-
-        public async Task<ResultWithError<List<ChangePixelColorResponse>>> ChangerPixelColor(List<Guid> pixels, int color,Guid userId)
+		public async Task<IResultWithError<List<ChangePixelColorResponse>>> ChangerPixelColor(List<Guid> pixels, int color,Guid userId)
         {
 	        var requestClient = _clientFactory.CreateRequestClient<ChangePixelColorRequestDto>();
 
@@ -119,45 +240,7 @@ namespace ApiGateways.Service.CommandService.PixelService
 				{
 					result.Message.Result?.ToModel()
 				});
-			var builder = new RoutingSlipBuilder(NewId.NextGuid());
-
-
-	        builder.AddActivity("SuperName", new Uri("queue:test"),
-		        new
-		        {
-			        PixelIds = pixels,
-			        Color = color,
-					UserId = userId,
-					GroupId= Guid.Empty
-				});
-
-	        //builder.AddSubscription(_busControl.Address, RoutingSlipEvents.All);
-
-			var routingSlip = builder.Build();
-
-			await _busControl.Execute(routingSlip);
-
 			
-			//var requestClient = _clientFactory.CreateRequestClient<ChangePixelColorRequestDto>();
-
-
-			//var result = await requestClient.GetResponse<ResultWithError<ChangePixelColorResponseDto>>(
-			//	new ChangePixelColorRequestDto()
-			//	{
-			//		Color = color,
-			//		PixelIds = pixels,
-			//                 UserId = userId
-			//             });
-
-
-			//return  new ResultWithError<List<ChangePixelColorResponse>>(
-			//	result.Message.ErrorCode,
-			//	result.Message.Message,
-			//	new List<ChangePixelColorResponse>
-			//	{
-			//		result.Message.Result?.ToObject()
-			//	}
-			//); 
         }
     }
 }

@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
-using ApiGateways.Domain.Models.ImageParser;
+﻿using System;
+using System.Threading.Tasks;
+using ApiGateways.Domain.Models.Image.Response;
+using Common.Errors;
 
 namespace ApiGateways.Domain.Services.ImageParser
 {
     public interface IImageParserService
     {
-        Task<ImageData> ParseImage(ImageData data);
+        Task<IResultWithError<ImageDataResponse>> SetImageForGroup(string imageBaseString, Guid groupId);
     }
 }

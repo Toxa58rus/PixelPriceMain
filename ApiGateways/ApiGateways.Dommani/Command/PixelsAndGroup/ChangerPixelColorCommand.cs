@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ApiGateways.Domain.Command.PixelsAndGroup
 {
-    public class ChangerPixelColorCommand : IRequest<ResultWithError<List<ChangePixelColorResponse>>>
+    public class ChangerPixelColorCommand : IRequest<IResultWithError<List<ChangePixelColorResponse>>> //IRequest<ResultWithError<List<ChangePixelColorResponse>>>
     {
         public List<Guid> PixelsId { get; set; }
         public int Color { get; set; }

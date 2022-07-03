@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ApiGateways.Domain.Command.User
 {
-    public class SingInCommand : IRequest<ResultWithError<SignInDataResponse>>
+    public class SingInCommand : IRequest<IResultWithError<SignInDataResponse>>//IRequest<ResultWithError<SignInDataResponse>>
     {
         public string Email { get; set; }
         public string Password { get; set; }

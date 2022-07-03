@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ApiGateways.Service.CommandService.User.Handlers
 {
-	public class SingUpHandler : HandlerBase<SingUpCommand, ResultWithError<SignUpDataResponse>>
+	public class SingUpHandler : HandlerBase<SingUpCommand, IResultWithError>//ResultWithError<SignUpDataResponse>>
 	{
 		private readonly IUserService _userService;
 		private readonly ILogger<SingUpHandler> _logger;
@@ -26,7 +26,7 @@ namespace ApiGateways.Service.CommandService.User.Handlers
 
 		}
 
-		protected override async Task<ResultWithError<SignUpDataResponse>> Execute(SingUpCommand request, CancellationToken cancellationToken)
+		protected override async Task<IResultWithError> Execute(SingUpCommand request, CancellationToken cancellationToken)
 		{
 			return await _userService.SignUp(request);
 		}

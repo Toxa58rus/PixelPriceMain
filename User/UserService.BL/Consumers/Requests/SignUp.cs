@@ -5,8 +5,10 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Common.Errors;
+using Contracts.UserContract.UserEvent;
 using Contracts.UserContract.UserRequest;
 using Contracts.UserContract.UserResponse;
 using MassTransit;
@@ -101,7 +103,11 @@ namespace UserService.BL.Consumers.Requests
 					UserId = Guid.Parse(userData.Id)
 				}));
 			
-			//await _publish.Publish(new CreateUserEvent { Userid = Guid.Parse(userData.Id), MailAddress = userData.Email }, cancellationToken);
+			await context.Publish(new CreateUserEventDto
+			{
+				Userid = Guid.Parse(userData.Id),
+				MailAddress = userData.Email
+			});
 
 			_logger.LogInformation($"user: {userData.Id}, {userData.Email} has registered");
         }
@@ -118,7 +124,8 @@ namespace UserService.BL.Consumers.Requests
 	        
 	        return new ClaimsIdentity(claims); 
         }
-	}
+
+    }
    
 	public class SignUpDefinition : ConsumerDefinition<SignUp>
     {

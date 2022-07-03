@@ -24,7 +24,7 @@ namespace ApiGateways.Service.CommandService.User
 	    }
 
 
-	    public async Task<ResultWithError<SignInDataResponse>> SignIn(SingInCommand request)
+	    public async Task<IResultWithError<SignInDataResponse>> SignIn(SingInCommand request)
 	    {
 			var requestClient = _clientFactory.CreateRequestClient<SignInUserDataRequestDto>();
 
@@ -48,7 +48,7 @@ namespace ApiGateways.Service.CommandService.User
 				});
 	    }
 
-	    public async Task<ResultWithError<SignUpDataResponse>> SignUp(SingUpCommand request)
+	    public async Task<IResultWithError<SignUpDataResponse>> SignUp(SingUpCommand request)
 	    {
 		    var requestClient = _clientFactory.CreateRequestClient<SignUpUserDataRequestDto>();
 
