@@ -15,4 +15,10 @@ namespace Contracts.PixelContract
 		public Guid GroupId { get; set; }
 		public Guid UserId { get; set; }
 	}
+
+	public class PixelDataDto
+	{
+		public Guid Id { get; set; }
+		public int Color { get; set; }
+	}
 }

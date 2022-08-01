@@ -1,7 +1,11 @@
-﻿using System.Net.Http.Headers;
+﻿using System;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using ApiGateways.Domain.Services;
+using ApiGateways.Service;
 using Common.Errors;
 using Contracts.UserContract.UserRequest;
+using Contracts.UserContract.UserResponse;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -11,10 +15,13 @@ namespace ApiGateways
 	public class UserAuthorizeFilter : IAsyncAuthorizationFilter
 	{
 		private readonly IClientFactory _clientFactory;
+		private readonly UserContext _userContext;
 
-		public UserAuthorizeFilter(IClientFactory clientFactory)
+
+		public UserAuthorizeFilter(IClientFactory clientFactory, UserContext userContext)
 		{
 			_clientFactory = clientFactory;
+			_userContext = userContext;
 		}
 		public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
 		{
@@ -23,14 +30,19 @@ namespace ApiGateways
 
 			var requestClient = _clientFactory.CreateRequestClient<AuthenticationDataRequestDto>();
 
-			var result = await requestClient.GetResponse<ResultWithError<bool>>(
+			var result = await requestClient.GetResponse<ResultWithError<AuthenticationDataResponseDto>>(
 				new AuthenticationDataRequestDto()
 				{
 					AccessToken = token
 				});
 
-			if (!result.Message.Result)
+			if (result.Message.Result.UserId == Guid.Empty)
+			{
 				context.Result = new UnauthorizedResult();
+				return;
+			}
+
+			_userContext.UserId = result.Message.Result.UserId;
 		}
 	}
 

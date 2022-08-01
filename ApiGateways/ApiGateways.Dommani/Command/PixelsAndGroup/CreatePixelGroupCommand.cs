@@ -7,7 +7,6 @@ namespace ApiGateways.Domain.Command.PixelsAndGroup
 {
     public class CreatePixelGroupCommand : IRequest<IResultWithError<Guid>>
     {
-        public Guid UserId { get; set; }
-        public string Name { get; set; }
+	    public string Name { get; set; }
     }
 }

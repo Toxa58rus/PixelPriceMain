@@ -12,5 +12,10 @@ namespace ApiGateways.Domain.Models.PixelsAndGroup
         public Guid UserId { get; set; }
     }
 
+    public class PixelData
+    {
+	    public Guid Id { get; set; }
+	    public int Color { get; set; }
+    }
 
 }

@@ -20,7 +20,7 @@ namespace ApiGateways.Service.CommandService.PixelService.Handlers
 
         protected override async Task<IResultWithError<Guid>> Execute(CreatePixelGroupCommand request, CancellationToken cancellationToken)
         {
-	        return await _pixelService.CreateUserPixelGroup(request.UserId, request.Name);
+	        return await _pixelService.CreateUserPixelGroup( request.Name);
         }
     }
 }

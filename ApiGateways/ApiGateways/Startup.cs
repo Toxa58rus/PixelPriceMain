@@ -19,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using ApiGateways.Domain.Services;
 
 namespace ApiGateways
 {
@@ -59,6 +60,7 @@ namespace ApiGateways
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiGateways", Version = "v1" });
             });
 
+
             services.AddMediatR(Assembly.Load("ApiGateways.Service"));
            
             services.AddDbContext<ApiGatewaysDbContext>(options => options.UseNpgsql(connectionString));
@@ -68,6 +70,7 @@ namespace ApiGateways
             services.AddScoped<IImageParserService, ImageParserService>();
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<UserContext>();
             services.AddLogging();
         }
 

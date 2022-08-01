@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Errors;
@@ -46,70 +47,111 @@ namespace UserService.BL.Consumers.Requests
 	        _jwtHelper = jwtHelper;
         }
 
-        private User CreateUserData(SignUpUserDataRequestDto userData) =>
+		private string ValidateEmail(string mail)
+		{
+			string email = mail;
+			Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+			Match match = regex.Match(email);
+			if (match.Success)
+				return email;
+			else
+				throw new ArgumentException("Не верный формат Email");
+		}
+
+		private User CreateUserData(SignUpUserDataRequestDto userData) =>
             new User()
             {
                 Id = NewId.NextGuid().ToString(),
-                Email = userData.Login.Contains("@") ? userData.Login : string.Empty,
+                Email = ValidateEmail(userData.Login),
                 PasswordHash = _md5Hash.GetMd5Hash(userData.Password),
-                UserName = string.Empty,
+                UserName = userData.UserName,
                 Active = true
             };
 
         public async Task Consume(ConsumeContext<SignUpUserDataRequestDto> context)
         {
-	        if (context.Message.Password != context.Message.ConfirmPassword)
-		        return ;
-
-	        if (_context.Users.AsNoTracking().Any(s => s.Email.Equals(context.Message.Login)))
-		        return ;
-
-	        await using var tr = await _context.Database.BeginTransactionAsync();
-	        
-	        var userData = CreateUserData(context.Message);
-	        await _context.Users.AddAsync(userData);
-	        await _context.SaveChangesAsync();
-
-	        await tr.CommitAsync();
-
-	        var identity = GetIdentity(userData);
-
-	        //TODO: Обработку сделать 
-	        if (identity == null)
+	        try
 	        {
-				await context.RespondAsync(new ResultWithError<SignUpUserDataResponseDto>((int)HttpStatusCode.Unauthorized, null,
-					new SignUpUserDataResponseDto()
-					{
-						AccessToken = null,
-						UserId = Guid.NewGuid()
-					}));
-
-			}
-
-	        var now = DateTime.UtcNow;
-	        
-	        var lifeTime = double.Parse(_configuration["AuthenticationOptions:LifeTime"]);
-
-	        var jwtAccess = _jwtHelper.CreateJwtToken(identity.Claims, lifeTime);
-
-			var jwtRefresh = _jwtHelper.CreateJwtToken(identity.Claims, 150);
-
-
-			await context.RespondAsync(new ResultWithError<SignUpUserDataResponseDto>((int)HttpStatusCode.OK, null,
-		        new SignUpUserDataResponseDto()
+		        if (context.Message.Password != context.Message.ConfirmPassword)
 		        {
-			        AccessToken = jwtAccess,
-					RefreshToken= jwtRefresh,
-					UserId = Guid.Parse(userData.Id)
-				}));
-			
-			await context.Publish(new CreateUserEventDto
-			{
-				Userid = Guid.Parse(userData.Id),
-				MailAddress = userData.Email
-			});
+			        await context.RespondAsync(new ResultWithError<SignUpUserDataResponseDto>(
+				        (int)HttpStatusCode.Unauthorized, "Пароли не совпадают",
+				        new SignUpUserDataResponseDto()
+				        {
 
-			_logger.LogInformation($"user: {userData.Id}, {userData.Email} has registered");
+					        AccessToken = null,
+					        UserId = Guid.Empty
+				        }));
+			        return;
+		        }
+
+		        if (_context.Users.AsNoTracking().Any(s => s.Email.Equals(context.Message.Login)))
+		        {
+			        await context.RespondAsync(new ResultWithError<SignUpUserDataResponseDto>(
+				        (int)HttpStatusCode.Unauthorized, "Данный логин уже существует",
+				        new SignUpUserDataResponseDto()
+				        {
+					        AccessToken = null,
+					        UserId = Guid.Empty
+				        }));
+			        return;
+		        }
+
+		        await using var tr = await _context.Database.BeginTransactionAsync();
+
+		        var userData = CreateUserData(context.Message);
+		        await _context.Users.AddAsync(userData);
+		        await _context.SaveChangesAsync();
+
+		        await tr.CommitAsync();
+
+		        var identity = GetIdentity(userData);
+
+		        //TODO: Обработку сделать 
+		        if (identity == null)
+		        {
+			        await context.RespondAsync(new ResultWithError<SignUpUserDataResponseDto>(
+				        (int)HttpStatusCode.Unauthorized, null,
+				        new SignUpUserDataResponseDto()
+				        {
+					        AccessToken = null,
+					        UserId = Guid.Empty
+				        }));
+
+		        }
+
+		        var now = DateTime.UtcNow;
+
+		        var lifeTime = double.Parse(_configuration["AuthenticationOptions:LifeTime"]);
+
+		        var jwtAccess = _jwtHelper.CreateJwtToken(identity.Claims, lifeTime);
+
+		        var jwtRefresh = _jwtHelper.CreateJwtToken(identity.Claims, 150);
+
+
+		        await context.RespondAsync(new ResultWithError<SignUpUserDataResponseDto>((int)HttpStatusCode.OK, null,
+			        new SignUpUserDataResponseDto()
+			        {
+				        AccessToken = jwtAccess,
+				        RefreshToken = jwtRefresh,
+				        UserId = Guid.Parse(userData.Id)
+			        }));
+
+		        await context.Publish(new CreateUserEventDto
+		        {
+			        Userid = Guid.Parse(userData.Id),
+			        MailAddress = userData.Email
+		        });
+
+		        _logger.LogInformation($"user: {userData.Id}, {userData.Email} has registered");
+	        }
+	        catch (ArgumentException ex)
+	        {
+		        await context.RespondAsync(new ResultWithError<SignUpUserDataResponseDto>(
+			        (int)HttpStatusCode.BadRequest, ex.Message,
+			        null));
+	        }
+
         }
         private ClaimsIdentity GetIdentity(User user)
         {

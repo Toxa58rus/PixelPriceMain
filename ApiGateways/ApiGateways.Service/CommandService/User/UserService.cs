@@ -24,6 +24,7 @@ namespace ApiGateways.Service.CommandService.User
 	    }
 
 
+
 	    public async Task<IResultWithError<SignInDataResponse>> SignIn(SingInCommand request)
 	    {
 			var requestClient = _clientFactory.CreateRequestClient<SignInUserDataRequestDto>();
@@ -33,9 +34,17 @@ namespace ApiGateways.Service.CommandService.User
 				new SignInUserDataRequestDto()
 				{
 					Login = request.Email,
-					Password = request.Password
+					Password = request.Password,
+					RefreshToken = request.RefreshToken
 				});
 
+			if (result.Message.IsError)
+			{
+				return new ResultWithError<SignInDataResponse>(
+					result.Message.ErrorCode,
+					result.Message.Message,
+					null);
+			}
 
 			return new ResultWithError<SignInDataResponse>(
 				result.Message.ErrorCode,
@@ -52,25 +61,37 @@ namespace ApiGateways.Service.CommandService.User
 	    {
 		    var requestClient = _clientFactory.CreateRequestClient<SignUpUserDataRequestDto>();
 
-			var result = await requestClient.GetResponse<ResultWithError<SignUpUserDataResponseDto>>(
-				new SignUpUserDataRequestDto()
-				{
-					Login = request.Email,
-					Password = request.Password,
-					ConfirmPassword = request.ConfirmPassword,
-					UserName = request.UserName
-				});
+		    var result = await requestClient.GetResponse<ResultWithError<SignUpUserDataResponseDto>>(
+			    new SignUpUserDataRequestDto()
+			    {
+				    Login = request.Email,
+				    Password = request.Password,
+				    ConfirmPassword = request.ConfirmPassword,
+				    UserName = request.UserName
+			    });
 
 
-			return new ResultWithError<SignUpDataResponse>(
-				result.Message.ErrorCode,
-				result.Message.Message,
-				new SignUpDataResponse()
-				{
-					AccessToken = result.Message.Result.AccessToken,
-					UserId = result.Message.Result.UserId,
-					RefreshToken = result.Message.Result.RefreshToken
-				});
-		}
+		    if (result.Message.IsError)
+		    {
+			    return new ResultWithError<SignUpDataResponse>(
+				    result.Message.ErrorCode,
+				    result.Message.Message,
+				    null);
+				
+		    }
+		    else
+		    {
+			    return new ResultWithError<SignUpDataResponse>(
+				    result.Message.ErrorCode,
+				    result.Message.Message,
+				    new SignUpDataResponse()
+				    {
+					    AccessToken = result.Message.Result.AccessToken,
+					    UserId = result.Message.Result.UserId,
+					    RefreshToken = result.Message.Result.RefreshToken
+				    });
+
+			}
+	    }
 	}
 }

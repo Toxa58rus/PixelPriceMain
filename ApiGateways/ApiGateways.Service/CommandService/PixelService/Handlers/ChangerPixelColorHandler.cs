@@ -20,7 +20,7 @@ namespace ApiGateways.Service.CommandService.PixelService.Handlers
 
         protected override async Task<IResultWithError<List<ChangePixelColorResponse>>> Execute(ChangerPixelColorCommand request, CancellationToken cancellationToken)
         {
-	       return await _pixelService.ChangerPixelColor(request.PixelsId, request.Color,request.UserId);
+	       return await _pixelService.ChangerPixelColor(request.Pixels);
         }
     }
 }

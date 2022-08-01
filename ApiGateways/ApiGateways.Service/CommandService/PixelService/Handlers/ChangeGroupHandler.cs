@@ -22,7 +22,7 @@ namespace ApiGateways.Service.CommandService.PixelService.Handlers
         protected override async Task<IResultWithError<ChangeGroupResponse>> Execute(ChangerGroupCommand request, CancellationToken cancellationToken)
         {
 
-	         return await _pixelService.ChangeGroup(request.Massage, request.UserId,request.Name,request.GroupId);
+	         return await _pixelService.ChangeGroup(request.Massage, request.Name,request.GroupId);
         }
     }
 }

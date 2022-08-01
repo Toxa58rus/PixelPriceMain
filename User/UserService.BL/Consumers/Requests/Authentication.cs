@@ -25,13 +25,16 @@ namespace UserService.BL.Consumers.Requests
     {
 	    private readonly ILogger<Authentication> _logger;
         private readonly IJwtHelper _jwtHelper;
+        private readonly UserDbContext _context;
 
         public Authentication(
 	        ILogger<Authentication> logger,
-	        IJwtHelper jwtHelper)
+	        IJwtHelper jwtHelper,
+	        UserDbContext context)
         {
 	        _logger = logger;
             _jwtHelper = jwtHelper;
+            _context = context;
         }
 
         public async Task Consume(ConsumeContext<AuthenticationDataRequestDto> context)
@@ -41,22 +44,55 @@ namespace UserService.BL.Consumers.Requests
 
 	        if (request.AccessToken == null)
 	        {
-		        await context.RespondAsync(new ResultWithError<bool>(200, null,
-			        false));
+		        await context.RespondAsync(new ResultWithError<AuthenticationDataResponseDto>(200, null,
+			        new AuthenticationDataResponseDto()
+			        {
+				        UserId = Guid.Empty
+			        }));
 		        return;
 	        }
 
 	        var result = _jwtHelper.ValidationSecurityToken(request.AccessToken);
 
+	        var email = result.ClaimsPrincipal.FindFirstValue(ClaimTypes.Email);
+	        
+	        if (email == null)
+	        {
+		        await context.RespondAsync(
+			        new ResultWithError<AuthenticationDataResponseDto>(
+				        (int)HttpStatusCode.Unauthorized, 
+				        null, 
+				        null));
+		        return;
+			}
+
+	        var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
+
+	        if (user == null)
+			{
+				await context.RespondAsync(
+					new ResultWithError<AuthenticationDataResponseDto>(
+						(int)HttpStatusCode.Unauthorized,
+						null,
+						null));
+				return;
+			}
+
 	        if (result.IsValid)
 	        {
-		        await context.RespondAsync(new ResultWithError<bool>((int)HttpStatusCode.OK, null,
-			        true));
-	        }
+				await context.RespondAsync(
+					new ResultWithError<AuthenticationDataResponseDto>(
+						(int)HttpStatusCode.OK,
+						null,
+						new AuthenticationDataResponseDto()
+						{
+							UserId = Guid.Parse(user.Id)
+						}));
+			}
 	        else
 	        {
-		        await context.RespondAsync(new ResultWithError<bool>((int)HttpStatusCode.Unauthorized, null,
-			        false));
+		        await context.RespondAsync(new ResultWithError<AuthenticationDataResponseDto>((int)HttpStatusCode.Unauthorized, null,
+			        null));
 	        }
 
         }

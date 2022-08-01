@@ -31,12 +31,19 @@ namespace ImageParserService.Command.Consumers.Requests
 
 	        var requestClient = _clientFactory.CreateRequestClient<GetPixelByGroupIdRequestDto>();
 
-	        var pixelsGroup =  requestClient.GetResponse<ResultWithError<GetPixelByGroupIdResponseDto>>(new GetPixelByGroupIdRequestDto()
+	        var resultResponse = await requestClient.GetResponse<ResultWithError<GetPixelByGroupIdResponseDto>>(new GetPixelByGroupIdRequestDto()
 	        {
 		        GroupId = request.GroupId
-	        }).GetAwaiter().GetResult().Message.Result.Pixels;
+	        });
 
-	        var result = pixelsGroup.OrderBy(x => x.X).GroupBy(y => y.X).ToList().SelectMany(e => e.OrderBy(s => s.Y))
+	        if (resultResponse.Message.IsError)
+	        {
+		        await context.RespondAsync(new ResultWithError<SetImageInGroupResponseDto>((int)HttpStatusCode.BadRequest,
+			        resultResponse.Message.Message, null));
+		        return;
+			}
+
+	        var result = resultResponse.Message.Result.Pixels.OrderBy(x => x.X).GroupBy(y => y.X).ToList().SelectMany(e => e.OrderBy(s => s.Y))
 		        .GroupBy(q => q.X).ToList();
 
 			var minValueX = result[result.First().Key].First().X;
@@ -89,7 +96,7 @@ namespace ImageParserService.Command.Consumers.Requests
 
 				        options.Size = new Size(minValueX, maxValueY);
 				        options.Compand = false;
-				        options.Mode = ResizeMode.BoxPad;
+				        options.Mode = ResizeMode.Stretch;
 
 				        image.Mutate(x => x.Resize(options));
 				        var base64 = image.ToBase64String(format);

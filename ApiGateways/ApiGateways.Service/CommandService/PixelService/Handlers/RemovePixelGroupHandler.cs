@@ -18,7 +18,7 @@ namespace ApiGateways.Service.CommandService.PixelService.Handlers
 
         protected override async Task<IResultWithError> Execute(RemovePixelGroupCommand request, CancellationToken cancellationToken)
         {
-	       return await _pixelService.RemovePixelGroup(request.UserId, request.GroupId);
+	       return await _pixelService.RemovePixelGroup( request.GroupId);
         }
     }
 }

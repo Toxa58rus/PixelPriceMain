@@ -1,4 +1,6 @@
-﻿namespace Common.Errors;
+﻿using System.Text.Json.Serialization;
+
+namespace Common.Errors;
 
 public interface IResultWithError<out T> : IResultWithError
 {
@@ -9,5 +11,6 @@ public interface IResultWithError
 {
 	int ErrorCode { get; }
 	string Message { get; }
+	
 	bool IsError { get; }
 }

@@ -6,11 +6,12 @@ using ApiGateways.Domain.Command.ImageParser;
 namespace ApiGateways.Controllers
 {
     [ApiController]
+    [UserAuthorize]
     [Route("[controller]/[action]")]
-    public class ImageParserController : BaseController
+    public class ImageController : BaseController
     {
         [HttpPost]
-        public async Task<IActionResult> ParseImage([FromBody] ParseImageCommand command) 
+        public async Task<IActionResult> Image([FromBody] ParseImageCommand command) 
 	        => await CreateResponse(async() => await Mediator.Send(command));
     }
 }

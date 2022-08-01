@@ -7,5 +7,6 @@ namespace Contracts.UserContract.UserRequest
 
         public string Login { get; set; }
         public string Password { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

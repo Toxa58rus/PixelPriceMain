@@ -26,7 +26,7 @@ namespace ApiGateways.Controllers
 			
 			if (result.IsError)
 			{
-				return StatusCode(result.ErrorCode, result.Message);
+				return StatusCode(result.ErrorCode, result);
 			}
 
 			return new OkResult();
@@ -38,10 +38,10 @@ namespace ApiGateways.Controllers
 
 			if (result.IsError)
 			{
-				return StatusCode(result.ErrorCode, result.Message);
+				return StatusCode(result.ErrorCode, result);
 			}
 
-			return new OkObjectResult(result.Result);
+			return new OkObjectResult(result);
 		}
 	}
 }

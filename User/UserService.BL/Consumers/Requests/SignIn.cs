@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using UserService.BL.Security;
 using UserService.Context;
 using UserService.Context.Models;
 using UserService.Domain;
@@ -42,66 +43,114 @@ namespace UserService.BL.Consumers.Requests
             _logger = logger;
             _jwtHelper = jwtHelper;
         }
+
         public async Task Consume(ConsumeContext<SignInUserDataRequestDto> context)
         {
-	        var identity = await GetIdentity(context.Message.Login, context.Message.Password);
+	        var request = context.Message;
 
-	        if (identity == null)
+	        JwtInfoUser jwtInfoUser = null;
+	        if (request.RefreshToken != null)
 	        {
-		        await context.RespondAsync(new ResultWithError<SignInUserDataResponseDto>((int)HttpStatusCode.Unauthorized, null,
-			        new SignInUserDataResponseDto()
-			        {
-				        AccessToken = null,
-				        UserId = Guid.NewGuid()
-			        }));
+		        jwtInfoUser = await GetIdentity(request.RefreshToken);
 		        
+		        _logger?.LogWarning($"user: {request.RefreshToken} refreshToken");
+			}
+	        else
+	        {
+		        jwtInfoUser = await GetIdentity(request.Login, request.Password);
+
+		        _logger?.LogWarning($"user: {request.Login} login , {request.Password} password");
+			}
+
+	        if (jwtInfoUser == null)
+	        {
+		        await context.RespondAsync(new ResultWithError<SignInUserDataResponseDto>(
+			        (int)HttpStatusCode.Unauthorized, null,
+			        null));
+
 		        return;
 	        }
 
-	        var jwtAccess = _jwtHelper.CreateJwtToken(identity.Claims,
-		        double.Parse(_configuration["AuthenticationOptions:LifeTime"]));
-
-	        var jwtRefresh = _jwtHelper.CreateJwtToken(identity.Claims,150);
-
-	        _logger?.LogWarning($"user: {context.Message.Login} login");
-
-			await context.RespondAsync(new ResultWithError<SignInUserDataResponseDto>((int)HttpStatusCode.OK, null,
+	        await context.RespondAsync(new ResultWithError<SignInUserDataResponseDto>((int)HttpStatusCode.OK, null,
 		        new SignInUserDataResponseDto()
+		        {
+			        AccessToken = jwtInfoUser.AccessToken,
+			        RefreshToken = jwtInfoUser.RefreshToken,
+			        UserId = jwtInfoUser.UserId
+		        }));
+        }
+
+        private async Task<JwtInfoUser> GetIdentity(string refreshToken)
+        {
+	        var valid = _jwtHelper.ValidationSecurityToken(refreshToken);
+
+	        if (valid.IsValid)
+	        {
+		        var email = valid.ClaimsPrincipal.FindFirstValue(ClaimTypes.Email);
+
+		        var user = await _context
+			        .Users
+			        .AsNoTracking()
+			        .FirstOrDefaultAsync(x => x.Email == email);
+
+		        if (user == null)
+			        return null;
+
+		        var claims = new List<Claim>
+		        {
+			        new Claim(ClaimTypes.Email, email),
+		        };
+
+		        var claimsIdentity = new ClaimsIdentity(claims);
+
+		        var jwtAccess = _jwtHelper.CreateJwtToken(claimsIdentity.Claims,
+			        double.Parse(_configuration["AuthenticationOptions:LifeTime"]));
+
+		        var jwtRefresh = _jwtHelper.CreateJwtToken(claimsIdentity.Claims, 150);
+		        return new JwtInfoUser()
 		        {
 			        AccessToken = jwtAccess,
 			        RefreshToken = jwtRefresh,
-			        UserId = Guid.NewGuid()
-		        }));
+			        UserId = Guid.Parse(user.Id)
+		        };
 
+	        }
+
+	        return null;
         }
 
-     
-
-        private async Task<ClaimsIdentity> GetIdentity(string email, string password)
+        private async Task<JwtInfoUser> GetIdentity(string email, string password)
         {
-            var hash = _md5Hash.GetMd5Hash(password);
+	        var hash = _md5Hash.GetMd5Hash(password);
 
-            User user =
-                await _context
-                    .Users
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Email == email && x.PasswordHash == hash);
+	        User user =
+		        await _context
+			        .Users
+			        .AsNoTracking()
+			        .FirstOrDefaultAsync(x => x.Email == email && x.PasswordHash == hash);
 
-            if (user == null) 
-	            return null;
+	        if (user == null)
+		        return null;
 
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, "TestName"),
-                //new Claim(ClaimTypes.DefaultNameClaimType, user.Email)
-            };
+	        var claims = new List<Claim>
+	        {
+		        new Claim(ClaimTypes.Email, email),
+	        };
 
-            var claimsIdentity = new ClaimsIdentity(claims);
+	        var claimsIdentity = new ClaimsIdentity(claims);
 
-            return claimsIdentity;
+	        var jwtAccess = _jwtHelper.CreateJwtToken(claimsIdentity.Claims,
+		        double.Parse(_configuration["AuthenticationOptions:LifeTime"]));
+
+	        var jwtRefresh = _jwtHelper.CreateJwtToken(claimsIdentity.Claims, 150);
+
+	        return new JwtInfoUser()
+	        {
+		        AccessToken = jwtAccess,
+		        RefreshToken = jwtRefresh,
+		        UserId = Guid.Parse(user.Id)
+	        };
         }
-
-
     }
 
     public class SignInDefinition : ConsumerDefinition<SignIn>

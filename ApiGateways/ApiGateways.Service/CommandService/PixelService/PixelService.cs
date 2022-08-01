@@ -6,30 +6,28 @@ using System.Threading.Tasks;
 using ApiGateways.Domain.Models.PixelsAndGroup;
 using ApiGateways.Domain.Models.PixelsAndGroup.Mapping;
 using ApiGateways.Domain.Models.PixelsAndGroup.Response;
+using ApiGateways.Domain.Services;
 using ApiGateways.Domain.Services.Pixels;
 using Common.Errors;
 using Contracts.PixelContract.PixelRequest;
 using Contracts.PixelContract.PixelResponse;
 using MassTransit;
-using MassTransit.Courier;
-using MassTransit.Courier.Contracts;
 
 namespace ApiGateways.Service.CommandService.PixelService
 {
     public class PixelService : IPixelAndGroupService
     {
 	    private readonly IClientFactory _clientFactory;
-	    private readonly IBusControl _busControl;
-	    private readonly IPublishEndpoint _publish;
+	    private readonly UserContext _userContext;
 
 	    public PixelService(
 		    IConfiguration configuration, 
-		    IClientFactory clientFactory, 
-		    IBusControl busControl
+		    IClientFactory clientFactory,
+		    UserContext userContext
 			)
 	    {
 		    _clientFactory = clientFactory;
-		    _busControl = busControl;
+		    _userContext = userContext;
 	    }
 
 	    public async Task<IResultWithError<GetPixelByGroupIdResponse>> GetPixelByGroupId(Guid groupId)
@@ -41,6 +39,14 @@ namespace ApiGateways.Service.CommandService.PixelService
 				{
 					GroupId=groupId
 				});
+
+			if (response.Message.IsError)
+			{
+				return new ResultWithError<GetPixelByGroupIdResponse>(
+					response.Message.ErrorCode,
+					response.Message.Message,
+					null);
+			}
 
 			var listPixel = response.Message.Result.Pixels.Select(x => new Pixel()
 			{
@@ -93,7 +99,7 @@ namespace ApiGateways.Service.CommandService.PixelService
 				});
 	    }
 
-	    public async Task<IResultWithError<Guid>> CreateUserPixelGroup(Guid userId, string name, bool isDefault = false)
+	    public async Task<IResultWithError<Guid>> CreateUserPixelGroup( string name, bool isDefault = false)
         {
 	        var requestClient = _clientFactory.CreateRequestClient<CreatePixelGroupRequestDto>();
 
@@ -101,46 +107,41 @@ namespace ApiGateways.Service.CommandService.PixelService
 		        new CreatePixelGroupRequestDto()
 		        {
 			        Name = name,
-			        UserId = userId,
+			        UserId = _userContext.UserId,
 			        IsDefault = isDefault
 		        });
 
-			
 			return new ResultWithError<Guid>(
 				response.Message.ErrorCode, 
 				response.Message.Message,
 				response.Message.Result.GroupId);
         }
 
-        public async Task<IResultWithError> RemovePixelGroup(Guid userId, Guid groupId)
+        public async Task<IResultWithError> RemovePixelGroup(Guid groupId)
         {
-
-			var requestClient = _clientFactory.CreateRequestClient<RemovePixelGroupRequestDto>();
-
+	        var requestClient = _clientFactory.CreateRequestClient<RemovePixelGroupRequestDto>();
 
 			var result = await requestClient.GetResponse<ResultWithError>(
 				new RemovePixelGroupRequestDto()
 				{
 					GroupId = groupId,
-					UserId = userId
+					UserId = _userContext.UserId
 				});
 
 			return new ResultWithError(
 				result.Message.ErrorCode,
 				result.Message.Message
 			);
-
-		}
-        public async Task<IResultWithError<GetGroupResponse>> GetGroupByUserId(Guid userId)
+        }
+        public async Task<IResultWithError<GetGroupResponse>> GetGroupByUserId()
         {
-
 	        var requestClient = _clientFactory.CreateRequestClient<GetGroupByUserIdRequestDto>();
 
 	        var result = await requestClient.GetResponse<ResultWithError<GetGroupResponseDto>>(
 		        new GetGroupByUserIdRequestDto()
 		        {
-			        UserId = userId
-		        });
+			        UserId = _userContext.UserId
+				});
 
 	        return new ResultWithError<GetGroupResponse>(
 		        result.Message.ErrorCode,
@@ -175,9 +176,8 @@ namespace ApiGateways.Service.CommandService.PixelService
 			        GroupId = groupId
 		        });
         }
-		public async Task<IResultWithError<ChangeGroupResponse>> ChangeGroup(string message, Guid userId,string name, Guid groupId)
+		public async Task<IResultWithError<ChangeGroupResponse>> ChangeGroup(string message, string name, Guid groupId)
         {
-
 	        var requestClient = _clientFactory.CreateRequestClient<ChangeGroupRequestDto>();
 
 	        var result = await requestClient.GetResponse<ResultWithError<ChangeGroupResponseDto>>(
@@ -185,7 +185,7 @@ namespace ApiGateways.Service.CommandService.PixelService
 		        {
 			        GroupId = groupId,
 			        Name = name,
-			        UserId = userId,
+			        UserId = _userContext.UserId,
 			        Massage = message
 		        });
 
@@ -202,15 +202,13 @@ namespace ApiGateways.Service.CommandService.PixelService
         }
 		public async Task<IResultWithError> ChangePixelGroup(List<Guid> pixels, Guid groupId)
         {
-
-			var requestClient = _clientFactory.CreateRequestClient<ChangePixelGroupRequestDto>();
-
+	        var requestClient = _clientFactory.CreateRequestClient<ChangePixelGroupRequestDto>();
 
 			var result = await requestClient.GetResponse<ResultWithError>(
 				new ChangePixelGroupRequestDto()
 				{
 					GroupId = groupId,
-					PixelIds= pixels
+					PixelIds = pixels
 				});
 
 			return new ResultWithError(
@@ -219,28 +217,38 @@ namespace ApiGateways.Service.CommandService.PixelService
 			);
         }
 
-		public async Task<IResultWithError<List<ChangePixelColorResponse>>> ChangerPixelColor(List<Guid> pixels, int color,Guid userId)
+		public async Task<IResultWithError<List<ChangePixelColorResponse>>> ChangerPixelColor(List<PixelData> pixels)
         {
 	        var requestClient = _clientFactory.CreateRequestClient<ChangePixelColorRequestDto>();
 
 
-			var result = await requestClient.GetResponse<ResultWithError<ChangePixelColorResponseDto>>(
-				new ChangePixelColorRequestDto()
-				{
-					Color = color,
-					PixelIds = pixels,
-					UserId = userId
+	        var result = await requestClient.GetResponse<ResultWithError<ChangePixelColorResponseDto>>(
+		        new ChangePixelColorRequestDto()
+		        {
+
+			        Pixels = pixels.Select(x => new Contracts.PixelContract.PixelDataDto()
+			        {
+				        Color = x.Color, 
+				        Id = x.Id
+			        }).ToList(),
+			        UserId = _userContext.UserId
 				});
 
+	        if (result.Message.IsError)
+	        {
+		        return new ResultWithError<List<ChangePixelColorResponse>>(
+			        result.Message.ErrorCode,
+			        result.Message.Message,
+			        null);
+			}
 
-			return new ResultWithError<List<ChangePixelColorResponse>>(
+	        return new ResultWithError<List<ChangePixelColorResponse>>(
 				result.Message.ErrorCode, 
 				result.Message.Message,
 				new List<ChangePixelColorResponse>()
 				{
 					result.Message.Result?.ToModel()
 				});
-			
         }
     }
 }

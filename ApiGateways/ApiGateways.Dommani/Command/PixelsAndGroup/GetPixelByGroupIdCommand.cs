@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ApiGateways.Domain.Command.PixelsAndGroup
 {
-    public class GetPixelByGroupIdCommand : IRequest<IResultWithError<GetPixelByGroupIdResponse>>// IRequest<ResultWithError<GetPixelByGroupIdResponse>>
+    public class GetPixelByGroupIdCommand : IRequest<IResultWithError<GetPixelByGroupIdResponse>>
     {
 	    public Guid GroupId { get; set; }
     }

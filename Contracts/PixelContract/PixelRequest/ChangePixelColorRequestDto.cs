@@ -8,9 +8,8 @@ namespace Contracts.PixelContract.PixelRequest
 {
     public class ChangePixelColorRequestDto
     {
-        public List<Guid> PixelIds { get; set; }
+        public List<PixelDataDto> Pixels { get; set; }
         public int Color { get; set; }
         public Guid UserId { get; set; }
-        public Guid GroupId { get; set; }
     }
 }

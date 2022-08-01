@@ -30,16 +30,16 @@ namespace PixelService.Command.Consumers.Requests
 
 	        var request = context.Message;
 
-			var isExist = _dbContext.Pixels
+	        var isExist = _dbContext.Pixels
 		        .Join(_dbContext.PixelGroups, x => x.GroupId, y => y.Id, (x, y) => x)
-		        .Any(x => request.PixelIds.Contains(x.Id));
+		        .All(x => x.UserId == request.UserId);
 	        
             if (!isExist)
 	        {
 
 		        await context.RespondAsync(new ResultWithError<ChangePixelColorResponseDto>(
 			        (int)HttpStatusCode.BadRequest,
-			        "Выбранные пиксели отсутвуют в данной группе",
+			        null,
 			        null)
 		        );
 
@@ -49,23 +49,12 @@ namespace PixelService.Command.Consumers.Requests
             try
             {
 
+	            var pixelsId = request.Pixels.Select(x => x.Id).ToList();
+	            var pixels =  _dbContext.Pixels.Where(x => pixelsId.Contains(x.Id)).ToList();
+	           
+	           pixels.ForEach(x => x.Color = request.Pixels.First(t => t.Id == x.Id).Color);
 
-	            var listChangeData = await request.PixelIds.AsQueryable().Select(x =>
-		            new Pixel()
-		            {
-			            Id = x,
-			            Color = request.Color
-		            }).AsNoTracking().ToListAsync();
-
-
-				_dbContext.Pixels.AttachRange(listChangeData);
-
-				foreach (var color in listChangeData)
-	            {
-		            _dbContext.Entry(color).Property(nameof(color.Color)).IsModified = true;
-	            }
-
-	            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
+	           await _dbContext.SaveChangesAsync();
             }
             catch
             {

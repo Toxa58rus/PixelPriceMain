@@ -16,5 +16,9 @@
     <ProjectReference Include="..\..\Contracts\Contracts.csproj" />
     <ProjectReference Include="..\Pixel.Context\PixelService.Context.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Consumers\CourierActivities\" />
+  </ItemGroup>
 
 </Project>

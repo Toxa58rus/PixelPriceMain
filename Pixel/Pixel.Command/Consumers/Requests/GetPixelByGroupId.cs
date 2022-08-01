@@ -30,6 +30,17 @@ namespace PixelService.Command.Consumers.Requests
 
 	        try
 	        {
+		        var isExist = _dbContext.Pixels.AsNoTracking().Any(x => x.GroupId == request.GroupId);
+
+		        if (!isExist)
+		        {
+			        await context.RespondAsync(new ResultWithError<GetPixelByGroupIdResponseDto>(
+				        (int)HttpStatusCode.BadRequest,
+				        $"Группа {request.GroupId} не найдена",
+				        null));
+			        return;
+		        }
+
 		        var response = _dbContext.Pixels.AsNoTracking().Select(x => new PixelDto()
 		        {
 			        GroupId = x.GroupId,

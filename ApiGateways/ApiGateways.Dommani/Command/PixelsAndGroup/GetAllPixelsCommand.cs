@@ -5,7 +5,7 @@ using MediatR;
 
 namespace ApiGateways.Domain.Command.PixelsAndGroup
 {
-    public class GetAllPixelsCommand : IRequest<IResultWithError<List<Pixel>>>//IRequest<List<Pixel>>
+    public class GetAllPixelsCommand : IRequest<IResultWithError<List<Pixel>>>
     {
     }
 }

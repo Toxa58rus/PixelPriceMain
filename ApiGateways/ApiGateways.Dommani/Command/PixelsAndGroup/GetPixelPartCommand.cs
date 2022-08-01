@@ -6,7 +6,7 @@ using MediatR;
 
 namespace ApiGateways.Domain.Command.PixelsAndGroup
 {
-    public class GetPixelPartCommand : IRequest<IResultWithError<GetPixelPartResponse>>//IRequest<ResultWithError<GetPixelPartResponse>>
+    public class GetPixelPartCommand : IRequest<IResultWithError<GetPixelPartResponse>>
     {
         public int StartPositionX{ get; set; }
         public int StartPositionY { get; set; }
