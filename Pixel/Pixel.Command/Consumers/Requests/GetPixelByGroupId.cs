@@ -36,7 +36,7 @@ namespace PixelService.Command.Consumers.Requests
 		        {
 			        await context.RespondAsync(new ResultWithError<GetPixelByGroupIdResponseDto>(
 				        (int)HttpStatusCode.BadRequest,
-				        $"Группа {request.GroupId} не найдена",
+				        $"Не найдено ни одного пикселя с группой {request.GroupId}",
 				        null));
 			        return;
 		        }

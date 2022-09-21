@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Common.Errors;
@@ -23,6 +24,18 @@ namespace PixelService.Command.Consumers.Requests
         public async Task Consume(ConsumeContext<CreatePixelGroupRequestDto> context)
         {
 	        var value = context.Message;
+
+	        var isExist = _dbContext.PixelGroups.Any(x => x.Name == value.Name);
+
+	        if (isExist)
+	        {
+		        await context.RespondAsync(new ResultWithError<CreatePixelGroupResponseDto>(
+			        (int)HttpStatusCode.BadRequest,
+			        "Имя группы уже существует",
+					null
+		        ));
+			}
+
 	        var newGroup = new PixelGroup()
 	        {
 		        Id = NewId.NextGuid(),

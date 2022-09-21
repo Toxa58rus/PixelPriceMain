@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -27,26 +28,33 @@ namespace PixelService.Command.Consumers.Requests
 	        var request = context.Message;
 	        try
 	        {
-		        var group = await _dbContext.PixelGroups.Where(s => s.UserId == request.UserId).AsNoTracking().FirstOrDefaultAsync();
+		        if (request.UserId != Guid.Empty)
+		        {
+			        var group = await _dbContext.PixelGroups
+				        .Where(s => s.UserId == request.UserId && s.IsDefault == false).AsNoTracking()
+				        .ToListAsync();
 
-				if (group != null)
-				{
+			        if (group != null)
+			        {
 
-					await context.RespondAsync(new ResultWithError<GetGroupResponseDto>(
-						(int)HttpStatusCode.OK,
-						null,
-						new GetGroupResponseDto()
-						{
-							GroupId = group.Id,
-							UserId = group.UserId,
-							Massage = group.Massage,
-							Name = group.Name
-						}));
-					return;
-				}
+				        await context.RespondAsync(new ResultWithError<IEnumerable<GetGroupResponseDto>>(
+					        (int)HttpStatusCode.OK,
+					        null,
+					        group.Select(x=>new GetGroupResponseDto()
+					        {
+						        GroupId = x.Id,
+						        UserId = x.UserId,
+						        Massage = x.Massage,
+						        Name = x.Name
+					        })));
+				        
+				        return;
+			        }
+		        }
 
-				await context.RespondAsync(new ResultWithError(
+		        await context.RespondAsync(new ResultWithError<GetGroupResponseDto>(
 					(int)HttpStatusCode.OK,
+					null,
 					null));
 
 				return;

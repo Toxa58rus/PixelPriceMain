@@ -111,7 +111,15 @@ namespace ApiGateways.Service.CommandService.PixelService
 			        IsDefault = isDefault
 		        });
 
-			return new ResultWithError<Guid>(
+	        if (response.Message.IsError)
+	        {
+		        return new ResultWithError<Guid>(
+			        response.Message.ErrorCode,
+			        response.Message.Message,
+			        Guid.Empty);
+			}
+
+	        return new ResultWithError<Guid>(
 				response.Message.ErrorCode, 
 				response.Message.Message,
 				response.Message.Result.GroupId);
@@ -133,26 +141,36 @@ namespace ApiGateways.Service.CommandService.PixelService
 				result.Message.Message
 			);
         }
-        public async Task<IResultWithError<GetGroupResponse>> GetGroupByUserId()
+        public async Task<IResultWithError<IEnumerable<GetGroupResponse>>> GetGroupByUserId()
         {
 	        var requestClient = _clientFactory.CreateRequestClient<GetGroupByUserIdRequestDto>();
 
-	        var result = await requestClient.GetResponse<ResultWithError<GetGroupResponseDto>>(
+	        var result = await requestClient.GetResponse<ResultWithError<IEnumerable<GetGroupResponseDto>>>(
 		        new GetGroupByUserIdRequestDto()
 		        {
 			        UserId = _userContext.UserId
 				});
 
-	        return new ResultWithError<GetGroupResponse>(
+	        if (result.Message.Result == null)
+	        {
+		        return new ResultWithError<IEnumerable<GetGroupResponse>>(
+			        result.Message.ErrorCode,
+			        result.Message.Message,
+			        null);
+	        }
+
+	        return new ResultWithError<IEnumerable<GetGroupResponse>>(
 		        result.Message.ErrorCode,
 		        result.Message.Message,
-		        new GetGroupResponse()
+		        result.Message.Result.Select(x => new GetGroupResponse()
 		        {
-			        Message = result.Message.Result.Massage,
-			        UserId = result.Message.Result.UserId,
-			        Name = result.Message.Result.Name,
-			        GroupId = result.Message.Result.GroupId
-		        });
+			        Message = x.Massage,
+			        UserId = x.UserId,
+			        Name = x.Name,
+			        GroupId = x.GroupId
+		        }));
+
+				
         }
 		public async Task<IResultWithError<GetGroupResponse>> GetGroupById(Guid groupId)
         {
@@ -165,7 +183,15 @@ namespace ApiGateways.Service.CommandService.PixelService
 			        GroupId = groupId
 		        });
 
-	        return new ResultWithError<GetGroupResponse>(
+	        if (result.Message.Result == null)
+	        {
+		        return new ResultWithError<GetGroupResponse>(
+			        result.Message.ErrorCode,
+			        result.Message.Message,
+			        null);
+	        }
+
+			return new ResultWithError<GetGroupResponse>(
 		        result.Message.ErrorCode,
 		        result.Message.Message,
 		        new GetGroupResponse()
@@ -176,6 +202,37 @@ namespace ApiGateways.Service.CommandService.PixelService
 			        GroupId = groupId
 		        });
         }
+
+		public async Task<IResultWithError<GetGroupResponse>> GetGroupByPixelId(Guid pixelId)
+		{
+
+			var requestClient = _clientFactory.CreateRequestClient<GetGroupByPixelIdRequestDto>();
+
+			var result = await requestClient.GetResponse<ResultWithError<GetGroupResponseDto>>(
+				new GetGroupByPixelIdRequestDto()
+				{
+					PixelId = pixelId
+				});
+
+			if (result.Message.Result == null)
+			{
+				return new ResultWithError<GetGroupResponse>(
+					result.Message.ErrorCode,
+					result.Message.Message,
+					null);
+			}
+
+			return new ResultWithError<GetGroupResponse>(
+				result.Message.ErrorCode,
+				result.Message.Message,
+				new GetGroupResponse()
+				{
+					Message = result.Message.Result.Massage,
+					UserId = result.Message.Result.UserId,
+					Name = result.Message.Result.Name,
+					GroupId = pixelId
+				});
+		}
 		public async Task<IResultWithError<ChangeGroupResponse>> ChangeGroup(string message, string name, Guid groupId)
         {
 	        var requestClient = _clientFactory.CreateRequestClient<ChangeGroupRequestDto>();
@@ -189,7 +246,15 @@ namespace ApiGateways.Service.CommandService.PixelService
 			        Massage = message
 		        });
 
-	        return new ResultWithError<ChangeGroupResponse>(
+	        if (result.Message.IsError)
+	        {
+		        return new ResultWithError<ChangeGroupResponse>(
+			        result.Message.ErrorCode,
+			        result.Message.Message,
+			        null);
+	        }
+
+			return new ResultWithError<ChangeGroupResponse>(
 		        result.Message.ErrorCode,
 		        result.Message.Message,
 		        new ChangeGroupResponse()

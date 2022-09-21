@@ -11,7 +11,7 @@ namespace ApiGateways.Domain.Services.Pixels
 {
     public interface IPixelAndGroupService
     {
-	    Task<IResultWithError<GetGroupResponse>> GetGroupByUserId();
+	    Task<IResultWithError<IEnumerable<GetGroupResponse>>> GetGroupByUserId();
         Task<IResultWithError<GetGroupResponse>> GetGroupById(Guid groupId);
 	    Task<IResultWithError<GetPixelByGroupIdResponse>> GetPixelByGroupId(Guid groupId);
 	    Task<IResultWithError<GetPixelPartResponse>> GetPixelPart(int startPositionX, int startPositionY, int endPositionX, int endPositionY);
@@ -20,5 +20,6 @@ namespace ApiGateways.Domain.Services.Pixels
         Task<IResultWithError> ChangePixelGroup(List<Guid> pixels, Guid groupId);
         Task<IResultWithError<List<ChangePixelColorResponse>>> ChangerPixelColor(List<PixelData> pixels);
         Task<IResultWithError<ChangeGroupResponse>> ChangeGroup(string message, string name, Guid groupId);
+        Task<IResultWithError<GetGroupResponse>> GetGroupByPixelId(Guid pixelId);
     }
 }

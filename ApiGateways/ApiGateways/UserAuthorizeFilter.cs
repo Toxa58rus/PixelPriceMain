@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System.Net;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ApiGateways.Domain.Services;
@@ -36,8 +37,16 @@ namespace ApiGateways
 					AccessToken = token
 				});
 
-			if (result.Message.Result.UserId == Guid.Empty)
+			if (result.Message.ErrorCode == (int)HttpStatusCode.BadRequest)
 			{
+
+				context.Result = new BadRequestResult();
+				return;
+			}
+
+			if (result.Message.ErrorCode == (int)HttpStatusCode.Unauthorized)
+			{
+
 				context.Result = new UnauthorizedResult();
 				return;
 			}

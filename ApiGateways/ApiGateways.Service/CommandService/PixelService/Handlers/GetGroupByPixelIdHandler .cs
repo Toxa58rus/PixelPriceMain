@@ -9,18 +9,18 @@ using Common.Errors;
 
 namespace ApiGateways.Service.CommandService.PixelService.Handlers
 {
-    public class GetGroupByUserIdHandler : HandlerBase<GetGroupByUserIdCommand, IResultWithError<IEnumerable<GetGroupResponse>>>//ResultWithError<GetGroupResponse>>
+    public class GetGroupByPixelIdHandler : HandlerBase<GetGroupByPixelIdCommand, IResultWithError<GetGroupResponse>>//ResultWithError<GetGroupResponse>>
     {
         private readonly IPixelAndGroupService _pixelService;
 
-        public GetGroupByUserIdHandler(IPixelAndGroupService pixelService)
+        public GetGroupByPixelIdHandler(IPixelAndGroupService pixelService)
         {
 	        _pixelService = pixelService;
         }
 
-        protected override async Task<IResultWithError<IEnumerable<GetGroupResponse>>> Execute(GetGroupByUserIdCommand request, CancellationToken cancellationToken)
+        protected override async Task<IResultWithError<GetGroupResponse>> Execute(GetGroupByPixelIdCommand request, CancellationToken cancellationToken)
         {
-	        return await _pixelService.GetGroupByUserId();
+	        return await _pixelService.GetGroupByPixelId(request.PixelId);
         }
     }
 }

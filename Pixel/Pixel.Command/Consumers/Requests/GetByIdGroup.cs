@@ -45,10 +45,11 @@ namespace PixelService.Command.Consumers.Requests
 					return;
 				}
 
-				await context.RespondAsync(new ResultWithError(
+				await context.RespondAsync(new ResultWithError<GetGroupResponseDto>(
 					(int)HttpStatusCode.OK,
-					null));
-			
+					null,
+					null)
+				);
 				return;
 			}
 	        catch (Exception ex)

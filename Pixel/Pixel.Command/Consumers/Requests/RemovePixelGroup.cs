@@ -21,31 +21,41 @@ namespace PixelService.Command.Consumers.Requests
         }
         public async Task Consume(ConsumeContext<RemovePixelGroupRequestDto> context)
         {
+           // Очень странно удаляется надо разобраться, надо не удалять дефолтные группы и если это не дефолит, то перенести все пиксели из удаляемой группы в дефолт
 	        var request = context.Message;
 
 	        var defaultGroupIdUser =
 		        await _dbContext.PixelGroups.AsNoTracking().FirstAsync(x => x.UserId == request.UserId && x.IsDefault == true);
 
-	        var listPixelForRemoveGroup = await _dbContext.Pixels.AsNoTracking().Where(x => x.GroupId == request.GroupId).ToListAsync();
+	        var removeGroup =
+		        await _dbContext.PixelGroups.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.GroupId && x.IsDefault == false);
 
-	        _dbContext.Pixels.AttachRange(listPixelForRemoveGroup);
-
-            foreach (var item in listPixelForRemoveGroup)
+	        if (removeGroup == null)
 	        {
-		        item.GroupId = defaultGroupIdUser.Id;
-		        _dbContext.Entry(item).Property(nameof(item.GroupId)).IsModified = true;
+		        await context.RespondAsync(new ResultWithError(
+			        (int)HttpStatusCode.BadRequest, "Группа не найдена"));
 	        }
 
-            var removeGroup=
-	            await _dbContext.PixelGroups.AsNoTracking().FirstAsync(x => x.UserId == request.UserId && x.IsDefault == true);
+            var listPixelForRemoveGroup = await _dbContext.Pixels.AsNoTracking().Where(x => x.GroupId == request.GroupId).ToListAsync();
+
+	        if (listPixelForRemoveGroup.Count > 0)
+	        {
+		        _dbContext.Pixels.AttachRange(listPixelForRemoveGroup);
+
+		        foreach (var item in listPixelForRemoveGroup)
+		        {
+			        item.GroupId = defaultGroupIdUser.Id;
+			        _dbContext.Entry(item).Property(nameof(item.GroupId)).IsModified = true;
+		        }
+
+            }
 
             _dbContext.PixelGroups.Remove(removeGroup);
 
             await _dbContext.SaveChangesAsync();
 
             await context.RespondAsync(new ResultWithError(
-	            (int)HttpStatusCode.BadRequest,
-	            "Ошибка изменения цвета пикселей"));
+	            (int)HttpStatusCode.OK, null));
         }
 
     }

@@ -27,7 +27,8 @@ namespace PixelService.Command.Consumers.Requests
 	        var request = context.Message;
 	        try
 	        {
-		        var group = await _dbContext.PixelGroups.Where(s => s.Id == request.GroupId).AsNoTracking().FirstOrDefaultAsync();
+		        var group = await _dbContext.PixelGroups.Where(s => s.Id == request.GroupId && s.IsDefault == false)
+			        .AsNoTracking().FirstOrDefaultAsync();
 
 				if (group != null)
 				{

@@ -8,15 +8,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
-    <PackageReference Include="NLog" Version="4.7.10" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="4.13.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+      <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
+      <PackageReference Include="NLog" Version="4.7.10" />
+      <PackageReference Include="NLog.Web.AspNetCore" Version="4.13.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
       <ProjectReference Include="..\..\Common\Common\Common.csproj" />
     <ProjectReference Include="..\Chat.Command\ChatService.Command.csproj" />
+    <ProjectReference Include="..\Chat.Services\ChatService.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Abstractions\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

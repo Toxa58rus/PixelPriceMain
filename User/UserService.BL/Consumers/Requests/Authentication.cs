@@ -42,9 +42,9 @@ namespace UserService.BL.Consumers.Requests
 
 	        var request = context.Message;
 
-	        if (request.AccessToken == null)
+	        if (string.IsNullOrEmpty(request.AccessToken))
 	        {
-		        await context.RespondAsync(new ResultWithError<AuthenticationDataResponseDto>(200, null,
+		        await context.RespondAsync(new ResultWithError<AuthenticationDataResponseDto>((int)HttpStatusCode.Unauthorized, null,
 			        new AuthenticationDataResponseDto()
 			        {
 				        UserId = Guid.Empty
@@ -53,6 +53,16 @@ namespace UserService.BL.Consumers.Requests
 	        }
 
 	        var result = _jwtHelper.ValidationSecurityToken(request.AccessToken);
+
+	        if (!result.IsValid)
+	        {
+		        await context.RespondAsync(new ResultWithError<AuthenticationDataResponseDto>((int)HttpStatusCode.Unauthorized, null,
+			        new AuthenticationDataResponseDto()
+			        {
+				        UserId = Guid.Empty
+			        }));
+		        return;
+			}
 
 	        var email = result.ClaimsPrincipal.FindFirstValue(ClaimTypes.Email);
 	        
