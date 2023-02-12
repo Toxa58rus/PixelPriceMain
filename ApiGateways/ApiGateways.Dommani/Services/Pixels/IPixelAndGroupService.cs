@@ -18,7 +18,7 @@ namespace ApiGateways.Domain.Services.Pixels
         Task<IResultWithError<Guid>> CreateUserPixelGroup(string name, bool isDefault = false);
         Task<IResultWithError> RemovePixelGroup( Guid groupId);
         Task<IResultWithError> ChangePixelGroup(List<Guid> pixels, Guid groupId);
-        Task<IResultWithError<List<ChangePixelColorResponse>>> ChangerPixelColor(List<PixelData> pixels);
+        Task<IResultWithError> ChangerPixelColor(List<PixelData> pixels);
         Task<IResultWithError<ChangeGroupResponse>> ChangeGroup(string message, string name, Guid groupId);
         Task<IResultWithError<GetGroupResponse>> GetGroupByPixelId(Guid pixelId);
     }

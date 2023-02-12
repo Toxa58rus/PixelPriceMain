@@ -30,11 +30,10 @@ namespace PixelService.Command.Consumers.Requests
 	        {
 		        if (request.UserId != Guid.Empty)
 		        {
-			        var group = await _dbContext.PixelGroups
-				        .Where(s => s.UserId == request.UserId && s.IsDefault == false).AsNoTracking()
+			        var group = await _dbContext.PixelGroups.Where(x=>x.UserId == request.UserId).AsNoTracking()
 				        .ToListAsync();
 
-			        if (group != null)
+			        if (group.Count != 0)
 			        {
 
 				        await context.RespondAsync(new ResultWithError<IEnumerable<GetGroupResponseDto>>(
@@ -52,7 +51,7 @@ namespace PixelService.Command.Consumers.Requests
 			        }
 		        }
 
-		        await context.RespondAsync(new ResultWithError<GetGroupResponseDto>(
+		        await context.RespondAsync(new ResultWithError<IEnumerable<GetGroupResponseDto>>(
 					(int)HttpStatusCode.OK,
 					null,
 					null));
@@ -61,7 +60,7 @@ namespace PixelService.Command.Consumers.Requests
 			}
 	        catch (Exception ex)
 	        {
-		         await context.RespondAsync(new ResultWithError<GetGroupResponseDto>((int)HttpStatusCode.BadRequest, null,null));
+		         await context.RespondAsync(new ResultWithError<IEnumerable<GetGroupResponseDto>>((int)HttpStatusCode.BadRequest, null,null));
 		         return;
 	        }
 

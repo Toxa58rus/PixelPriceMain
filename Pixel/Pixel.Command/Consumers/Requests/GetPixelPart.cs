@@ -37,7 +37,7 @@ namespace PixelService.Command.Consumers.Requests
 				var resultQuery = _dbContext.Pixels.AsNoTracking().Select(x => new PixelDto()
 				{
 					Color = x.Color,
-					GroupId = x.GroupId,
+					GroupId = x.PixelGroupId,
 					Id = x.Id,
 					UserId = x.UserId,
 					X = x.X.Value,

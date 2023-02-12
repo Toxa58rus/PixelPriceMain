@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PixelService.Context;
@@ -11,9 +12,10 @@ using PixelService.Context;
 namespace PixelService.Context.Migrations
 {
     [DbContext(typeof(PixelContext))]
-    partial class PixelContextModelSnapshot : ModelSnapshot
+    [Migration("20230212165354_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +33,10 @@ namespace PixelService.Context.Migrations
                     b.Property<int>("Color")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("PixelGroupId")
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("PixelGroupId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("UserId")
@@ -77,9 +82,7 @@ namespace PixelService.Context.Migrations
                 {
                     b.HasOne("PixelService.Context.Models.PixelGroup", "PixelGroup")
                         .WithMany("Pixels")
-                        .HasForeignKey("PixelGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PixelGroupId");
 
                     b.Navigation("PixelGroup");
                 });

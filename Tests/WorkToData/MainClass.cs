@@ -39,22 +39,23 @@ class MainClass
 			pixel.Add(new Pixel()
 				{
 					Id= Guid.NewGuid(),
-					GroupId= group.Id,
+					PixelGroupId = group.Id,
 					UserId= Guid.Empty,
 					X = x,
 					Y = y,
-					Color=color.Color
-					//ColorId=color.Id
-				}
+					Color = color.Color,
+					PixelGroup = group
+				//ColorId=color.Id
+			}
 			);
 			x++;
 		}
-
+		group.Pixels = pixel;
 		var pixelContext = new PixelContext();
 		//pixelContext.Database.EnsureDeleted();
 		pixelContext.Database.EnsureCreated();
 		//pixelContext.PixelColors.Add(color);
-		pixelContext.Pixels.AddRange(pixel);
+		//pixelContext.Pixels.AddRange(pixel);
 		pixelContext.PixelGroups.Add(group);
 		pixelContext.SaveChanges();
 

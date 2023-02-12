@@ -12,8 +12,8 @@ using PixelService.Context;
 namespace PixelService.Context.Migrations
 {
     [DbContext(typeof(PixelContext))]
-    [Migration("20220702205829_Init")]
-    partial class Init
+    [Migration("20230212174246_test")]
+    partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,7 +33,7 @@ namespace PixelService.Context.Migrations
                     b.Property<int>("Color")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("GroupId")
+                    b.Property<Guid>("PixelGroupId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("UserId")
@@ -46,6 +46,8 @@ namespace PixelService.Context.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PixelGroupId");
 
                     b.ToTable("Pixels");
                 });
@@ -71,6 +73,22 @@ namespace PixelService.Context.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PixelGroups");
+                });
+
+            modelBuilder.Entity("PixelService.Context.Models.Pixel", b =>
+                {
+                    b.HasOne("PixelService.Context.Models.PixelGroup", "PixelGroup")
+                        .WithMany("Pixels")
+                        .HasForeignKey("PixelGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PixelGroup");
+                });
+
+            modelBuilder.Entity("PixelService.Context.Models.PixelGroup", b =>
+                {
+                    b.Navigation("Pixels");
                 });
 #pragma warning restore 612, 618
         }

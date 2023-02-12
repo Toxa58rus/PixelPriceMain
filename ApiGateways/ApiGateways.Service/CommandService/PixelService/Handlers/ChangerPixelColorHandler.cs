@@ -9,7 +9,7 @@ using Common.Errors;
 
 namespace ApiGateways.Service.CommandService.PixelService.Handlers
 {
-    public class ChangerPixelColorHandler : HandlerBase<ChangerPixelColorCommand, IResultWithError<List<ChangePixelColorResponse>>>// ResultWithError<List<ChangePixelColorResponse>>>
+    public class ChangerPixelColorHandler : HandlerBase<ChangerPixelColorCommand, IResultWithError>// ResultWithError<List<ChangePixelColorResponse>>>
     {
         private readonly IPixelAndGroupService _pixelService;
 
@@ -18,7 +18,7 @@ namespace ApiGateways.Service.CommandService.PixelService.Handlers
 	        _pixelService = pixelService;
         }
 
-        protected override async Task<IResultWithError<List<ChangePixelColorResponse>>> Execute(ChangerPixelColorCommand request, CancellationToken cancellationToken)
+        protected override async Task<IResultWithError> Execute(ChangerPixelColorCommand request, CancellationToken cancellationToken)
         {
 	       return await _pixelService.ChangerPixelColor(request.Pixels);
         }

@@ -7,5 +7,6 @@
         public string UserName { get; set; }
         public string PasswordHash { get; set; }
         public bool Active { get; set; }
+        public virtual ImageUser ImageUser { get; set; }
     }
 }

@@ -33,21 +33,32 @@ namespace PixelService.Context.Migrations
                     X = table.Column<int>(type: "integer", nullable: true),
                     Y = table.Column<int>(type: "integer", nullable: true),
                     GroupId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PixelGroupId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pixels", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pixels_PixelGroups_PixelGroupId",
+                        column: x => x.PixelGroupId,
+                        principalTable: "PixelGroups",
+                        principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pixels_PixelGroupId",
+                table: "Pixels",
+                column: "PixelGroupId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "PixelGroups");
+                name: "Pixels");
 
             migrationBuilder.DropTable(
-                name: "Pixels");
+                name: "PixelGroups");
         }
     }
 }

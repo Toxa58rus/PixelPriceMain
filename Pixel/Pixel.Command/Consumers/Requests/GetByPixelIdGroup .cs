@@ -27,10 +27,8 @@ namespace PixelService.Command.Consumers.Requests
 	        var request = context.Message;
 	        try
 	        {
-		        var group = await _dbContext.Pixels
-			        .Join(_dbContext.PixelGroups, x => x.GroupId, y => y.Id,
-				        (x, y) => new { y.Name, y.Massage, y.UserId, y.IsDefault, GroupId = y.Id, PixelId = x.Id })
-			        .FirstOrDefaultAsync(r => r.PixelId == request.PixelId && r.IsDefault == false);
+		        var group = await _dbContext.PixelGroups
+			        .FirstOrDefaultAsync(r => r.Pixels.Any(x=>x.Id == request.PixelId));
 
 		       if (group != null)
 		       {
@@ -40,7 +38,7 @@ namespace PixelService.Command.Consumers.Requests
 				       null,
 				       new GetGroupResponseDto()
 				       {
-					       GroupId = group.GroupId,
+					       GroupId = group.Id,
 					       UserId = group.UserId,
 					       Massage = group.Massage,
 					       Name = group.Name

@@ -46,5 +46,6 @@ namespace UserService.Context
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<ImageUser> ImageUsers  { get; set; }
     }
 }

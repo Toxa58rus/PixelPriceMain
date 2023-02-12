@@ -11,7 +11,8 @@ namespace PixelService.Context.Models
         public int Color { get; set; }
         public int? X { get; set; }
         public int? Y { get; set; }
-        public Guid GroupId { get; set; }
+        public Guid PixelGroupId { get; set; }
         public Guid UserId { get; set; }
+        public virtual PixelGroup  PixelGroup { get; set; }
     }
 }

@@ -30,7 +30,7 @@ namespace PixelService.Command.Consumers.Requests
 
 	        try
 	        {
-		        var isExist = _dbContext.Pixels.AsNoTracking().Any(x => x.GroupId == request.GroupId);
+		        var isExist = _dbContext.Pixels.AsNoTracking().Any(x => x.PixelGroupId == request.GroupId);
 
 		        if (!isExist)
 		        {
@@ -43,7 +43,7 @@ namespace PixelService.Command.Consumers.Requests
 
 		        var response = _dbContext.Pixels.AsNoTracking().Select(x => new PixelDto()
 		        {
-			        GroupId = x.GroupId,
+			        GroupId = x.PixelGroupId,
 			        Color = x.Color,
 			        Id = x.Id,
 			        UserId = x.UserId,

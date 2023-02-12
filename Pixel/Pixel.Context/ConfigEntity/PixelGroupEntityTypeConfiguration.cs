@@ -16,10 +16,13 @@ namespace PixelService.Context.ConfigEntity
 
             builder.HasKey(x=>x.Id);
 
-            builder.ToTable("PixelGroup");
+            builder.ToTable("PixelGroups");
 
-            builder.HasIndex(e => e.Id, "PixelIndexGroupId")
+            builder.HasIndex(e => e.Id)
 	            .IsUnique();
+
+            builder.Property(e => e.Id)
+	            .ValueGeneratedOnAdd();
         }
     }
 }

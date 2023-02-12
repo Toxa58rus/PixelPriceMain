@@ -14,6 +14,8 @@ namespace ApiGateways.Domain.Services.User
     {
         Task<IResultWithError<SignInDataResponse>> SignIn(SingInCommand request);
         Task<IResultWithError<SignUpDataResponse>> SignUp(SingUpCommand request);
-
+        Task<IResultWithError> SetImage(SetImageCommand request);
+        Task<IResultWithError<string>> GetImage(GetImageCommand request);
+        Task<IResultWithError<GetUserInfoResponse>> GetUserInfo(GetUserInfoCommand request);
     }
 }

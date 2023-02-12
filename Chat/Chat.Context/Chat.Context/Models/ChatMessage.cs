@@ -9,23 +9,16 @@ namespace ChatService.Context.Models
         {
         }
 
-        public ChatMessage(string chatId, string userId, string message)
+        public ChatMessage(string userId, string message)
         {
-            Id = Guid.NewGuid().ToString();
-            ChatId = chatId;
-            UserId = userId;
+	        UserId = userId;
             Message = message;
-            WriteDate = DateTime.Now.ToLocalTime();
-            Edit = false;
+            WriteDate = DateTimeOffset.UtcNow;
         }
 
-        public string Id { get; set; }
-        public string ChatId { get; set; }
         public string UserId { get; set; }
         public string Message { get; set; }
-        public DateTime WriteDate { get; set; }
-        public DateTime EditDate { get; set; }
-        public bool Edit { get; set; }
+        public DateTimeOffset WriteDate { get; set; }
 
     }
 }

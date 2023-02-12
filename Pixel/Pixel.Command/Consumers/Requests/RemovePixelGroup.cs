@@ -24,31 +24,26 @@ namespace PixelService.Command.Consumers.Requests
            // Очень странно удаляется надо разобраться, надо не удалять дефолтные группы и если это не дефолит, то перенести все пиксели из удаляемой группы в дефолт
 	        var request = context.Message;
 
-	        var defaultGroupIdUser =
-		        await _dbContext.PixelGroups.AsNoTracking().FirstAsync(x => x.UserId == request.UserId && x.IsDefault == true);
-
 	        var removeGroup =
-		        await _dbContext.PixelGroups.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.GroupId && x.IsDefault == false);
+		        await _dbContext.PixelGroups
+			        .Include(x=>x.Pixels)
+			        .FirstOrDefaultAsync(x => x.Id == request.GroupId && x.IsDefault == false);
 
 	        if (removeGroup == null)
 	        {
 		        await context.RespondAsync(new ResultWithError(
 			        (int)HttpStatusCode.BadRequest, "Группа не найдена"));
+		        
+		        return;
 	        }
 
-            var listPixelForRemoveGroup = await _dbContext.Pixels.AsNoTracking().Where(x => x.GroupId == request.GroupId).ToListAsync();
-
-	        if (listPixelForRemoveGroup.Count > 0)
+	        if (removeGroup.Pixels.Count > 0)
 	        {
-		        _dbContext.Pixels.AttachRange(listPixelForRemoveGroup);
+		        await context.RespondAsync(new ResultWithError(
+			        (int)HttpStatusCode.BadRequest, "Нельзя удалить группу в которой есть пиксели"));
 
-		        foreach (var item in listPixelForRemoveGroup)
-		        {
-			        item.GroupId = defaultGroupIdUser.Id;
-			        _dbContext.Entry(item).Property(nameof(item.GroupId)).IsModified = true;
-		        }
-
-            }
+		        return;
+	        }
 
             _dbContext.PixelGroups.Remove(removeGroup);
 

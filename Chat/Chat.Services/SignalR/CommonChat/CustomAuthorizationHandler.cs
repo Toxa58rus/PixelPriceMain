@@ -18,22 +18,22 @@ namespace ChatService.Services.SignalR.CommonChat
 		}
 		protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, CustomAuthorizationRequirement requirement)
 		{
-			Короче для клиентов на .Net почему-то не приходит авторизация в заголовке, а на JavaScript будет в параметрах запроса
+			//	Короче для клиентов на .Net почему-то не приходит авторизация в заголовке, а на JavaScript будет в параметрах запроса
 			// Implement authorization logic  
-			if (_httpContextAccessor.HttpContext.Request.Query.TryGetValue("username", out var username) &&
-			    username.Any() &&
-			    !string.IsNullOrWhiteSpace(username.FirstOrDefault()) &&
-			    username.FirstOrDefault() == "test_user")
-			{
-				// Authorization passed  
-				context.Succeed(requirement);
-			}
-			else
-			{
-				// Authorization failed  
-				context.Fail();
-			}
-
+			//if (_httpContextAccessor.HttpContext.Request.Query.TryGetValue("username", out var username) &&
+			//    username.Any() &&
+			//    !string.IsNullOrWhiteSpace(username.FirstOrDefault()) &&
+			//    username.FirstOrDefault() == "test_user")
+			//{
+			//	// Authorization passed  
+			//	context.Succeed(requirement);
+			//}
+			//else
+			//{
+			//	// Authorization failed  
+			//	context.Fail();
+			//}
+			context.Succeed(requirement);
 			// Return completed task  
 			return Task.CompletedTask;
 		}

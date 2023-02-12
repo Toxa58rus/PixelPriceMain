@@ -1,5 +1,7 @@
 using System;
 using ChatService.Context;
+using ChatService.Context.Models;
+using ChatService.Services;
 using ChatService.Services.SignalR.CommonChat;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -36,13 +38,15 @@ namespace ChatService
             // Add SignalR  
             services.AddSingleton<IAuthorizationHandler, CustomAuthorizationHandler>();
 
-            services.AddAuthorization(options =>
-            {
-	            options.AddPolicy("test", policy =>
-	            {
-		            policy.Requirements.Add(new CustomAuthorizationRequirement("test"));
-	            });
-            });
+            services.AddSingleton(new StorageMessage(100));
+
+            //services.AddAuthorization(options =>
+            //{
+	           // options.AddPolicy("test", policy =>
+	           // {
+		          //  policy.Requirements.Add(new CustomAuthorizationRequirement("test"));
+	           // });
+            //});
 
             services.AddSignalR();
         }

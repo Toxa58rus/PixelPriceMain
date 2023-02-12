@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using Common.Errors;
 using Contracts.UserContract.UserRequest;
@@ -12,11 +9,8 @@ using MassTransit;
 using MassTransit.ConsumeConfigurators;
 using MassTransit.Definition;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using UserService.Context;
-using UserService.Context.Models;
 using UserService.Domain;
 
 namespace UserService.BL.Consumers.Requests

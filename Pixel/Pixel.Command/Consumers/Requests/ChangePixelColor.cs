@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Common.Errors;
 using Contracts.PixelContract.PixelRequest;
 using Contracts.PixelContract.PixelResponse;
+using LinqKit;
 using MassTransit;
 using MassTransit.ConsumeConfigurators;
 using MassTransit.Courier;
@@ -12,6 +13,7 @@ using MassTransit.Courier.Contracts;
 using MassTransit.Definition;
 using Microsoft.EntityFrameworkCore;
 using PixelService.Context;
+using PixelService.Context.Migrations;
 using PixelService.Context.Models;
 
 namespace PixelService.Command.Consumers.Requests
@@ -29,47 +31,29 @@ namespace PixelService.Command.Consumers.Requests
         {
 
 	        var request = context.Message;
-
-	        var isExist = _dbContext.Pixels
-		        .Join(_dbContext.PixelGroups, x => x.GroupId, y => y.Id, (x, y) => x)
-		        .All(x => x.UserId == request.UserId);
-	        
-            if (!isExist)
-	        {
-
-		        await context.RespondAsync(new ResultWithError<ChangePixelColorResponseDto>(
-			        (int)HttpStatusCode.BadRequest,
-			        null,
-			        null)
-		        );
-
-		        return;
-	        }
-
-            try
+	        try
             {
+	            var ids = request.Pixels.Select(x => x.Id);
 
-	            var pixelsId = request.Pixels.Select(x => x.Id).ToList();
-	            var pixels =  _dbContext.Pixels.Where(x => pixelsId.Contains(x.Id)).ToList();
-	           
-	           pixels.ForEach(x => x.Color = request.Pixels.First(t => t.Id == x.Id).Color);
+	            var pixels = await _dbContext.Pixels.Where(x => ids.Contains(x.Id)).ToListAsync();
 
-	           await _dbContext.SaveChangesAsync();
+                pixels.ForEach(x => x.Color = request.Pixels.First(y => y.Id == x.Id).Color);
+	            
+	            await _dbContext.SaveChangesAsync();
             }
             catch
             {
-	            await context.RespondAsync(new ResultWithError<ChangePixelColorResponseDto>(
+	            await context.RespondAsync(new ResultWithError(
 		            (int)HttpStatusCode.BadRequest,
-		            "Ошибка изменения цвета пикселей",
-		            null));
+		            "Ошибка изменения цвета пикселей")
+	            );
 
 				return;
             }
 
-            await context.RespondAsync(new ResultWithError<ChangePixelColorResponseDto>(
+            await context.RespondAsync(new ResultWithError(
 				(int)HttpStatusCode.OK,
-				null,
-				new ChangePixelColorResponseDto() { Color = request.Color }));
+				null));
         }
     }
 

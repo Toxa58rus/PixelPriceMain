@@ -12,5 +12,6 @@ namespace PixelService.Context.Models
         public Guid UserId { get; set; }
         public bool IsDefault { get; set; }
         public string Massage { get; set; }
+        public virtual  ICollection<Pixel> Pixels { get; set; }
     }
 }

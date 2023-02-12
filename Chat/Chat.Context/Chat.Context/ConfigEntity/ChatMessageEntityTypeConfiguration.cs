@@ -10,9 +10,9 @@ namespace ChatService.Context.ConfigEntity
         {
 	        builder.ToTable("ChatMessage");
 	        
-	        builder.HasKey(x => x.Id);
-
-	        builder.Property(x => x.Id);
+	       // builder.HasKey(x => x.Id);
+           //
+	       // builder.Property(x => x.Id);
         }
     }
 }

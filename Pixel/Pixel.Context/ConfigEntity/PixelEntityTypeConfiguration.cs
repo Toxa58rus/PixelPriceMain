@@ -15,18 +15,10 @@ namespace PixelService.Context.ConfigEntity
         {
             builder.ToTable("Pixels");
 
-           
-            
-            builder.HasIndex(e => e.GroupId, "PixelIndexGroupId")
-	            .IsUnique(false);
+            builder.HasKey(x => x.Id);
 
-            builder.HasIndex(e => e.Id, "PixelIndexId")
-                .IsUnique();
-
-            builder.HasIndex(e => e.UserId, "PixelIndexUserId")
-                .IsUnique(false);
-
-            builder.Property(e => e.GroupId).IsRequired();
+            builder.Property(x => x.Id)
+	            .ValueGeneratedOnAdd();
 
             builder.Property(e => e.UserId).IsRequired();
 

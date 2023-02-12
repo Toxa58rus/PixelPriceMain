@@ -31,17 +31,8 @@ namespace PixelService.Command.Consumers.Requests
 
 		        if (isExist)
 		        {
-			        var listPixel = await _dbContext.Pixels.AsNoTracking()
-						.Select(x => new Pixel()
-				        {
-					        GroupId = request.GroupId,
-					        UserId = x.UserId,
-					        Id = x.Id,
-					        Color = x.Color,
-					        X = x.X,
-					        Y = x.Y
-				        })
-				        .Where(x => request.PixelIds.Contains(x.Id) && x.GroupId !=request.GroupId)
+			        var listPixel = await _dbContext.Pixels
+				        .Where(x => request.PixelIds.Any(e => e == x.Id))
 				        .ToListAsync();
 
 			        if (listPixel.Count == 0)
@@ -50,12 +41,13 @@ namespace PixelService.Command.Consumers.Requests
 				        return;
 					}
 
-			        _dbContext.Pixels.AttachRange(listPixel);
-
-					foreach (var pixel in listPixel)
-			        {
-				        _dbContext.Entry(pixel).Property(nameof(pixel.GroupId)).IsModified = true;
-			        }
+			        listPixel.ForEach(x => x.PixelGroupId = request.GroupId);
+			        //_dbContext.Pixels.AttachRange(listPixel);
+					//
+					//foreach (var pixel in listPixel)
+			        //{
+				    //    _dbContext.Entry(pixel).Property(nameof(pixel.GroupId)).IsModified = true;
+			        //}
 					
 					await _dbContext.SaveChangesAsync();
 		        }

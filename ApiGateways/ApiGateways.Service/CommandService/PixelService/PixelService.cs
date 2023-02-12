@@ -230,7 +230,7 @@ namespace ApiGateways.Service.CommandService.PixelService
 					Message = result.Message.Result.Massage,
 					UserId = result.Message.Result.UserId,
 					Name = result.Message.Result.Name,
-					GroupId = pixelId
+					GroupId = result.Message.Result.GroupId
 				});
 		}
 		public async Task<IResultWithError<ChangeGroupResponse>> ChangeGroup(string message, string name, Guid groupId)
@@ -282,12 +282,12 @@ namespace ApiGateways.Service.CommandService.PixelService
 			);
         }
 
-		public async Task<IResultWithError<List<ChangePixelColorResponse>>> ChangerPixelColor(List<PixelData> pixels)
+		public async Task<IResultWithError> ChangerPixelColor(List<PixelData> pixels)
         {
 	        var requestClient = _clientFactory.CreateRequestClient<ChangePixelColorRequestDto>();
 
 
-	        var result = await requestClient.GetResponse<ResultWithError<ChangePixelColorResponseDto>>(
+	        var result = await requestClient.GetResponse<ResultWithError>(
 		        new ChangePixelColorRequestDto()
 		        {
 
@@ -307,13 +307,9 @@ namespace ApiGateways.Service.CommandService.PixelService
 			        null);
 			}
 
-	        return new ResultWithError<List<ChangePixelColorResponse>>(
-				result.Message.ErrorCode, 
-				result.Message.Message,
-				new List<ChangePixelColorResponse>()
-				{
-					result.Message.Result?.ToModel()
-				});
+	        return new ResultWithError(
+		        result.Message.ErrorCode,
+		        result.Message.Message);
         }
     }
 }
